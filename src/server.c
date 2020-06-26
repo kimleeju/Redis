@@ -1506,6 +1506,7 @@ void initServerConfig(void) {
     server.slave_priority = CONFIG_DEFAULT_SLAVE_PRIORITY;
 #ifdef __KLJ__
 	server.memory_priority = CONFIG_DEFAULT_MEMORY_PRIORITY;
+	server.master_switch_offset = 0;
 	server.switch_buf = NULL;
 	server.switch_buf_size = CONFIG_DEFAULT_SWITCH_BUF;
 	server.switch_buf_histlen = 0;

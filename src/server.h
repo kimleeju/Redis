@@ -1113,6 +1113,7 @@ struct redisServer {
     int repl_ping_slave_period;     /* Master pings the slave every N seconds */
 #ifdef __KLJ__
 	char *switch_buf;
+	long long master_switch_offset;
 	long long switch_buf_size;
 	long long switch_buf_histlen;
 	long long switch_buf_idx;

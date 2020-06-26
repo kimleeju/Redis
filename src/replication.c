@@ -73,6 +73,20 @@ char *replicationGetSlaveName(client *c) {
 }
 
 /* ---------------------------------- MASTER -------------------------------- */
+#ifdef __KLJ__
+void createReplicationSwitchBuf(void) {
+    serverAssert(server.switch_buf == NULL);
+    server.switch_buf = zmalloc(server.switch_buf_size);
+    server.switch_buf_histlen = 0;
+    server.switch_buf_idx = 0;
+
+    /* We don't have any data inside our buffer, but virtually the first
+     * byte we have is the next byte that will be generated for the
+     * replication stream. */
+    server.switch_buf_off = server.master_switch_offset+1;
+}
+#endif
+
 
 void createReplicationBacklog(void) {
     serverAssert(server.repl_backlog == NULL);
@@ -132,7 +146,7 @@ void feedReplicationBacklog(void *ptr, size_t len) {
      * iteration and rewind the "idx" index if we reach the limit. */
     while(len) {
         size_t thislen = server.repl_backlog_size - server.repl_backlog_idx;
-        if (thislen > len) thislen = len;
+		if (thislen > len) thislen = len;
         memcpy(server.repl_backlog+server.repl_backlog_idx,p,thislen);
         server.repl_backlog_idx += thislen;
         if (server.repl_backlog_idx == server.repl_backlog_size)
@@ -146,12 +160,14 @@ void feedReplicationBacklog(void *ptr, size_t len) {
     /* Set the offset of the first byte we have in the backlog. */
     server.repl_backlog_off = server.master_repl_offset -
                               server.repl_backlog_histlen + 1;
+	
+	serverLog(LL_WARNING, "server.backlog = %s\n",server.repl_backlog);
 }
 #ifdef __KLJ__
 void feedReplicationSwitchBuf(void *ptr, size_t len) {
     unsigned char *p = ptr; 
 
-    server.master_repl_offset += len; 
+    server.master_switch_offset += len; 
 
     /* This is a circular buffer, so write as much data we can at every
      * iteration and rewind the "idx" index if we reach the limit. */
@@ -169,8 +185,29 @@ void feedReplicationSwitchBuf(void *ptr, size_t len) {
     if (server.switch_buf_histlen > server.switch_buf_size)
         server.switch_buf_histlen = server.switch_buf_size;
     /* Set the offset of the first byte we have in the backlog. */
-    server.switch_buf_off = server.master_repl_offset -
+    server.switch_buf_off = server.master_switch_offset -
                               server.switch_buf_histlen + 1; 
+
+	serverLog(LL_WARNING, "server.switch_buf = %s\n",server.switch_buf);
+}
+
+
+/* Wrapper for feedReplicationBacklog() that takes Redis string objects
+ * as input. */
+void feedReplicationSwitchBufWithObject(robj *o) {
+    char llstr[LONG_STR_SIZE];
+    void *p;
+    size_t len;
+
+    if (o->encoding == OBJ_ENCODING_INT) {
+        len = ll2string(llstr,sizeof(llstr),(long)o->ptr);
+        p = llstr;
+    } else {
+        len = sdslen(o->ptr);
+        p = o->ptr;
+    }
+	serverLog(LL_WARNING, "p = %s\n",(char*)p);
+    feedReplicationSwitchBuf(p,len);
 }
 #endif
 
@@ -190,6 +227,7 @@ void feedReplicationBacklogWithObject(robj *o) {
         len = sdslen(o->ptr);
         p = o->ptr;
     }
+	serverLog(LL_WARNING, "p = %s\n",(char*)p);
     feedReplicationBacklog(p,len);
 }
 
@@ -258,9 +296,11 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
         /* Add the multi bulk reply length. */
         aux[0] = '*';
         len = ll2string(aux+1,sizeof(aux)-1,argc);
-        aux[len+1] = '\r';
+        
+		aux[len+1] = '\r';
         aux[len+2] = '\n';
-        feedReplicationBacklog(aux,len+3);
+        
+		feedReplicationBacklog(aux,len+3);
 
         for (j = 0; j < argc; j++) {
             long objlen = stringObjectLen(argv[j]);
@@ -272,11 +312,55 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
             len = ll2string(aux+1,sizeof(aux)-1,objlen);
             aux[len+1] = '\r';
             aux[len+2] = '\n';
-            feedReplicationBacklog(aux,len+3);
-            feedReplicationBacklogWithObject(argv[j]);
-            feedReplicationBacklog(aux+len+1,2);
-        }
+			feedReplicationBacklog(aux,len+3); // $(명령어 크기) 삽입
+            
+			feedReplicationBacklogWithObject(argv[j]); // 명령어 삽입 
+			
+			feedReplicationBacklog(aux+len+1,2);
+    
+		}
     }
+
+
+#ifdef __KLJ__
+	//해야할일 ) 이 부분을 나중에 마스터 교체 할때 호출하는 곳으로 이동해야함
+   	/* Write the command to the switch_buf if any. */
+    
+	serverLog(LL_WARNING, "111111");
+	if (server.switch_buf) {
+
+		serverLog(LL_WARNING, "22222");
+        char aux[LONG_STR_SIZE+3];
+
+        /* Add the multi bulk reply length. */
+        aux[0] = '*';
+        len = ll2string(aux+1,sizeof(aux)-1,argc);
+        
+		aux[len+1] = '\r';
+        aux[len+2] = '\n';
+        
+		feedReplicationSwitchBuf(aux,len+3);
+
+        for (j = 0; j < argc; j++) {
+            long objlen = stringObjectLen(argv[j]);
+
+            /* We need to feed the buffer with the object as a bulk reply
+             * not just as a plain string, so create the $..CRLF payload len
+             * and add the final CRLF */
+            aux[0] = '$';
+            len = ll2string(aux+1,sizeof(aux)-1,objlen);
+            aux[len+1] = '\r';
+            aux[len+2] = '\n';
+			feedReplicationSwitchBuf(aux,len+3); // $(명령어 크기) 삽입
+            
+			feedReplicationSwitchBufWithObject(argv[j]); // 명령어 삽입 
+			
+			feedReplicationSwitchBuf(aux+len+1,2);
+    
+		}
+    }
+
+#endif
 
     /* Write the command to every slave. */
     listRewind(slaves,&li);
@@ -724,6 +808,9 @@ void syncCommand(client *c) {
         clearReplicationId2();
         createReplicationBacklog();
     }
+	if(server.switch_buf == NULL){
+		createReplicationSwitchBuf();
+	}
 
     /* CASE 1: BGSAVE is in progress, with disk target. */
     if (server.rdb_child_pid != -1 &&
@@ -1316,7 +1403,7 @@ void readSyncBulkPayload(aeEventLoop *el, int fd, void *privdata, int mask) {
          * or not, in order to behave correctly if they are promoted to
          * masters after a failover. */
         if (server.repl_backlog == NULL) createReplicationBacklog();
-
+        if (server.switch_buf == NULL) createReplicationSwitchBuf();
         serverLog(LL_NOTICE, "MASTER <-> SLAVE sync: Finished with success");
         /* Restart the AOF subsystem now that we finished the sync. This
          * will trigger an AOF rewrite, and when done will start appending
