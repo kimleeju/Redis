@@ -1,0 +1,86 @@
+15446:C 14 Aug 17:06:30.061 # USING NOT NVM
+15446:C 14 Aug 17:06:30.061 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+15446:C 14 Aug 17:06:30.061 # Redis version=4.0.0, bits=64, commit=b302ce32, modified=1, pid=15446, just started
+15446:C 14 Aug 17:06:30.061 # Configuration loaded
+15446:S 14 Aug 17:06:30.063 # server.ipfd[j] : 6
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.0 (b302ce32/1) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3001
+ |    `-._   `._    /     _.-'    |     PID: 15446
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+15446:S 14 Aug 17:06:30.064 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+15446:S 14 Aug 17:06:30.064 # Server initialized
+15446:S 14 Aug 17:06:30.064 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+15446:S 14 Aug 17:06:30.064 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+15446:S 14 Aug 17:06:30.064 * Ready to accept connections
+15446:S 14 Aug 17:06:30.064 # port = 3001
+15446:S 14 Aug 17:06:30.064 # !!!!!!!repl_backlog = (null)
+15446:S 14 Aug 17:06:30.064 * Connecting to MASTER 127.0.0.1:3000
+15446:S 14 Aug 17:06:30.064 * MASTER <-> SLAVE sync started
+15446:S 14 Aug 17:06:30.064 * Non blocking connect for SYNC fired the event.
+15446:S 14 Aug 17:06:30.064 * Master replied to PING, replication can continue...
+15446:S 14 Aug 17:06:30.065 * Partial resynchronization not possible (no cached master)
+15446:S 14 Aug 17:06:31.066 # port = 3001
+15446:S 14 Aug 17:06:31.066 # !!!!!!!repl_backlog = (null)
+15446:S 14 Aug 17:06:32.068 # port = 3001
+15446:S 14 Aug 17:06:32.068 # !!!!!!!repl_backlog = (null)
+15446:signal-handler (1597392392) Received SIGINT scheduling shutdown...
+15446:S 14 Aug 17:06:32.969 # User requested shutdown...
+15446:S 14 Aug 17:06:32.969 * Removing the pid file.
+15446:S 14 Aug 17:06:32.969 # Redis is now ready to exit, bye bye...
+15450:C 14 Aug 17:06:35.948 # USING NOT NVM
+15450:C 14 Aug 17:06:35.948 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+15450:C 14 Aug 17:06:35.948 # Redis version=4.0.0, bits=64, commit=b302ce32, modified=1, pid=15450, just started
+15450:C 14 Aug 17:06:35.948 # Configuration loaded
+15450:S 14 Aug 17:06:35.950 # server.ipfd[j] : 6
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.0 (b302ce32/1) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3001
+ |    `-._   `._    /     _.-'    |     PID: 15450
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+15450:S 14 Aug 17:06:35.950 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+15450:S 14 Aug 17:06:35.950 # Server initialized
+15450:S 14 Aug 17:06:35.950 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+15450:S 14 Aug 17:06:35.951 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+15450:S 14 Aug 17:06:35.951 * Ready to accept connections
+15450:S 14 Aug 17:06:35.951 # port = 3001
+15450:S 14 Aug 17:06:35.951 # !!!!!!!repl_backlog = (null)
+15450:S 14 Aug 17:06:35.951 * Connecting to MASTER 127.0.0.1:3000
+15450:S 14 Aug 17:06:35.951 * MASTER <-> SLAVE sync started
+15450:S 14 Aug 17:06:35.951 * Non blocking connect for SYNC fired the event.
+15450:S 14 Aug 17:06:35.951 * Master replied to PING, replication can continue...
+15450:S 14 Aug 17:06:35.951 * Partial resynchronization not possible (no cached master)
+15450:S 14 Aug 17:06:36.954 # port = 3001
+15450:S 14 Aug 17:06:36.954 # !!!!!!!repl_backlog = (null)
+15450:S 14 Aug 17:06:37.957 # port = 3001
+15450:S 14 Aug 17:06:37.957 # !!!!!!!repl_backlog = (null)
+15450:signal-handler (1597392398) Received SIGINT scheduling shutdown...
+15450:S 14 Aug 17:06:38.157 # User requested shutdown...
+15450:S 14 Aug 17:06:38.157 * Removing the pid file.
+15450:S 14 Aug 17:06:38.158 # Redis is now ready to exit, bye bye...

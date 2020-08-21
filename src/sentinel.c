@@ -4324,8 +4324,10 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 			ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
 			ri->master->promoted_slave = ri;
 			//ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;
+#if 1
 			int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"MULTI");
 			if(retval == C_ERR) return;
+#endif
 			ri->master->link->pending_commands++;
 			ri->master->failover_state = SENTINEL_FAILOVER_STATE_WAIT_PROMOTION;
 			ri->master->new_master = 1;
@@ -4333,19 +4335,6 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 		}
 #endif
 		/*new_master가 생겼다면 플래그설정해놓음 */	
-#if 0
-#ifdef __LJS__
-		if(ri->master->new_master == 1){
-		/* old master에게 그때부터 들어오는 명령들 switch_buf에 적으라고 전달 */
-			retval = redisAsyncCommand(ri->link->cc,
-        	sentinelDiscardReplyCallback, ri, "WAIT");
-			if (retval == C_ERR) return retval;
-			ri->link->pending_commands++;
-			/*old_master가 기다리는 상태가 됨*/
-
-		}
-#endif
-#endif
 		sentinelHandleRedisInstance(ri);//redis 상태 검사 // 가장 중요한 부분
 		
 		if (ri->flags & SRI_MASTER) {

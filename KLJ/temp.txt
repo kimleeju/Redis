@@ -1,0 +1,188 @@
+15400:C 14 Aug 17:06:17.597 # USING NOT NVM
+15400:C 14 Aug 17:06:17.597 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+15400:C 14 Aug 17:06:17.597 # Redis version=4.0.0, bits=64, commit=b302ce32, modified=1, pid=15400, just started
+15400:C 14 Aug 17:06:17.597 # Configuration loaded
+15400:M 14 Aug 17:06:17.599 # server.ipfd[j] : 6
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.0 (b302ce32/1) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3000
+ |    `-._   `._    /     _.-'    |     PID: 15400
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+15400:M 14 Aug 17:06:17.599 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+15400:M 14 Aug 17:06:17.599 # Server initialized
+15400:M 14 Aug 17:06:17.599 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+15400:M 14 Aug 17:06:17.599 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+15400:M 14 Aug 17:06:17.599 * Ready to accept connections
+15400:M 14 Aug 17:06:17.600 # port = 3000
+15400:M 14 Aug 17:06:17.600 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:18.603 # port = 3000
+15400:M 14 Aug 17:06:18.603 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:19.605 # port = 3000
+15400:M 14 Aug 17:06:19.605 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:20.608 # port = 3000
+15400:M 14 Aug 17:06:20.608 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:21.610 # port = 3000
+15400:M 14 Aug 17:06:21.610 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:22.613 # port = 3000
+15400:M 14 Aug 17:06:22.613 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:23.615 # port = 3000
+15400:M 14 Aug 17:06:23.615 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:24.618 # port = 3000
+15400:M 14 Aug 17:06:24.618 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:24.763 # Before: 
+15400:M 14 Aug 17:06:24.763 # After: *3
+$3
+set
+$4
+2222
+$5
+55555
+
+15400:M 14 Aug 17:06:24.763 # c->fd = 7
+15400:M 14 Aug 17:06:24.764 # Before: 
+15400:M 14 Aug 17:06:24.764 # After: 
+15400:M 14 Aug 17:06:25.620 # port = 3000
+15400:M 14 Aug 17:06:25.620 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:26.622 # port = 3000
+15400:M 14 Aug 17:06:26.622 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:27.624 # port = 3000
+15400:M 14 Aug 17:06:27.624 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:28.626 # port = 3000
+15400:M 14 Aug 17:06:28.626 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:29.629 # port = 3000
+15400:M 14 Aug 17:06:29.629 # !!!!!!!repl_backlog = (null)
+15400:M 14 Aug 17:06:30.064 # Before: 
+15400:M 14 Aug 17:06:30.064 # After: PING
+
+15400:M 14 Aug 17:06:30.064 # aux : PING
+15400:M 14 Aug 17:06:30.064 # c->fd = 7
+15400:M 14 Aug 17:06:30.064 # Before: 
+15400:M 14 Aug 17:06:30.065 # After: REPLCONF listening-port 3001
+
+15400:M 14 Aug 17:06:30.065 # aux : REPLCONF listening-port 3001
+15400:M 14 Aug 17:06:30.065 # c->fd = 7
+15400:M 14 Aug 17:06:30.065 # Before: 
+15400:M 14 Aug 17:06:30.065 # After: REPLCONF capa eof capa psync2
+
+15400:M 14 Aug 17:06:30.065 # aux : REPLCONF capa eof capa psync2
+15400:M 14 Aug 17:06:30.065 # c->fd = 7
+15400:M 14 Aug 17:06:30.065 # Before: 
+15400:M 14 Aug 17:06:30.065 # After: PSYNC ? -1
+a eof capa psync2
+
+15400:M 14 Aug 17:06:30.065 # aux : PSYNC ? -1
+15400:M 14 Aug 17:06:30.065 * Slave 127.0.0.1:3001 asks for synchronization
+15400:M 14 Aug 17:06:30.065 * Full resync requested by slave 127.0.0.1:3001
+15400:M 14 Aug 17:06:30.065 * Delay next BGSAVE for diskless SYNC
+15400:M 14 Aug 17:06:30.631 # port = 3000
+15400:M 14 Aug 17:06:30.631 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:31.634 # port = 3000
+15400:M 14 Aug 17:06:31.634 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:32.636 # port = 3000
+15400:M 14 Aug 17:06:32.636 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:32.969 # Before: 
+15400:M 14 Aug 17:06:32.970 # After: 
+15400:M 14 Aug 17:06:32.970 # Connection with slave 127.0.0.1:3001 lost.
+15400:M 14 Aug 17:06:33.638 # port = 3000
+15400:M 14 Aug 17:06:33.638 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:34.641 # port = 3000
+15400:M 14 Aug 17:06:34.641 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:35.643 # port = 3000
+15400:M 14 Aug 17:06:35.643 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:35.951 # Before: 
+15400:M 14 Aug 17:06:35.951 # After: PING
+
+15400:M 14 Aug 17:06:35.951 # aux : PING
+15400:M 14 Aug 17:06:35.951 # c->fd = 7
+15400:M 14 Aug 17:06:35.951 # Before: 
+15400:M 14 Aug 17:06:35.951 # After: REPLCONF listening-port 3001
+
+15400:M 14 Aug 17:06:35.951 # aux : REPLCONF listening-port 3001
+15400:M 14 Aug 17:06:35.951 # c->fd = 7
+15400:M 14 Aug 17:06:35.951 # Before: 
+15400:M 14 Aug 17:06:35.951 # After: REPLCONF capa eof capa psync2
+
+15400:M 14 Aug 17:06:35.951 # aux : REPLCONF capa eof capa psync2
+15400:M 14 Aug 17:06:35.951 # c->fd = 7
+15400:M 14 Aug 17:06:35.951 # Before: 
+15400:M 14 Aug 17:06:35.951 # After: PSYNC ? -1
+a eof capa psync2
+
+15400:M 14 Aug 17:06:35.951 # aux : PSYNC ? -1
+15400:M 14 Aug 17:06:35.951 * Slave 127.0.0.1:3001 asks for synchronization
+15400:M 14 Aug 17:06:35.951 * Full resync requested by slave 127.0.0.1:3001
+15400:M 14 Aug 17:06:35.951 * Delay next BGSAVE for diskless SYNC
+15400:M 14 Aug 17:06:36.646 # port = 3000
+15400:M 14 Aug 17:06:36.646 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:37.649 # port = 3000
+15400:M 14 Aug 17:06:37.649 # !!!!!!!repl_backlog = 
+15400:M 14 Aug 17:06:37.649 # Before backlog = 
+
+15400:M 14 Aug 17:06:37.649 # After backlog = *1
+
+
+15400:M 14 Aug 17:06:37.649 # Before backlog = *1
+
+
+15400:M 14 Aug 17:06:37.649 # After backlog = *1
+$4
+
+
+15400:M 14 Aug 17:06:37.649 # Before backlog = *1
+$4
+
+
+15400:M 14 Aug 17:06:37.649 # After backlog = *1
+$4
+PING
+
+15400:M 14 Aug 17:06:37.649 # Before backlog = *1
+$4
+PING
+
+15400:M 14 Aug 17:06:37.649 # After backlog = *1
+$4
+PING
+
+
+15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
+
+
+15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
+$4
+
+
+15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
+$4
+PING
+
+15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
+$4
+PING
+
+
+15400:M 14 Aug 17:06:38.158 # Before: 
+15400:M 14 Aug 17:06:38.158 # After: 
+15400:M 14 Aug 17:06:38.158 # Connection with slave 127.0.0.1:3001 lost.
+15400:M 14 Aug 17:06:38.651 # port = 3000
+15400:M 14 Aug 17:06:38.652 # !!!!!!!repl_backlog = *1
+$4
+PING
+
+15400:signal-handler (1597392399) Received SIGINT scheduling shutdown...
+15400:M 14 Aug 17:06:39.153 # User requested shutdown...
+15400:M 14 Aug 17:06:39.153 * Removing the pid file.
+15400:M 14 Aug 17:06:39.153 # Redis is now ready to exit, bye bye...

@@ -999,7 +999,7 @@ int handleClientsWithPendingWrites(void) {
         listDelNode(server.clients_pending_write,ln);
 
         /* Try to write buffers to the client socket. */
-        if (writeToClient(c->fd,c,0) == C_ERR) continue;
+		if (writeToClient(c->fd,c,0) == C_ERR) continue;
 
         /* If there is nothing left, do nothing. Otherwise install
          * the write handler. */
@@ -1069,7 +1069,12 @@ int processInlineBuffer(client *c) {
     /* Split the input buffer up to the \r\n */
     querylen = newline-(c->querybuf);
     aux = sdsnewlen(c->querybuf,querylen);
-    argv = sdssplitargs(aux,&argc);
+#ifdef __KLJ__
+	serverLog(LL_WARNING, "aux : %s",aux);
+
+#endif
+	
+	argv = sdssplitargs(aux,&argc);
     sdsfree(aux);
     if (argv == NULL) {
         addReplyError(c,"Protocol error: unbalanced quotes in request");
@@ -1325,7 +1330,7 @@ void processInputBuffer(client *c) {
          *
          * The same applies for clients we want to terminate ASAP. */
         if (c->flags & (CLIENT_CLOSE_AFTER_REPLY|CLIENT_CLOSE_ASAP)) break;
-
+		
         /* Determine request type when unknown. */
         if (!c->reqtype) {
             if (c->querybuf[0] == '*') {
@@ -1371,7 +1376,7 @@ void processInputBuffer(client *c) {
 }
 
 void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
-    client *c = (client*) privdata;
+	client *c = (client*) privdata;
     int nread, readlen;
     size_t qblen;
     UNUSED(el);
@@ -1395,8 +1400,17 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
     qblen = sdslen(c->querybuf);
     if (c->querybuf_peak < qblen) c->querybuf_peak = qblen;
     c->querybuf = sdsMakeRoomFor(c->querybuf, readlen);
-    nread = read(fd, c->querybuf+qblen, readlen);
-    if (nread == -1) {
+#if 0
+#ifdef __KLJ__
+    serverLog(LL_WARNING, "Before: %s",c->querybuf);
+	//buf에서 읽는 부분
+#endif
+#endif
+	nread = read(fd, c->querybuf+qblen, readlen);
+#if 0
+	serverLog(LL_WARNING, "After: %s",c->querybuf);
+#endif
+	if (nread == -1) {
         if (errno == EAGAIN) {
             return;
         } else {
@@ -1405,16 +1419,29 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
             return;
         }
     } else if (nread == 0) {
+		//쓸게 있을때 master
         serverLog(LL_VERBOSE, "Client closed connection");
         freeClient(c);
         return;
     } else if (c->flags & CLIENT_MASTER) {
-        /* Append the query buffer to the pending (not applied) buffer
+       // 쓸게 있을 때 slave 
+			/* Append the query buffer to the pending (not applied) buffer
          * of the master. We'll use this buffer later in order to have a
          * copy of the string applied by the last command executed. */
-        c->pending_querybuf = sdscatlen(c->pending_querybuf,
-                                        c->querybuf+qblen,nread);
-    }
+#if 0
+		serverLog(LL_WARNING,"c->querybuf = %s", c->querybuf);
+#endif
+		c->pending_querybuf = sdscatlen(c->pending_querybuf,
+										c->querybuf+qblen,nread);
+#if 0
+#ifdef __KLJ__ 
+		server.switch_buf = sdscatlen(server.switch_buf,
+										c->pending_querybuf,nread);
+		serverLog(LL_WARNING,"server.swithc_buf = %s", server.switch_buf);
+#endif
+#endif
+		serverLog(LL_WARNING,"c->pending_querybuf = %s", c->pending_querybuf);
+	}
 
     sdsIncrLen(c->querybuf,nread);
     c->lastinteraction = server.unixtime;
@@ -1438,12 +1465,14 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
      * corresponding part of the replication stream, will be propagated to
      * the sub-slaves and to the replication backlog. */
     if (!(c->flags & CLIENT_MASTER)) {
+		//master
         processInputBuffer(c);
-    } else {
-        size_t prev_offset = c->reploff;
+	} else {
+        //slave
+		size_t prev_offset = c->reploff;
         processInputBuffer(c);
         size_t applied = c->reploff - prev_offset;
-        if (applied) {
+		if (applied) {
             replicationFeedSlavesFromMasterStream(server.slaves,
                     c->pending_querybuf, applied);
             sdsrange(c->pending_querybuf,applied,-1);

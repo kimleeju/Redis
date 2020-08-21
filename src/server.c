@@ -2048,6 +2048,8 @@ void initServer(void) {
                 serverPanic(
                     "Unrecoverable error creating server.ipfd file event.");
             }
+
+        serverLog(LL_WARNING, "server.port %d , server.ipfd[j] : %d",server.port,server.ipfd[j]);
     }
     if (server.sofd > 0 && aeCreateFileEvent(server.el,server.sofd,AE_READABLE,
         acceptUnixHandler,NULL) == AE_ERR) serverPanic("Unrecoverable error creating server.sofd file event.");
