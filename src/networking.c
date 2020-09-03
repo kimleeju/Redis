@@ -1070,12 +1070,17 @@ int processInlineBuffer(client *c) {
     querylen = newline-(c->querybuf);
     aux = sdsnewlen(c->querybuf,querylen);
 #ifdef __KLJ__
+#if 0
 	serverLog(LL_WARNING, "aux : %s",aux);
-
+#endif
 #endif
 	
 	argv = sdssplitargs(aux,&argc);
-    sdsfree(aux);
+//명령어를 받아 들임
+#if 0
+	serverLog(LL_WARNING, "argv : %s",*argv);
+#endif
+	sdsfree(aux);
     if (argv == NULL) {
         addReplyError(c,"Protocol error: unbalanced quotes in request");
         setProtocolError("unbalanced quotes in inline request",c,0);
@@ -1433,14 +1438,14 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 #endif
 		c->pending_querybuf = sdscatlen(c->pending_querybuf,
 										c->querybuf+qblen,nread);
-#if 0
+#if 1
 #ifdef __KLJ__ 
-		server.switch_buf = sdscatlen(server.switch_buf,
-										c->pending_querybuf,nread);
-		serverLog(LL_WARNING,"server.swithc_buf = %s", server.switch_buf);
+//		server.switch_buf = sdscatlen(server.switch_buf,
+//										c->querybuf+qblen,nread);
+//		serverLog(LL_WARNING,"server.swithc_buf = %s", server.switch_buf);
 #endif
 #endif
-		serverLog(LL_WARNING,"c->pending_querybuf = %s", c->pending_querybuf);
+	//	serverLog(LL_WARNING,"c->pending_querybuf = %s", c->pending_querybuf);
 	}
 
     sdsIncrLen(c->querybuf,nread);

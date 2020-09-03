@@ -447,6 +447,10 @@ typedef long long mstime_t; /* millisecond time type. */
 #define PROPAGATE_AOF 1
 #define PROPAGATE_REPL 2
 
+#ifdef __KLJ__
+#define PROPAGATE_SWITCH 4
+#endif
+
 /* RDB active child save type. */
 #define RDB_CHILD_TYPE_NONE 0
 #define RDB_CHILD_TYPE_DISK 1     /* RDB is written to disk. */
@@ -773,6 +777,7 @@ typedef struct client {
     /* Response buffer */
     int bufpos;
     char buf[PROTO_REPLY_CHUNK_BYTES];
+
 } client;
 
 struct saveparam {
@@ -787,7 +792,7 @@ struct moduleLoadQueueEntry {
 };
 
 struct sharedObjectsStruct {
-    robj *crlf, *ok, *err, *emptybulk, *czero, *cone, *cnegone, *pong, *space,
+    robj *crlf, *ok, *err, *emptybulk, *czero, *cone, *cnegone, *pong, *space, *synchronous,
     *colon, *nullbulk, *nullmultibulk, *queued,
     *emptymultibulk, *wrongtypeerr, *nokeyerr, *syntaxerr, *sameobjecterr,
     *outofrangeerr, *noscripterr, *loadingerr, *slowscripterr, *bgsaveerr,
@@ -1119,6 +1124,7 @@ struct redisServer {
 	long long switch_buf_idx;
 	long long switch_buf_off;
 	time_t switch_buf_time_limit;
+	int bool_switch;
 #endif
 	char *repl_backlog;             /* Replication backlog for partial syncs */
     long long repl_backlog_size;    /* Backlog circular buffer size */
@@ -1159,6 +1165,8 @@ struct redisServer {
     int slave_priority;             /* Reported in INFO and used by Sentinel. */
 #ifdef __KLJ__
 	int memory_priority;
+	int bool_switch_ready;
+	int bool_connect_master;
 #endif
 	
 	int slave_announce_port;        /* Give the master this listening port. */
@@ -2015,6 +2023,10 @@ void sunionstoreCommand(client *c);
 void sdiffCommand(client *c);
 void sdiffstoreCommand(client *c);
 void sscanCommand(client *c);
+#ifdef __KLJ__
+void switchCommand(client *c);
+void synchronousCommand(client *c);
+#endif
 void syncCommand(client *c);
 void flushdbCommand(client *c);
 void flushallCommand(client *c);

@@ -315,7 +315,11 @@ struct redisCommand redisCommandTable[] = {
     {"pfdebug",pfdebugCommand,-3,"w",0,NULL,0,0,0,0,0},
     {"post",securityWarningCommand,-1,"lt",0,NULL,0,0,0,0,0},
     {"host:",securityWarningCommand,-1,"lt",0,NULL,0,0,0,0,0},
-    {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0}
+    {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0},
+#ifdef __KLJ__
+    {"switch",switchCommand,1,"ars",0,NULL,0,0,0,0,0},
+    {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},
+#endif
 };
 
 /*============================ Utility functions ============================ */
@@ -1282,7 +1286,10 @@ void createSharedObjects(void) {
     shared.nullbulk = createObject(OBJ_STRING,sdsnew("$-1\r\n"));
     shared.nullmultibulk = createObject(OBJ_STRING,sdsnew("*-1\r\n"));
     shared.emptymultibulk = createObject(OBJ_STRING,sdsnew("*0\r\n"));
-    shared.pong = createObject(OBJ_STRING,sdsnew("+PONG\r\n"));
+#ifdef __KLJ__
+	shared.synchronous = createObject(OBJ_STRING,sdsnew("+SYNCHRONOUS\r\n"));
+#endif
+	shared.pong = createObject(OBJ_STRING,sdsnew("+PONG\r\n"));
     shared.queued = createObject(OBJ_STRING,sdsnew("+QUEUED\r\n"));
     shared.emptyscan = createObject(OBJ_STRING,sdsnew("*2\r\n$1\r\n0\r\n*0\r\n"));
     shared.wrongtypeerr = createObject(OBJ_STRING,sdsnew(
@@ -1506,13 +1513,15 @@ void initServerConfig(void) {
     server.slave_priority = CONFIG_DEFAULT_SLAVE_PRIORITY;
 #ifdef __KLJ__
 	server.memory_priority = CONFIG_DEFAULT_MEMORY_PRIORITY;
+	server.bool_switch_ready = 0;
 	server.master_switch_offset = 0;
 	server.switch_buf = NULL;
 	server.switch_buf_size = CONFIG_DEFAULT_SWITCH_BUF;
 	server.switch_buf_histlen = 0;
 	server.switch_buf_idx = 0;
 	server.switch_buf_off = 0;
-//	server.switch_buf_time_limit 
+	server.bool_connect_master = 0;
+	//	server.switch_buf_time_limit 
 #endif
 	
 	
@@ -2139,8 +2148,7 @@ void populateCommandTable(void) {
             }
             f++;
         }
-
-        retval1 = dictAdd(server.commands, sdsnew(c->name), c);
+		retval1 = dictAdd(server.commands, sdsnew(c->name), c);
         /* Populate an additional dictionary that will be unaffected
          * by rename-command statements in redis.conf. */
         retval2 = dictAdd(server.orig_commands, sdsnew(c->name), c);
@@ -2244,6 +2252,10 @@ void propagate(struct redisCommand *cmd, int dbid, robj **argv, int argc,
         feedAppendOnlyFile(cmd,dbid,argv,argc);
     if (flags & PROPAGATE_REPL)
         replicationFeedSlaves(server.slaves,dbid,argv,argc);
+#ifdef __KLJ__
+	if (flags & PROPAGATE_SWITCH)
+		replicationFeedSwitchBuf(server.slaves,dbid,argv,argc);
+#endif
 }
 
 /* Used inside commands to schedule the propagation of additional commands
@@ -2340,6 +2352,10 @@ void call(client *c, int flags) {
     long long dirty, start, duration;
     int client_old_flags = c->flags;
 
+
+#if 0
+    serverLog(LL_WARNING,"c->argv->ptr = %s",c->argv[0]->ptr);
+#endif
     /* Sent the command to clients in MONITOR mode, only if the commands are
      * not generated from reading an AOF. */
     if (listLength(server.monitors) &&
@@ -2418,9 +2434,20 @@ void call(client *c, int flags) {
 
         /* Call propagate() only if at least one of AOF / replication
          * propagation is needed. */
-        if (propagate_flags != PROPAGATE_NONE)
-            propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
-    }
+        if (propagate_flags != PROPAGATE_NONE){
+#ifndef __KLJ__
+            	propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
+#endif
+#ifdef __KLJ__	
+			if(!server.bool_switch){
+				propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
+			}
+			else{
+				propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
+			}
+#endif
+		}	
+	}
 
     /* Restore the old replication flags, since call() can be executed
      * recursively. */
@@ -2473,20 +2500,27 @@ int processCommand(client *c) {
 
     /* Now lookup the command and check ASAP about trivial error conditions
      * such as wrong arity, bad command name and so forth. */
-    c->cmd = c->lastcmd = lookupCommand(c->argv[0]->ptr);
-    if (!c->cmd) {
-        flagTransaction(c);
+   
+#ifdef __KLJ__
+	
+//    serverLog(LL_WARNING,"c->argv[0]->ptr = %s",c->argv[0]->ptr);
+#endif
+	//여기가 문제!
+	c->cmd = c->lastcmd = lookupCommand(c->argv[0]->ptr);
+
+	if (!c->cmd) {
+		flagTransaction(c);
         addReplyErrorFormat(c,"unknown command '%s'",
             (char*)c->argv[0]->ptr);
         return C_OK;
     } else if ((c->cmd->arity > 0 && c->cmd->arity != c->argc) ||
                (c->argc < -c->cmd->arity)) {
-        flagTransaction(c);
+		flagTransaction(c);
         addReplyErrorFormat(c,"wrong number of arguments for '%s' command",
             c->cmd->name);
         return C_OK;
     }
-
+	
     /* Check if the user is authenticated */
     if (server.requirepass && !c->authenticated && c->cmd->proc != authCommand)
     {
@@ -2646,6 +2680,8 @@ int processCommand(client *c) {
 #ifdef SUPPORT_PBA
     server.pba.arg = 0;
 #endif
+
+  
     return C_OK;
 }
 
@@ -2791,6 +2827,15 @@ void authCommand(client *c) {
     }
 }
 
+#ifdef __KLJ__
+void synchronousCommand(client *c) {
+	//sync맞춰줘야함
+	//replicationSendPsync();
+	replicationSendFinish();
+}
+#endif
+
+
 /* The PING command. It works in a different way if the client is in
  * in Pub/Sub mode. */
 void pingCommand(client *c) {
@@ -2802,18 +2847,20 @@ void pingCommand(client *c) {
     }
 
     if (c->flags & CLIENT_PUBSUB) {
-        addReply(c,shared.mbulkhdr[2]);
+		addReply(c,shared.mbulkhdr[2]);
         addReplyBulkCBuffer(c,"pong",4);
         if (c->argc == 1)
             addReplyBulkCBuffer(c,"",0);
         else
             addReplyBulk(c,c->argv[1]);
     } else {
-        if (c->argc == 1)
-            addReply(c,shared.pong);
-        else
+        if (c->argc == 1){
+			addReply(c,shared.pong);
+		}
+        else{
             addReplyBulk(c,c->argv[1]);
-    }
+		}
+	}
 }
 
 void echoCommand(client *c) {
@@ -3337,8 +3384,10 @@ sds genRedisInfoString(char *section) {
         info = sdscatprintf(info,
             "# Replication\r\n"
             "role:%s\r\n"
-			"memory_priority:%d\r\n",
-            server.masterhost == NULL ? "master" : "slave",server.memory_priority);
+			"memory_priority:%d\r\n"
+			"bool_switch_ready:%d\r\n"
+			"bool_connect_master:%d\r\n",
+            server.masterhost == NULL ? "master" : "slave",server.memory_priority,server.bool_switch_ready,server.bool_connect_master);
         
 		if (server.masterhost) {
             long long slave_repl_offset = 1;

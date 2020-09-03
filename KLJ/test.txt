@@ -1,0 +1,731 @@
+21632:X 01 Sep 17:35:47.167 # c->name : module
+21632:X 01 Sep 17:35:47.168 # c->name : get
+21632:X 01 Sep 17:35:47.168 # c->name : set
+21632:X 01 Sep 17:35:47.168 # c->name : setnx
+21632:X 01 Sep 17:35:47.168 # c->name : setex
+21632:X 01 Sep 17:35:47.168 # c->name : psetex
+21632:X 01 Sep 17:35:47.168 # c->name : append
+21632:X 01 Sep 17:35:47.168 # c->name : strlen
+21632:X 01 Sep 17:35:47.168 # c->name : del
+21632:X 01 Sep 17:35:47.168 # c->name : unlink
+21632:X 01 Sep 17:35:47.168 # c->name : exists
+21632:X 01 Sep 17:35:47.168 # c->name : setbit
+21632:X 01 Sep 17:35:47.168 # c->name : getbit
+21632:X 01 Sep 17:35:47.168 # c->name : bitfield
+21632:X 01 Sep 17:35:47.168 # c->name : setrange
+21632:X 01 Sep 17:35:47.168 # c->name : getrange
+21632:X 01 Sep 17:35:47.168 # c->name : substr
+21632:X 01 Sep 17:35:47.168 # c->name : incr
+21632:X 01 Sep 17:35:47.168 # c->name : decr
+21632:X 01 Sep 17:35:47.168 # c->name : mget
+21632:X 01 Sep 17:35:47.168 # c->name : rpush
+21632:X 01 Sep 17:35:47.168 # c->name : lpush
+21632:X 01 Sep 17:35:47.168 # c->name : rpushx
+21632:X 01 Sep 17:35:47.168 # c->name : lpushx
+21632:X 01 Sep 17:35:47.168 # c->name : linsert
+21632:X 01 Sep 17:35:47.168 # c->name : rpop
+21632:X 01 Sep 17:35:47.168 # c->name : lpop
+21632:X 01 Sep 17:35:47.168 # c->name : brpop
+21632:X 01 Sep 17:35:47.168 # c->name : brpoplpush
+21632:X 01 Sep 17:35:47.168 # c->name : blpop
+21632:X 01 Sep 17:35:47.168 # c->name : llen
+21632:X 01 Sep 17:35:47.168 # c->name : lindex
+21632:X 01 Sep 17:35:47.168 # c->name : lset
+21632:X 01 Sep 17:35:47.168 # c->name : lrange
+21632:X 01 Sep 17:35:47.168 # c->name : ltrim
+21632:X 01 Sep 17:35:47.168 # c->name : lrem
+21632:X 01 Sep 17:35:47.168 # c->name : rpoplpush
+21632:X 01 Sep 17:35:47.168 # c->name : sadd
+21632:X 01 Sep 17:35:47.168 # c->name : srem
+21632:X 01 Sep 17:35:47.168 # c->name : smove
+21632:X 01 Sep 17:35:47.168 # c->name : sismember
+21632:X 01 Sep 17:35:47.168 # c->name : scard
+21632:X 01 Sep 17:35:47.168 # c->name : spop
+21632:X 01 Sep 17:35:47.168 # c->name : srandmember
+21632:X 01 Sep 17:35:47.168 # c->name : sinter
+21632:X 01 Sep 17:35:47.168 # c->name : sinterstore
+21632:X 01 Sep 17:35:47.168 # c->name : sunion
+21632:X 01 Sep 17:35:47.168 # c->name : sunionstore
+21632:X 01 Sep 17:35:47.168 # c->name : sdiff
+21632:X 01 Sep 17:35:47.168 # c->name : sdiffstore
+21632:X 01 Sep 17:35:47.168 # c->name : smembers
+21632:X 01 Sep 17:35:47.168 # c->name : sscan
+21632:X 01 Sep 17:35:47.168 # c->name : zadd
+21632:X 01 Sep 17:35:47.168 # c->name : zincrby
+21632:X 01 Sep 17:35:47.168 # c->name : zrem
+21632:X 01 Sep 17:35:47.168 # c->name : zremrangebyscore
+21633:C 01 Sep 17:35:47.168 # c->name : module
+21632:X 01 Sep 17:35:47.168 # c->name : zremrangebyrank
+21632:X 01 Sep 17:35:47.168 # c->name : zremrangebylex
+21633:C 01 Sep 17:35:47.168 # c->name : get
+21632:X 01 Sep 17:35:47.168 # c->name : zunionstore
+21633:C 01 Sep 17:35:47.168 # c->name : set
+21632:X 01 Sep 17:35:47.168 # c->name : zinterstore
+21633:C 01 Sep 17:35:47.168 # c->name : setnx
+21632:X 01 Sep 17:35:47.168 # c->name : zrange
+21633:C 01 Sep 17:35:47.168 # c->name : setex
+21632:X 01 Sep 17:35:47.168 # c->name : zrangebyscore
+21632:X 01 Sep 17:35:47.168 # c->name : zrevrangebyscore
+21633:C 01 Sep 17:35:47.168 # c->name : psetex
+21632:X 01 Sep 17:35:47.168 # c->name : zrangebylex
+21633:C 01 Sep 17:35:47.168 # c->name : append
+21632:X 01 Sep 17:35:47.168 # c->name : zrevrangebylex
+21633:C 01 Sep 17:35:47.168 # c->name : strlen
+21632:X 01 Sep 17:35:47.168 # c->name : zcount
+21633:C 01 Sep 17:35:47.168 # c->name : del
+21632:X 01 Sep 17:35:47.168 # c->name : zlexcount
+21632:X 01 Sep 17:35:47.168 # c->name : zrevrange
+21633:C 01 Sep 17:35:47.168 # c->name : unlink
+21632:X 01 Sep 17:35:47.168 # c->name : zcard
+21633:C 01 Sep 17:35:47.168 # c->name : exists
+21632:X 01 Sep 17:35:47.168 # c->name : zscore
+21633:C 01 Sep 17:35:47.168 # c->name : setbit
+21632:X 01 Sep 17:35:47.168 # c->name : zrank
+21633:C 01 Sep 17:35:47.168 # c->name : getbit
+21632:X 01 Sep 17:35:47.168 # c->name : zrevrank
+21633:C 01 Sep 17:35:47.168 # c->name : bitfield
+21632:X 01 Sep 17:35:47.168 # c->name : zscan
+21633:C 01 Sep 17:35:47.168 # c->name : setrange
+21632:X 01 Sep 17:35:47.168 # c->name : hset
+21633:C 01 Sep 17:35:47.168 # c->name : getrange
+21632:X 01 Sep 17:35:47.168 # c->name : hsetnx
+21633:C 01 Sep 17:35:47.168 # c->name : substr
+21632:X 01 Sep 17:35:47.168 # c->name : hget
+21632:X 01 Sep 17:35:47.168 # c->name : hmset
+21633:C 01 Sep 17:35:47.168 # c->name : incr
+21632:X 01 Sep 17:35:47.168 # c->name : hmget
+21633:C 01 Sep 17:35:47.168 # c->name : decr
+21632:X 01 Sep 17:35:47.168 # c->name : hincrby
+21633:C 01 Sep 17:35:47.168 # c->name : mget
+21632:X 01 Sep 17:35:47.168 # c->name : hincrbyfloat
+21633:C 01 Sep 17:35:47.168 # c->name : rpush
+21632:X 01 Sep 17:35:47.168 # c->name : hdel
+21633:C 01 Sep 17:35:47.168 # c->name : lpush
+21632:X 01 Sep 17:35:47.168 # c->name : hlen
+21633:C 01 Sep 17:35:47.168 # c->name : rpushx
+21632:X 01 Sep 17:35:47.168 # c->name : hstrlen
+21633:C 01 Sep 17:35:47.168 # c->name : lpushx
+21632:X 01 Sep 17:35:47.168 # c->name : hkeys
+21633:C 01 Sep 17:35:47.168 # c->name : linsert
+21632:X 01 Sep 17:35:47.168 # c->name : hvals
+21633:C 01 Sep 17:35:47.168 # c->name : rpop
+21632:X 01 Sep 17:35:47.168 # c->name : hgetall
+21633:C 01 Sep 17:35:47.168 # c->name : lpop
+21632:X 01 Sep 17:35:47.168 # c->name : hexists
+21633:C 01 Sep 17:35:47.168 # c->name : brpop
+21632:X 01 Sep 17:35:47.168 # c->name : hscan
+21633:C 01 Sep 17:35:47.168 # c->name : brpoplpush
+21632:X 01 Sep 17:35:47.168 # c->name : incrby
+21633:C 01 Sep 17:35:47.168 # c->name : blpop
+21632:X 01 Sep 17:35:47.168 # c->name : decrby
+21633:C 01 Sep 17:35:47.168 # c->name : llen
+21632:X 01 Sep 17:35:47.168 # c->name : incrbyfloat
+21633:C 01 Sep 17:35:47.168 # c->name : lindex
+21632:X 01 Sep 17:35:47.169 # c->name : getset
+21633:C 01 Sep 17:35:47.169 # c->name : lset
+21632:X 01 Sep 17:35:47.169 # c->name : mset
+21632:X 01 Sep 17:35:47.169 # c->name : msetnx
+21633:C 01 Sep 17:35:47.169 # c->name : lrange
+21632:X 01 Sep 17:35:47.169 # c->name : randomkey
+21633:C 01 Sep 17:35:47.169 # c->name : ltrim
+21632:X 01 Sep 17:35:47.169 # c->name : select
+21633:C 01 Sep 17:35:47.169 # c->name : lrem
+21632:X 01 Sep 17:35:47.169 # c->name : swapdb
+21633:C 01 Sep 17:35:47.169 # c->name : rpoplpush
+21632:X 01 Sep 17:35:47.169 # c->name : move
+21633:C 01 Sep 17:35:47.169 # c->name : sadd
+21632:X 01 Sep 17:35:47.169 # c->name : rename
+21633:C 01 Sep 17:35:47.169 # c->name : srem
+21632:X 01 Sep 17:35:47.169 # c->name : renamenx
+21633:C 01 Sep 17:35:47.169 # c->name : smove
+21632:X 01 Sep 17:35:47.169 # c->name : expire
+21633:C 01 Sep 17:35:47.169 # c->name : sismember
+21632:X 01 Sep 17:35:47.169 # c->name : expireat
+21633:C 01 Sep 17:35:47.169 # c->name : scard
+21632:X 01 Sep 17:35:47.169 # c->name : pexpire
+21633:C 01 Sep 17:35:47.169 # c->name : spop
+21632:X 01 Sep 17:35:47.169 # c->name : pexpireat
+21633:C 01 Sep 17:35:47.169 # c->name : srandmember
+21632:X 01 Sep 17:35:47.169 # c->name : keys
+21633:C 01 Sep 17:35:47.169 # c->name : sinter
+21632:X 01 Sep 17:35:47.169 # c->name : scan
+21633:C 01 Sep 17:35:47.169 # c->name : sinterstore
+21632:X 01 Sep 17:35:47.169 # c->name : dbsize
+21633:C 01 Sep 17:35:47.169 # c->name : sunion
+21632:X 01 Sep 17:35:47.169 # c->name : auth
+21633:C 01 Sep 17:35:47.169 # c->name : sunionstore
+21632:X 01 Sep 17:35:47.169 # c->name : ping
+21633:C 01 Sep 17:35:47.169 # c->name : sdiff
+21632:X 01 Sep 17:35:47.169 # c->name : echo
+21633:C 01 Sep 17:35:47.169 # c->name : sdiffstore
+21632:X 01 Sep 17:35:47.169 # c->name : save
+21633:C 01 Sep 17:35:47.169 # c->name : smembers
+21632:X 01 Sep 17:35:47.169 # c->name : bgsave
+21632:X 01 Sep 17:35:47.169 # c->name : bgrewriteaof
+21633:C 01 Sep 17:35:47.169 # c->name : sscan
+21632:X 01 Sep 17:35:47.169 # c->name : shutdown
+21633:C 01 Sep 17:35:47.169 # c->name : zadd
+21632:X 01 Sep 17:35:47.169 # c->name : lastsave
+21633:C 01 Sep 17:35:47.169 # c->name : zincrby
+21632:X 01 Sep 17:35:47.169 # c->name : type
+21633:C 01 Sep 17:35:47.169 # c->name : zrem
+21632:X 01 Sep 17:35:47.169 # c->name : multi
+21633:C 01 Sep 17:35:47.169 # c->name : zremrangebyscore
+21632:X 01 Sep 17:35:47.169 # c->name : exec
+21633:C 01 Sep 17:35:47.169 # c->name : zremrangebyrank
+21632:X 01 Sep 17:35:47.169 # c->name : discard
+21633:C 01 Sep 17:35:47.169 # c->name : zremrangebylex
+21632:X 01 Sep 17:35:47.169 # c->name : sync
+21633:C 01 Sep 17:35:47.169 # c->name : zunionstore
+21632:X 01 Sep 17:35:47.169 # c->name : psync
+21633:C 01 Sep 17:35:47.169 # c->name : zinterstore
+21632:X 01 Sep 17:35:47.169 # c->name : replconf
+21633:C 01 Sep 17:35:47.169 # c->name : zrange
+21632:X 01 Sep 17:35:47.169 # c->name : flushdb
+21633:C 01 Sep 17:35:47.169 # c->name : zrangebyscore
+21632:X 01 Sep 17:35:47.169 # c->name : flushall
+21633:C 01 Sep 17:35:47.169 # c->name : zrevrangebyscore
+21632:X 01 Sep 17:35:47.169 # c->name : sort
+21632:X 01 Sep 17:35:47.169 # c->name : info
+21633:C 01 Sep 17:35:47.169 # c->name : zrangebylex
+21632:X 01 Sep 17:35:47.169 # c->name : monitor
+21633:C 01 Sep 17:35:47.169 # c->name : zrevrangebylex
+21632:X 01 Sep 17:35:47.169 # c->name : ttl
+21632:X 01 Sep 17:35:47.169 # c->name : touch
+21633:C 01 Sep 17:35:47.169 # c->name : zcount
+21632:X 01 Sep 17:35:47.169 # c->name : pttl
+21633:C 01 Sep 17:35:47.169 # c->name : zlexcount
+21632:X 01 Sep 17:35:47.169 # c->name : persist
+21633:C 01 Sep 17:35:47.169 # c->name : zrevrange
+21632:X 01 Sep 17:35:47.169 # c->name : slaveof
+21633:C 01 Sep 17:35:47.169 # c->name : zcard
+21632:X 01 Sep 17:35:47.169 # c->name : role
+21633:C 01 Sep 17:35:47.169 # c->name : zscore
+21632:X 01 Sep 17:35:47.169 # c->name : debug
+21633:C 01 Sep 17:35:47.169 # c->name : zrank
+21632:X 01 Sep 17:35:47.169 # c->name : config
+21633:C 01 Sep 17:35:47.169 # c->name : zrevrank
+21632:X 01 Sep 17:35:47.169 # c->name : subscribe
+21633:C 01 Sep 17:35:47.169 # c->name : zscan
+21632:X 01 Sep 17:35:47.169 # c->name : unsubscribe
+21633:C 01 Sep 17:35:47.169 # c->name : hset
+21632:X 01 Sep 17:35:47.169 # c->name : psubscribe
+21633:C 01 Sep 17:35:47.169 # c->name : hsetnx
+21632:X 01 Sep 17:35:47.169 # c->name : punsubscribe
+21632:X 01 Sep 17:35:47.169 # c->name : publish
+21633:C 01 Sep 17:35:47.169 # c->name : hget
+21632:X 01 Sep 17:35:47.169 # c->name : pubsub
+21633:C 01 Sep 17:35:47.169 # c->name : hmset
+21632:X 01 Sep 17:35:47.169 # c->name : watch
+21633:C 01 Sep 17:35:47.169 # c->name : hmget
+21632:X 01 Sep 17:35:47.169 # c->name : unwatch
+21633:C 01 Sep 17:35:47.169 # c->name : hincrby
+21632:X 01 Sep 17:35:47.169 # c->name : cluster
+21633:C 01 Sep 17:35:47.169 # c->name : hincrbyfloat
+21632:X 01 Sep 17:35:47.169 # c->name : restore
+21633:C 01 Sep 17:35:47.169 # c->name : hdel
+21632:X 01 Sep 17:35:47.169 # c->name : restore-asking
+21633:C 01 Sep 17:35:47.169 # c->name : hlen
+21632:X 01 Sep 17:35:47.169 # c->name : migrate
+21633:C 01 Sep 17:35:47.169 # c->name : hstrlen
+21632:X 01 Sep 17:35:47.169 # c->name : asking
+21633:C 01 Sep 17:35:47.169 # c->name : hkeys
+21632:X 01 Sep 17:35:47.169 # c->name : readonly
+21633:C 01 Sep 17:35:47.169 # c->name : hvals
+21632:X 01 Sep 17:35:47.169 # c->name : readwrite
+21633:C 01 Sep 17:35:47.169 # c->name : hgetall
+21632:X 01 Sep 17:35:47.169 # c->name : dump
+21633:C 01 Sep 17:35:47.169 # c->name : hexists
+21632:X 01 Sep 17:35:47.169 # c->name : object
+21633:C 01 Sep 17:35:47.169 # c->name : hscan
+21632:X 01 Sep 17:35:47.169 # c->name : memory
+21633:C 01 Sep 17:35:47.169 # c->name : incrby
+21632:X 01 Sep 17:35:47.169 # c->name : client
+21633:C 01 Sep 17:35:47.169 # c->name : decrby
+21632:X 01 Sep 17:35:47.169 # c->name : eval
+21633:C 01 Sep 17:35:47.169 # c->name : incrbyfloat
+21632:X 01 Sep 17:35:47.169 # c->name : evalsha
+21633:C 01 Sep 17:35:47.169 # c->name : getset
+21632:X 01 Sep 17:35:47.169 # c->name : slowlog
+21633:C 01 Sep 17:35:47.169 # c->name : mset
+21632:X 01 Sep 17:35:47.169 # c->name : script
+21633:C 01 Sep 17:35:47.169 # c->name : msetnx
+21632:X 01 Sep 17:35:47.169 # c->name : time
+21633:C 01 Sep 17:35:47.169 # c->name : randomkey
+21632:X 01 Sep 17:35:47.169 # c->name : bitop
+21633:C 01 Sep 17:35:47.169 # c->name : select
+21632:X 01 Sep 17:35:47.169 # c->name : bitcount
+21633:C 01 Sep 17:35:47.169 # c->name : swapdb
+21632:X 01 Sep 17:35:47.169 # c->name : bitpos
+21633:C 01 Sep 17:35:47.169 # c->name : move
+21632:X 01 Sep 17:35:47.169 # c->name : wait
+21633:C 01 Sep 17:35:47.169 # c->name : rename
+21632:X 01 Sep 17:35:47.169 # c->name : command
+21633:C 01 Sep 17:35:47.169 # c->name : renamenx
+21632:X 01 Sep 17:35:47.169 # c->name : geoadd
+21633:C 01 Sep 17:35:47.169 # c->name : expire
+21632:X 01 Sep 17:35:47.169 # c->name : georadius
+21633:C 01 Sep 17:35:47.169 # c->name : expireat
+21632:X 01 Sep 17:35:47.169 # c->name : georadius_ro
+21633:C 01 Sep 17:35:47.169 # c->name : pexpire
+21632:X 01 Sep 17:35:47.169 # c->name : georadiusbymember
+21633:C 01 Sep 17:35:47.169 # c->name : pexpireat
+21632:X 01 Sep 17:35:47.169 # c->name : georadiusbymember_ro
+21633:C 01 Sep 17:35:47.169 # c->name : keys
+21632:X 01 Sep 17:35:47.169 # c->name : geohash
+21633:C 01 Sep 17:35:47.169 # c->name : scan
+21632:X 01 Sep 17:35:47.169 # c->name : geopos
+21633:C 01 Sep 17:35:47.169 # c->name : dbsize
+21632:X 01 Sep 17:35:47.169 # c->name : geodist
+21633:C 01 Sep 17:35:47.169 # c->name : auth
+21632:X 01 Sep 17:35:47.169 # c->name : pfselftest
+21633:C 01 Sep 17:35:47.169 # c->name : ping
+21632:X 01 Sep 17:35:47.169 # c->name : pfadd
+21633:C 01 Sep 17:35:47.169 # c->name : echo
+21632:X 01 Sep 17:35:47.169 # c->name : pfcount
+21633:C 01 Sep 17:35:47.169 # c->name : save
+21632:X 01 Sep 17:35:47.169 # c->name : pfmerge
+21633:C 01 Sep 17:35:47.169 # c->name : bgsave
+21632:X 01 Sep 17:35:47.169 # c->name : pfdebug
+21633:C 01 Sep 17:35:47.169 # c->name : bgrewriteaof
+21632:X 01 Sep 17:35:47.169 # c->name : post
+21633:C 01 Sep 17:35:47.169 # c->name : shutdown
+21632:X 01 Sep 17:35:47.169 # c->name : host:
+21633:C 01 Sep 17:35:47.170 # c->name : lastsave
+21632:X 01 Sep 17:35:47.170 # c->name : latency
+21633:C 01 Sep 17:35:47.170 # c->name : type
+21632:X 01 Sep 17:35:47.170 # c->name : switch
+21633:C 01 Sep 17:35:47.170 # c->name : multi
+21632:X 01 Sep 17:35:47.170 # c->name : synchronous
+21633:C 01 Sep 17:35:47.170 # c->name : exec
+21632:X 01 Sep 17:35:47.170 # c->name : partialsync
+21633:C 01 Sep 17:35:47.170 # c->name : discard
+21633:C 01 Sep 17:35:47.170 # c->name : sync
+21633:C 01 Sep 17:35:47.170 # c->name : psync
+21633:C 01 Sep 17:35:47.170 # c->name : replconf
+21633:C 01 Sep 17:35:47.170 # c->name : flushdb
+21633:C 01 Sep 17:35:47.170 # c->name : flushall
+21633:C 01 Sep 17:35:47.170 # c->name : sort
+21633:C 01 Sep 17:35:47.170 # c->name : info
+21633:C 01 Sep 17:35:47.170 # c->name : monitor
+21633:C 01 Sep 17:35:47.170 # c->name : ttl
+21633:C 01 Sep 17:35:47.170 # c->name : touch
+21633:C 01 Sep 17:35:47.170 # c->name : pttl
+21633:C 01 Sep 17:35:47.170 # c->name : persist
+21633:C 01 Sep 17:35:47.170 # c->name : slaveof
+21633:C 01 Sep 17:35:47.170 # c->name : role
+21633:C 01 Sep 17:35:47.170 # c->name : debug
+21633:C 01 Sep 17:35:47.170 # c->name : config
+21633:C 01 Sep 17:35:47.170 # c->name : subscribe
+21633:C 01 Sep 17:35:47.170 # c->name : unsubscribe
+21633:C 01 Sep 17:35:47.170 # c->name : psubscribe
+21633:C 01 Sep 17:35:47.170 # c->name : punsubscribe
+21633:C 01 Sep 17:35:47.170 # c->name : publish
+21633:C 01 Sep 17:35:47.170 # c->name : pubsub
+21633:C 01 Sep 17:35:47.170 # c->name : watch
+21633:C 01 Sep 17:35:47.170 # c->name : unwatch
+21633:C 01 Sep 17:35:47.170 # c->name : cluster
+21633:C 01 Sep 17:35:47.170 # c->name : restore
+21633:C 01 Sep 17:35:47.170 # c->name : restore-asking
+21633:C 01 Sep 17:35:47.170 # c->name : migrate
+21633:C 01 Sep 17:35:47.170 # c->name : asking
+21633:C 01 Sep 17:35:47.170 # c->name : readonly
+21633:C 01 Sep 17:35:47.170 # c->name : readwrite
+21633:C 01 Sep 17:35:47.170 # c->name : dump
+21633:C 01 Sep 17:35:47.170 # c->name : object
+21633:C 01 Sep 17:35:47.170 # c->name : memory
+21633:C 01 Sep 17:35:47.170 # c->name : client
+21633:C 01 Sep 17:35:47.170 # c->name : eval
+21632:X 01 Sep 17:35:47.170 # USING NOT NVM
+21633:C 01 Sep 17:35:47.170 # c->name : evalsha
+21632:X 01 Sep 17:35:47.170 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+21633:C 01 Sep 17:35:47.170 # c->name : slowlog
+21632:X 01 Sep 17:35:47.170 # Redis version=4.0.0, bits=64, commit=a771c909, modified=1, pid=21632, just started
+21633:C 01 Sep 17:35:47.170 # c->name : script
+21632:X 01 Sep 17:35:47.170 # Configuration loaded
+21633:C 01 Sep 17:35:47.170 # c->name : time
+21633:C 01 Sep 17:35:47.170 # c->name : bitop
+21633:C 01 Sep 17:35:47.170 # c->name : bitcount
+21633:C 01 Sep 17:35:47.170 # c->name : bitpos
+21633:C 01 Sep 17:35:47.170 # c->name : wait
+21633:C 01 Sep 17:35:47.170 # c->name : command
+21633:C 01 Sep 17:35:47.170 # c->name : geoadd
+21633:C 01 Sep 17:35:47.170 # c->name : georadius
+21633:C 01 Sep 17:35:47.170 # c->name : georadius_ro
+21633:C 01 Sep 17:35:47.170 # c->name : georadiusbymember
+21633:C 01 Sep 17:35:47.170 # c->name : georadiusbymember_ro
+21633:C 01 Sep 17:35:47.170 # c->name : geohash
+21633:C 01 Sep 17:35:47.170 # c->name : geopos
+21633:C 01 Sep 17:35:47.170 # c->name : geodist
+21633:C 01 Sep 17:35:47.170 # c->name : pfselftest
+21633:C 01 Sep 17:35:47.170 # c->name : pfadd
+21633:C 01 Sep 17:35:47.170 # c->name : pfcount
+21633:C 01 Sep 17:35:47.170 # c->name : pfmerge
+21633:C 01 Sep 17:35:47.170 # c->name : pfdebug
+21633:C 01 Sep 17:35:47.170 # c->name : post
+21633:C 01 Sep 17:35:47.170 # c->name : host:
+21633:C 01 Sep 17:35:47.170 # c->name : latency
+21633:C 01 Sep 17:35:47.170 # c->name : switch
+21633:C 01 Sep 17:35:47.170 # c->name : synchronous
+21633:C 01 Sep 17:35:47.170 # c->name : partialsync
+21632:X 01 Sep 17:35:47.172 # server.port 3100 , server.ipfd[j] : 6
+21632:X 01 Sep 17:35:47.172 # server.port 3100 , server.ipfd[j] : 7
+21632:X 01 Sep 17:35:47.172 * Running mode=sentinel, port=3100.
+21632:X 01 Sep 17:35:47.172 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+21632:X 01 Sep 17:35:47.172 # Sentinel ID is 1a490bb5a42b291a975b51f7f02b7c21c2e90737
+21632:X 01 Sep 17:35:47.172 # +monitor master mymaster 127.0.0.1 3000 quorum 1
+21633:C 01 Sep 17:35:47.172 # USING NOT NVM
+21633:C 01 Sep 17:35:47.172 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+21633:C 01 Sep 17:35:47.172 # Redis version=4.0.0, bits=64, commit=a771c909, modified=1, pid=21633, just started
+21633:C 01 Sep 17:35:47.172 # Configuration loaded
+21633:M 01 Sep 17:35:47.174 # server.port 3000 , server.ipfd[j] : 6
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.0 (a771c909/1) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3000
+ |    `-._   `._    /     _.-'    |     PID: 21633
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+21633:M 01 Sep 17:35:47.175 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+21633:M 01 Sep 17:35:47.175 # Server initialized
+21633:M 01 Sep 17:35:47.175 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+21633:M 01 Sep 17:35:47.175 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+21633:M 01 Sep 17:35:47.175 * Ready to accept connections
+21633:M 01 Sep 17:35:48.254 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$21
+sentinel-1a490bb5-cmd
+*1
+$4
+PING
+*1
+$4
+INFO
+
+21633:M 01 Sep 17:35:48.254 # c->argv[0]->ptr = CLIENT
+21633:M 01 Sep 17:35:48.254 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:48.254 # c->argv[0]->ptr = INFO
+21633:M 01 Sep 17:35:48.254 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$24
+sentinel-1a490bb5-pubsub
+*2
+$9
+SUBSCRIBE
+$18
+__sentinel__:hello
+
+21633:M 01 Sep 17:35:48.254 # c->argv[0]->ptr = CLIENT
+21633:M 01 Sep 17:35:48.254 # c->argv[0]->ptr = SUBSCRIBE
+21633:M 01 Sep 17:35:49.224 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:49.225 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:35:49.279 # After: *1
+$4
+PING
+IBE
+$18
+__sentinel__:hello
+
+21633:M 01 Sep 17:35:49.279 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:50.349 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:35:50.349 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:50.833 # After: PING
+
+21633:M 01 Sep 17:35:50.833 # aux : PING
+21633:M 01 Sep 17:35:50.833 # argv : PING
+21633:M 01 Sep 17:35:50.833 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:50.833 # After: REPLCONF listening-port 3001
+
+21633:M 01 Sep 17:35:50.833 # aux : REPLCONF listening-port 3001
+21633:M 01 Sep 17:35:50.833 # argv : REPLCONF
+21633:M 01 Sep 17:35:50.833 # c->argv[0]->ptr = REPLCONF
+21633:M 01 Sep 17:35:50.833 # After: REPLCONF capa eof capa psync2
+
+21633:M 01 Sep 17:35:50.833 # aux : REPLCONF capa eof capa psync2
+21633:M 01 Sep 17:35:50.833 # argv : REPLCONF
+21633:M 01 Sep 17:35:50.833 # c->argv[0]->ptr = REPLCONF
+21633:M 01 Sep 17:35:50.833 # After: PSYNC ? -1
+a eof capa psync2
+
+21633:M 01 Sep 17:35:50.833 # aux : PSYNC ? -1
+21633:M 01 Sep 17:35:50.833 # argv : PSYNC
+21633:M 01 Sep 17:35:50.833 # c->argv[0]->ptr = PSYNC
+21633:M 01 Sep 17:35:50.833 * Slave 127.0.0.1:3001 asks for synchronization
+21633:M 01 Sep 17:35:50.833 * Full resync requested by slave 127.0.0.1:3001
+21633:M 01 Sep 17:35:50.834 * Delay next BGSAVE for diskless SYNC
+21633:M 01 Sep 17:35:51.242 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:51.243 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:35:51.413 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:35:51.413 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:52.459 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:35:52.459 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:53.326 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1
+21633:M 01 Sep 17:35:53.326 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:35:53.467 # After: *1
+$4
+PING
+H
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:53.467 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:54.488 # After: *1
+$4
+PING
+975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:54.488 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:55.403 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:55.403 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:35:55.528 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:35:55.528 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:56.196 * Starting BGSAVE for SYNC with target: slaves sockets
+21633:M 01 Sep 17:35:56.196 * Background RDB transfer started by pid 21687
+21687:C 01 Sep 17:35:56.197 * RDB: 0 MB of memory used by copy-on-write
+21633:M 01 Sep 17:35:56.296 * Background RDB transfer terminated with success
+21633:M 01 Sep 17:35:56.296 # Slave 127.0.0.1:3001 correctly received the streamed RDB file.
+21633:M 01 Sep 17:35:56.296 * Streamed RDB transfer with slave 127.0.0.1:3001 succeeded (socket). Waiting for REPLCONF ACK from slave to enable streaming
+21633:M 01 Sep 17:35:56.624 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:35:56.624 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:56.848 # After: *3
+$8
+REPLCONF
+$3
+ACK
+$3
+419
+37,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:56.848 # c->argv[0]->ptr = REPLCONF
+21633:M 01 Sep 17:35:56.848 * Synchronization with slave 127.0.0.1:3001 succeeded
+21633:M 01 Sep 17:35:57.417 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:57.417 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:35:57.672 # After: *1
+$4
+PING
+NF
+$3
+ACK
+$3
+419
+
+21633:M 01 Sep 17:35:57.672 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:57.850 # After: *3
+$8
+REPLCONF
+$3
+ACK
+$3
+588
+
+21633:M 01 Sep 17:35:57.850 # c->argv[0]->ptr = REPLCONF
+21633:M 01 Sep 17:35:58.290 # After: *1
+$4
+INFO
+
+21633:M 01 Sep 17:35:58.290 # c->argv[0]->ptr = INFO
+21632:X 01 Sep 17:35:58.291 * +slave slave 127.0.0.1:3001 127.0.0.1 3001 @ mymaster 127.0.0.1 3000
+21633:M 01 Sep 17:35:58.451 # After: *1
+$6
+SWITCH
+
+21633:M 01 Sep 17:35:58.451 # c->argv[0]->ptr = SWITCH
+21633:M 01 Sep 17:35:58.451 # 222222
+21633:M 01 Sep 17:35:58.451 # SYNCHRONOUS
+21633:M 01 Sep 17:35:58.451 # 55555
+21633:M 01 Sep 17:35:58.451 # 9999999
+21633:M 01 Sep 17:35:58.451 # c->buf = *1
+$6
+SWITCH
+
+redis_version:4.0.0
+redis_git_sha1:a771c909
+redis_git_dirty:1
+redis_build_id:3b5e9f058be62f2e
+redis_mode:standalone
+os:Linux 5.3.0-51-generic x86_64
+arch_bits:64
+multiplexing_api:epoll
+atomicvar_api:atomic-builtin
+gcc_version:7.5.0
+process_id:21633
+run_id:788be00f25c38370f0aa1388e04dc15890e220fb
+tcp_port:3000
+uptime_in_seconds:11
+uptime_in_days:0
+hz:10
+lru_clock:5113838
+executable:/home/ljkim/redis_switch_master/pmem-redis-test/src/redis-server
+config_file:/home/ljkim/redis_switch_master/pmem-redis-test/KLJ/3000.conf
+
+# Clients
+connected_clients:2
+client_longest_output_list:0
+client_biggest_input_buf:0
+blocked_clients:0
+
+# Memory
+used_memory:2972024
+used_memory_human:2.83M
+used_memory_rss:5455872
+used_memory_rss_human:5.20M
+used_memory_peak:2972024
+used_memory_peak_human:2.83M
+used_memory_peak_perc:100.01%
+used_memory_overhead:1902522
+used_memory_startup:770600
+used_memory_dataset:1069502
+used_memory_dataset_perc:48.58%
+total_system_memory:26166
+21633:M 01 Sep 17:35:58.451 # 88888888
+21633:M 01 Sep 17:35:58.552 # After: $158
+REDIS0008ú	redis-ver4.0.0ú
+redis-bitsÀ@úctimeÂîN_úused-memÂ¨—.
+21633:M 01 Sep 17:35:58.552 # aux : $158
+21633:M 01 Sep 17:35:58.552 # argv : $158
+21633:M 01 Sep 17:35:58.552 # c->argv[0]->ptr = $158
+21633:M 01 Sep 17:35:58.552 # aux : REDIS0008ú	redis-ver4.0.0ú
+21633:M 01 Sep 17:35:58.552 # argv : REDIS0008ú
+21633:M 01 Sep 17:35:58.552 # c->argv[0]->ptr = REDIS0008ú
+21633:M 01 Sep 17:35:58.713 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:35:58.713 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:35:59.426 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:35:59.426 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:35:59.783 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:35:59.783 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:36:00.836 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:36:00.836 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:36:01.465 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:36:01.465 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:36:01.908 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:36:01.908 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:36:01.960 # After: edis-bitsÀ@úctimeÂîN_úused-memÂ¨—.
+21633:M 01 Sep 17:36:01.960 # Connection with slave 127.0.0.1:3001 lost.
+21633:M 01 Sep 17:36:02.950 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:36:02.950 # c->argv[0]->ptr = PING
+21633:M 01 Sep 17:36:03.473 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21633:M 01 Sep 17:36:03.474 # c->argv[0]->ptr = PUBLISH
+21633:M 01 Sep 17:36:03.980 # After: *1
+$4
+PING
+
+21633:M 01 Sep 17:36:03.980 # c->argv[0]->ptr = PING
+21632:signal-handler (1598949364) Received SIGINT scheduling shutdown...21633
+:signal-handler (1598949364) Received SIGINT scheduling shutdown...
+21632:X 01 Sep 17:36:04.608 # User requested shutdown...
+21632:X 01 Sep 17:36:04.608 # Sentinel is now ready to exit, bye bye...
+21633:M 01 Sep 17:36:04.609 # After: 
+21633:M 01 Sep 17:36:04.609 # After: 
+21633:M 01 Sep 17:36:04.617 # User requested shutdown...
+21633:M 01 Sep 17:36:04.617 * Removing the pid file.
+21633:M 01 Sep 17:36:04.617 # Redis is now ready to exit, bye bye...

@@ -208,6 +208,9 @@ typedef struct sentinelRedisInstance {
 #ifdef __KLJ__
 	int memory_priority;
 	int new_master;
+	int temp;
+	int bool_switch_ready;
+	int bool_connect_master;
 #endif	
 	
 	mstime_t slave_reconf_sent_time; /* Time at which we sent SLAVE OF <new> */
@@ -2086,6 +2089,13 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
 #ifdef __KLJ__
         if (sdslen(l) >= 16 && !memcmp(l,"memory_priority:",16))
                 ri->memory_priority = atoi(l+16);
+
+        if (sdslen(l) >= 18 && !memcmp(l,"bool_switch_ready:",18)){
+			ri->bool_switch_ready = atoi(l+18);
+		}
+		if (sdslen(l) >= 20 && !memcmp(l,"bool_connect_master:",20)){
+			ri->bool_connect_master = atoi(l+20);
+		}
 #endif
 		
 		if (role == SRI_SLAVE) {
@@ -2159,11 +2169,12 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
          * considered to be unreachable by Sentinel, so eventually
          * a failover will be triggered. */
     }
+
+	
 	if ((ri->flags & SRI_SLAVE) && role == SRI_MASTER) {
 
         /* If this is a promoted slave we can change state to the
          * failover state machine. */
-
 
         if ((ri->flags & SRI_PROMOTED) &&
             (ri->master->flags & SRI_FAILOVER_IN_PROGRESS) &&
@@ -2176,7 +2187,8 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
              * election to perform this failover. This will force the other
              * Sentinels to update their config (assuming there is not
              * a newer one already available). */
-            ri->master->config_epoch = ri->master->failover_epoch;
+            
+			ri->master->config_epoch = ri->master->failover_epoch;
             ri->master->failover_state = SENTINEL_FAILOVER_STATE_RECONF_SLAVES;
             ri->master->failover_state_change_time = mstime();
             sentinelFlushConfig();
@@ -4078,7 +4090,8 @@ void sentinelFailoverSendSlaveOfNoOne(sentinelRedisInstance *ri) {
 void sentinelFailoverWaitPromotion(sentinelRedisInstance *ri) {
     /* Just handle the timeout. Switching to the next state is handled
      * by the function parsing the INFO command of the promoted slave. */
-    if (mstime() - ri->failover_state_change_time > ri->failover_timeout) {
+    
+	if (mstime() - ri->failover_state_change_time > ri->failover_timeout) {
         sentinelEvent(LL_WARNING,"-failover-abort-slave-timeout",ri,"%@");
         sentinelAbortFailover(ri);
     }
@@ -4315,23 +4328,31 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 
     /* There are a number of things we need to perform against every master. */
     di = dictGetIterator(instances);
-    while((de = dictNext(di)) != NULL) {
+	
+	while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
-		if(ri->master != NULL && ri->master->new_master != 0 && ri->master->new_master !=1)
-				ri->master->new_master=0;
 #ifdef __KLJ__
-		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && !(ri->master->new_master)){
-			ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
-			ri->master->promoted_slave = ri;
-			//ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;
-#if 1
-			int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"MULTI");
-			if(retval == C_ERR) return;
-#endif
-			ri->master->link->pending_commands++;
-			ri->master->failover_state = SENTINEL_FAILOVER_STATE_WAIT_PROMOTION;
-			ri->master->new_master = 1;
-			ri->flags |= SRI_PROMOTED;
+		if(ri->master != NULL && ri->master->new_master !=1 && ri->temp != 1){
+			ri->master->new_master=0;
+			ri->temp = 0;
+		}
+	
+		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && !(ri->master->new_master) && ri->bool_connect_master){
+			if(ri->temp != 1){
+				int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"SWITCH");
+				ri->temp = 1;
+				if(retval == C_ERR) return;
+			}
+
+			if(ri->master->bool_switch_ready){
+				ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
+				ri->master->promoted_slave = ri;
+				ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;
+
+				ri->master->link->pending_commands++;
+				ri->master->new_master = 1;
+				ri->flags |= SRI_PROMOTED;
+			}
 		}
 #endif
 		/*new_master가 생겼다면 플래그설정해놓음 */	

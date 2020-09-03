@@ -1,15 +1,198 @@
-15400:C 14 Aug 17:06:17.597 # USING NOT NVM
-15400:C 14 Aug 17:06:17.597 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-15400:C 14 Aug 17:06:17.597 # Redis version=4.0.0, bits=64, commit=b302ce32, modified=1, pid=15400, just started
-15400:C 14 Aug 17:06:17.597 # Configuration loaded
-15400:M 14 Aug 17:06:17.599 # server.ipfd[j] : 6
+21640:C 01 Sep 17:35:50.825 # c->name : module
+21640:C 01 Sep 17:35:50.825 # c->name : get
+21640:C 01 Sep 17:35:50.825 # c->name : set
+21640:C 01 Sep 17:35:50.825 # c->name : setnx
+21640:C 01 Sep 17:35:50.825 # c->name : setex
+21640:C 01 Sep 17:35:50.825 # c->name : psetex
+21640:C 01 Sep 17:35:50.825 # c->name : append
+21640:C 01 Sep 17:35:50.825 # c->name : strlen
+21640:C 01 Sep 17:35:50.825 # c->name : del
+21640:C 01 Sep 17:35:50.825 # c->name : unlink
+21640:C 01 Sep 17:35:50.825 # c->name : exists
+21640:C 01 Sep 17:35:50.825 # c->name : setbit
+21640:C 01 Sep 17:35:50.825 # c->name : getbit
+21640:C 01 Sep 17:35:50.825 # c->name : bitfield
+21640:C 01 Sep 17:35:50.825 # c->name : setrange
+21640:C 01 Sep 17:35:50.825 # c->name : getrange
+21640:C 01 Sep 17:35:50.825 # c->name : substr
+21640:C 01 Sep 17:35:50.825 # c->name : incr
+21640:C 01 Sep 17:35:50.825 # c->name : decr
+21640:C 01 Sep 17:35:50.825 # c->name : mget
+21640:C 01 Sep 17:35:50.825 # c->name : rpush
+21640:C 01 Sep 17:35:50.825 # c->name : lpush
+21640:C 01 Sep 17:35:50.825 # c->name : rpushx
+21640:C 01 Sep 17:35:50.825 # c->name : lpushx
+21640:C 01 Sep 17:35:50.825 # c->name : linsert
+21640:C 01 Sep 17:35:50.825 # c->name : rpop
+21640:C 01 Sep 17:35:50.825 # c->name : lpop
+21640:C 01 Sep 17:35:50.825 # c->name : brpop
+21640:C 01 Sep 17:35:50.825 # c->name : brpoplpush
+21640:C 01 Sep 17:35:50.825 # c->name : blpop
+21640:C 01 Sep 17:35:50.825 # c->name : llen
+21640:C 01 Sep 17:35:50.825 # c->name : lindex
+21640:C 01 Sep 17:35:50.825 # c->name : lset
+21640:C 01 Sep 17:35:50.825 # c->name : lrange
+21640:C 01 Sep 17:35:50.825 # c->name : ltrim
+21640:C 01 Sep 17:35:50.825 # c->name : lrem
+21640:C 01 Sep 17:35:50.825 # c->name : rpoplpush
+21640:C 01 Sep 17:35:50.825 # c->name : sadd
+21640:C 01 Sep 17:35:50.825 # c->name : srem
+21640:C 01 Sep 17:35:50.825 # c->name : smove
+21640:C 01 Sep 17:35:50.825 # c->name : sismember
+21640:C 01 Sep 17:35:50.825 # c->name : scard
+21640:C 01 Sep 17:35:50.825 # c->name : spop
+21640:C 01 Sep 17:35:50.825 # c->name : srandmember
+21640:C 01 Sep 17:35:50.825 # c->name : sinter
+21640:C 01 Sep 17:35:50.825 # c->name : sinterstore
+21640:C 01 Sep 17:35:50.825 # c->name : sunion
+21640:C 01 Sep 17:35:50.825 # c->name : sunionstore
+21640:C 01 Sep 17:35:50.825 # c->name : sdiff
+21640:C 01 Sep 17:35:50.825 # c->name : sdiffstore
+21640:C 01 Sep 17:35:50.825 # c->name : smembers
+21640:C 01 Sep 17:35:50.825 # c->name : sscan
+21640:C 01 Sep 17:35:50.825 # c->name : zadd
+21640:C 01 Sep 17:35:50.825 # c->name : zincrby
+21640:C 01 Sep 17:35:50.825 # c->name : zrem
+21640:C 01 Sep 17:35:50.825 # c->name : zremrangebyscore
+21640:C 01 Sep 17:35:50.825 # c->name : zremrangebyrank
+21640:C 01 Sep 17:35:50.825 # c->name : zremrangebylex
+21640:C 01 Sep 17:35:50.825 # c->name : zunionstore
+21640:C 01 Sep 17:35:50.825 # c->name : zinterstore
+21640:C 01 Sep 17:35:50.825 # c->name : zrange
+21640:C 01 Sep 17:35:50.825 # c->name : zrangebyscore
+21640:C 01 Sep 17:35:50.826 # c->name : zrevrangebyscore
+21640:C 01 Sep 17:35:50.826 # c->name : zrangebylex
+21640:C 01 Sep 17:35:50.826 # c->name : zrevrangebylex
+21640:C 01 Sep 17:35:50.826 # c->name : zcount
+21640:C 01 Sep 17:35:50.826 # c->name : zlexcount
+21640:C 01 Sep 17:35:50.826 # c->name : zrevrange
+21640:C 01 Sep 17:35:50.826 # c->name : zcard
+21640:C 01 Sep 17:35:50.826 # c->name : zscore
+21640:C 01 Sep 17:35:50.826 # c->name : zrank
+21640:C 01 Sep 17:35:50.826 # c->name : zrevrank
+21640:C 01 Sep 17:35:50.826 # c->name : zscan
+21640:C 01 Sep 17:35:50.826 # c->name : hset
+21640:C 01 Sep 17:35:50.826 # c->name : hsetnx
+21640:C 01 Sep 17:35:50.826 # c->name : hget
+21640:C 01 Sep 17:35:50.826 # c->name : hmset
+21640:C 01 Sep 17:35:50.826 # c->name : hmget
+21640:C 01 Sep 17:35:50.826 # c->name : hincrby
+21640:C 01 Sep 17:35:50.826 # c->name : hincrbyfloat
+21640:C 01 Sep 17:35:50.826 # c->name : hdel
+21640:C 01 Sep 17:35:50.826 # c->name : hlen
+21640:C 01 Sep 17:35:50.826 # c->name : hstrlen
+21640:C 01 Sep 17:35:50.826 # c->name : hkeys
+21640:C 01 Sep 17:35:50.826 # c->name : hvals
+21640:C 01 Sep 17:35:50.826 # c->name : hgetall
+21640:C 01 Sep 17:35:50.826 # c->name : hexists
+21640:C 01 Sep 17:35:50.826 # c->name : hscan
+21640:C 01 Sep 17:35:50.826 # c->name : incrby
+21640:C 01 Sep 17:35:50.826 # c->name : decrby
+21640:C 01 Sep 17:35:50.826 # c->name : incrbyfloat
+21640:C 01 Sep 17:35:50.826 # c->name : getset
+21640:C 01 Sep 17:35:50.826 # c->name : mset
+21640:C 01 Sep 17:35:50.826 # c->name : msetnx
+21640:C 01 Sep 17:35:50.826 # c->name : randomkey
+21640:C 01 Sep 17:35:50.826 # c->name : select
+21640:C 01 Sep 17:35:50.826 # c->name : swapdb
+21640:C 01 Sep 17:35:50.826 # c->name : move
+21640:C 01 Sep 17:35:50.826 # c->name : rename
+21640:C 01 Sep 17:35:50.826 # c->name : renamenx
+21640:C 01 Sep 17:35:50.826 # c->name : expire
+21640:C 01 Sep 17:35:50.826 # c->name : expireat
+21640:C 01 Sep 17:35:50.826 # c->name : pexpire
+21640:C 01 Sep 17:35:50.826 # c->name : pexpireat
+21640:C 01 Sep 17:35:50.826 # c->name : keys
+21640:C 01 Sep 17:35:50.826 # c->name : scan
+21640:C 01 Sep 17:35:50.826 # c->name : dbsize
+21640:C 01 Sep 17:35:50.826 # c->name : auth
+21640:C 01 Sep 17:35:50.826 # c->name : ping
+21640:C 01 Sep 17:35:50.826 # c->name : echo
+21640:C 01 Sep 17:35:50.826 # c->name : save
+21640:C 01 Sep 17:35:50.826 # c->name : bgsave
+21640:C 01 Sep 17:35:50.826 # c->name : bgrewriteaof
+21640:C 01 Sep 17:35:50.826 # c->name : shutdown
+21640:C 01 Sep 17:35:50.826 # c->name : lastsave
+21640:C 01 Sep 17:35:50.826 # c->name : type
+21640:C 01 Sep 17:35:50.826 # c->name : multi
+21640:C 01 Sep 17:35:50.826 # c->name : exec
+21640:C 01 Sep 17:35:50.826 # c->name : discard
+21640:C 01 Sep 17:35:50.826 # c->name : sync
+21640:C 01 Sep 17:35:50.826 # c->name : psync
+21640:C 01 Sep 17:35:50.826 # c->name : replconf
+21640:C 01 Sep 17:35:50.826 # c->name : flushdb
+21640:C 01 Sep 17:35:50.826 # c->name : flushall
+21640:C 01 Sep 17:35:50.826 # c->name : sort
+21640:C 01 Sep 17:35:50.826 # c->name : info
+21640:C 01 Sep 17:35:50.826 # c->name : monitor
+21640:C 01 Sep 17:35:50.826 # c->name : ttl
+21640:C 01 Sep 17:35:50.826 # c->name : touch
+21640:C 01 Sep 17:35:50.826 # c->name : pttl
+21640:C 01 Sep 17:35:50.826 # c->name : persist
+21640:C 01 Sep 17:35:50.826 # c->name : slaveof
+21640:C 01 Sep 17:35:50.826 # c->name : role
+21640:C 01 Sep 17:35:50.826 # c->name : debug
+21640:C 01 Sep 17:35:50.826 # c->name : config
+21640:C 01 Sep 17:35:50.826 # c->name : subscribe
+21640:C 01 Sep 17:35:50.826 # c->name : unsubscribe
+21640:C 01 Sep 17:35:50.826 # c->name : psubscribe
+21640:C 01 Sep 17:35:50.826 # c->name : punsubscribe
+21640:C 01 Sep 17:35:50.826 # c->name : publish
+21640:C 01 Sep 17:35:50.826 # c->name : pubsub
+21640:C 01 Sep 17:35:50.826 # c->name : watch
+21640:C 01 Sep 17:35:50.826 # c->name : unwatch
+21640:C 01 Sep 17:35:50.826 # c->name : cluster
+21640:C 01 Sep 17:35:50.826 # c->name : restore
+21640:C 01 Sep 17:35:50.826 # c->name : restore-asking
+21640:C 01 Sep 17:35:50.826 # c->name : migrate
+21640:C 01 Sep 17:35:50.826 # c->name : asking
+21640:C 01 Sep 17:35:50.826 # c->name : readonly
+21640:C 01 Sep 17:35:50.827 # c->name : readwrite
+21640:C 01 Sep 17:35:50.827 # c->name : dump
+21640:C 01 Sep 17:35:50.827 # c->name : object
+21640:C 01 Sep 17:35:50.827 # c->name : memory
+21640:C 01 Sep 17:35:50.827 # c->name : client
+21640:C 01 Sep 17:35:50.827 # c->name : eval
+21640:C 01 Sep 17:35:50.827 # c->name : evalsha
+21640:C 01 Sep 17:35:50.827 # c->name : slowlog
+21640:C 01 Sep 17:35:50.827 # c->name : script
+21640:C 01 Sep 17:35:50.827 # c->name : time
+21640:C 01 Sep 17:35:50.827 # c->name : bitop
+21640:C 01 Sep 17:35:50.827 # c->name : bitcount
+21640:C 01 Sep 17:35:50.827 # c->name : bitpos
+21640:C 01 Sep 17:35:50.827 # c->name : wait
+21640:C 01 Sep 17:35:50.827 # c->name : command
+21640:C 01 Sep 17:35:50.827 # c->name : geoadd
+21640:C 01 Sep 17:35:50.827 # c->name : georadius
+21640:C 01 Sep 17:35:50.827 # c->name : georadius_ro
+21640:C 01 Sep 17:35:50.827 # c->name : georadiusbymember
+21640:C 01 Sep 17:35:50.827 # c->name : georadiusbymember_ro
+21640:C 01 Sep 17:35:50.827 # c->name : geohash
+21640:C 01 Sep 17:35:50.827 # c->name : geopos
+21640:C 01 Sep 17:35:50.827 # c->name : geodist
+21640:C 01 Sep 17:35:50.827 # c->name : pfselftest
+21640:C 01 Sep 17:35:50.827 # c->name : pfadd
+21640:C 01 Sep 17:35:50.827 # c->name : pfcount
+21640:C 01 Sep 17:35:50.827 # c->name : pfmerge
+21640:C 01 Sep 17:35:50.827 # c->name : pfdebug
+21640:C 01 Sep 17:35:50.827 # c->name : post
+21640:C 01 Sep 17:35:50.827 # c->name : host:
+21640:C 01 Sep 17:35:50.827 # c->name : latency
+21640:C 01 Sep 17:35:50.827 # c->name : switch
+21640:C 01 Sep 17:35:50.827 # c->name : synchronous
+21640:C 01 Sep 17:35:50.827 # c->name : partialsync
+21640:C 01 Sep 17:35:50.829 # USING NOT NVM
+21640:C 01 Sep 17:35:50.829 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+21640:C 01 Sep 17:35:50.829 # Redis version=4.0.0, bits=64, commit=a771c909, modified=1, pid=21640, just started
+21640:C 01 Sep 17:35:50.829 # Configuration loaded
+21640:S 01 Sep 17:35:50.831 # server.port 3001 , server.ipfd[j] : 6
                 _._                                                  
            _.-``__ ''-._                                             
-      _.-``    `.  `_.  ''-._           Redis 4.0.0 (b302ce32/1) 64 bit
+      _.-``    `.  `_.  ''-._           Redis 4.0.0 (a771c909/1) 64 bit
   .-`` .-```.  ```\/    _.,_ ''-._                                   
  (    '      ,       .-`  | `,    )     Running in standalone mode
- |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3000
- |    `-._   `._    /     _.-'    |     PID: 15400
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3001
+ |    `-._   `._    /     _.-'    |     PID: 21640
   `-._    `-._  `-./  _.-'    _.-'                                   
  |`-._`-._    `-.__.-'    _.-'_.-'|                                  
  |    `-._`-._        _.-'_.-'    |           http://redis.io        
@@ -21,168 +204,131 @@
           `-._        _.-'                                           
               `-.__.-'                                               
 
-15400:M 14 Aug 17:06:17.599 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
-15400:M 14 Aug 17:06:17.599 # Server initialized
-15400:M 14 Aug 17:06:17.599 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
-15400:M 14 Aug 17:06:17.599 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
-15400:M 14 Aug 17:06:17.599 * Ready to accept connections
-15400:M 14 Aug 17:06:17.600 # port = 3000
-15400:M 14 Aug 17:06:17.600 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:18.603 # port = 3000
-15400:M 14 Aug 17:06:18.603 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:19.605 # port = 3000
-15400:M 14 Aug 17:06:19.605 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:20.608 # port = 3000
-15400:M 14 Aug 17:06:20.608 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:21.610 # port = 3000
-15400:M 14 Aug 17:06:21.610 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:22.613 # port = 3000
-15400:M 14 Aug 17:06:22.613 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:23.615 # port = 3000
-15400:M 14 Aug 17:06:23.615 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:24.618 # port = 3000
-15400:M 14 Aug 17:06:24.618 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:24.763 # Before: 
-15400:M 14 Aug 17:06:24.763 # After: *3
-$3
-set
-$4
-2222
-$5
-55555
+21640:S 01 Sep 17:35:50.831 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+21640:S 01 Sep 17:35:50.831 # Server initialized
+21640:S 01 Sep 17:35:50.831 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+21640:S 01 Sep 17:35:50.831 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+21640:S 01 Sep 17:35:50.831 * Ready to accept connections
+21640:S 01 Sep 17:35:50.833 * Connecting to MASTER 127.0.0.1:3000
+21640:S 01 Sep 17:35:50.833 * MASTER <-> SLAVE sync started
+21640:S 01 Sep 17:35:50.833 * Non blocking connect for SYNC fired the event.
+21640:S 01 Sep 17:35:50.833 # cmd : PING
 
-15400:M 14 Aug 17:06:24.763 # c->fd = 7
-15400:M 14 Aug 17:06:24.764 # Before: 
-15400:M 14 Aug 17:06:24.764 # After: 
-15400:M 14 Aug 17:06:25.620 # port = 3000
-15400:M 14 Aug 17:06:25.620 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:26.622 # port = 3000
-15400:M 14 Aug 17:06:26.622 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:27.624 # port = 3000
-15400:M 14 Aug 17:06:27.624 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:28.626 # port = 3000
-15400:M 14 Aug 17:06:28.626 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:29.629 # port = 3000
-15400:M 14 Aug 17:06:29.629 # !!!!!!!repl_backlog = (null)
-15400:M 14 Aug 17:06:30.064 # Before: 
-15400:M 14 Aug 17:06:30.064 # After: PING
+21640:S 01 Sep 17:35:50.833 * Master replied to PING, replication can continue...
+21640:S 01 Sep 17:35:50.833 # cmd : REPLCONF listening-port 3001
 
-15400:M 14 Aug 17:06:30.064 # aux : PING
-15400:M 14 Aug 17:06:30.064 # c->fd = 7
-15400:M 14 Aug 17:06:30.064 # Before: 
-15400:M 14 Aug 17:06:30.065 # After: REPLCONF listening-port 3001
+21640:S 01 Sep 17:35:50.833 # cmd : REPLCONF capa eof capa psync2
 
-15400:M 14 Aug 17:06:30.065 # aux : REPLCONF listening-port 3001
-15400:M 14 Aug 17:06:30.065 # c->fd = 7
-15400:M 14 Aug 17:06:30.065 # Before: 
-15400:M 14 Aug 17:06:30.065 # After: REPLCONF capa eof capa psync2
+21640:S 01 Sep 17:35:50.833 * Partial resynchronization not possible (no cached master)
+21640:S 01 Sep 17:35:50.833 # cmd : PSYNC ? -1
 
-15400:M 14 Aug 17:06:30.065 # aux : REPLCONF capa eof capa psync2
-15400:M 14 Aug 17:06:30.065 # c->fd = 7
-15400:M 14 Aug 17:06:30.065 # Before: 
-15400:M 14 Aug 17:06:30.065 # After: PSYNC ? -1
-a eof capa psync2
-
-15400:M 14 Aug 17:06:30.065 # aux : PSYNC ? -1
-15400:M 14 Aug 17:06:30.065 * Slave 127.0.0.1:3001 asks for synchronization
-15400:M 14 Aug 17:06:30.065 * Full resync requested by slave 127.0.0.1:3001
-15400:M 14 Aug 17:06:30.065 * Delay next BGSAVE for diskless SYNC
-15400:M 14 Aug 17:06:30.631 # port = 3000
-15400:M 14 Aug 17:06:30.631 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:31.634 # port = 3000
-15400:M 14 Aug 17:06:31.634 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:32.636 # port = 3000
-15400:M 14 Aug 17:06:32.636 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:32.969 # Before: 
-15400:M 14 Aug 17:06:32.970 # After: 
-15400:M 14 Aug 17:06:32.970 # Connection with slave 127.0.0.1:3001 lost.
-15400:M 14 Aug 17:06:33.638 # port = 3000
-15400:M 14 Aug 17:06:33.638 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:34.641 # port = 3000
-15400:M 14 Aug 17:06:34.641 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:35.643 # port = 3000
-15400:M 14 Aug 17:06:35.643 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:35.951 # Before: 
-15400:M 14 Aug 17:06:35.951 # After: PING
-
-15400:M 14 Aug 17:06:35.951 # aux : PING
-15400:M 14 Aug 17:06:35.951 # c->fd = 7
-15400:M 14 Aug 17:06:35.951 # Before: 
-15400:M 14 Aug 17:06:35.951 # After: REPLCONF listening-port 3001
-
-15400:M 14 Aug 17:06:35.951 # aux : REPLCONF listening-port 3001
-15400:M 14 Aug 17:06:35.951 # c->fd = 7
-15400:M 14 Aug 17:06:35.951 # Before: 
-15400:M 14 Aug 17:06:35.951 # After: REPLCONF capa eof capa psync2
-
-15400:M 14 Aug 17:06:35.951 # aux : REPLCONF capa eof capa psync2
-15400:M 14 Aug 17:06:35.951 # c->fd = 7
-15400:M 14 Aug 17:06:35.951 # Before: 
-15400:M 14 Aug 17:06:35.951 # After: PSYNC ? -1
-a eof capa psync2
-
-15400:M 14 Aug 17:06:35.951 # aux : PSYNC ? -1
-15400:M 14 Aug 17:06:35.951 * Slave 127.0.0.1:3001 asks for synchronization
-15400:M 14 Aug 17:06:35.951 * Full resync requested by slave 127.0.0.1:3001
-15400:M 14 Aug 17:06:35.951 * Delay next BGSAVE for diskless SYNC
-15400:M 14 Aug 17:06:36.646 # port = 3000
-15400:M 14 Aug 17:06:36.646 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:37.649 # port = 3000
-15400:M 14 Aug 17:06:37.649 # !!!!!!!repl_backlog = 
-15400:M 14 Aug 17:06:37.649 # Before backlog = 
-
-15400:M 14 Aug 17:06:37.649 # After backlog = *1
-
-
-15400:M 14 Aug 17:06:37.649 # Before backlog = *1
-
-
-15400:M 14 Aug 17:06:37.649 # After backlog = *1
-$4
-
-
-15400:M 14 Aug 17:06:37.649 # Before backlog = *1
-$4
-
-
-15400:M 14 Aug 17:06:37.649 # After backlog = *1
+21640:S 01 Sep 17:35:56.196 * Full resync from master: ee309e93d29d0dc538acba36faa25e34fd5aaac9:419
+21640:S 01 Sep 17:35:56.197 * MASTER <-> SLAVE sync: receiving streamed RDB from master
+21640:S 01 Sep 17:35:56.197 * MASTER <-> SLAVE sync: Flushing old data
+21640:S 01 Sep 17:35:56.197 * MASTER <-> SLAVE sync: Loading DB in memory
+21640:S 01 Sep 17:35:56.197 * MASTER <-> SLAVE sync: Finished with success
+21640:S 01 Sep 17:35:57.199 # After: *1
 $4
 PING
 
-15400:M 14 Aug 17:06:37.649 # Before backlog = *1
+21640:S 01 Sep 17:35:57.199 # c->argv[0]->ptr = PING
+21640:S 01 Sep 17:35:57.417 # After: *2
+$6
+SELECT
+$1
+0
+*3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21640:S 01 Sep 17:35:57.417 # c->argv[0]->ptr = SELECT
+21640:S 01 Sep 17:35:57.417 # c->argv[0]->ptr = PUBLISH
+21640:S 01 Sep 17:35:58.380 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$21
+sentinel-1a490bb5-cmd
+*1
+$4
+PING
+*1
+$4
+INFO
+
+21640:S 01 Sep 17:35:58.380 # c->argv[0]->ptr = CLIENT
+21640:S 01 Sep 17:35:58.380 # c->argv[0]->ptr = PING
+21640:S 01 Sep 17:35:58.380 # c->argv[0]->ptr = INFO
+21640:S 01 Sep 17:35:58.380 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$24
+sentinel-1a490bb5-pubsub
+*2
+$9
+SUBSCRIBE
+$18
+__sentinel__:hello
+
+21640:S 01 Sep 17:35:58.380 # c->argv[0]->ptr = CLIENT
+21640:S 01 Sep 17:35:58.380 # c->argv[0]->ptr = SUBSCRIBE
+21640:S 01 Sep 17:35:58.451 # After: *1
+$11
+partialsync
+
+21640:S 01 Sep 17:35:58.451 # c->argv[0]->ptr = partialsync
+21640:S 01 Sep 17:35:58.451 # psync psync psync
+21640:S 01 Sep 17:35:58.451 * Slave 127.0.0.1:<unknown-slave-port> asks for synchronization
+21640:S 01 Sep 17:35:58.451 * Starting BGSAVE for SYNC with target: disk
+21640:S 01 Sep 17:35:58.451 * Background saving started by pid 21688
+21688:C 01 Sep 17:35:58.453 * DB saved on disk
+21688:C 01 Sep 17:35:58.453 * RDB: 0 MB of memory used by copy-on-write
+21640:S 01 Sep 17:35:58.552 * Background saving terminated with success
+21640:S 01 Sep 17:35:58.552 * Synchronization with slave 127.0.0.1:<unknown-slave-port> succeeded
+21640:S 01 Sep 17:35:58.552 # After: -ERR unknown command '$158'
+-ERR unknown command 'REDIS0008ú'
+
+21640:S 01 Sep 17:35:58.552 # aux : -ERR unknown command '$158'
+21640:S 01 Sep 17:35:58.552 # argv : -ERR
+21640:S 01 Sep 17:35:58.552 # c->argv[0]->ptr = -ERR
+21640:S 01 Sep 17:35:58.552 # aux : -ERR unknown command 'REDIS0008ú'
+21640:S 01 Sep 17:35:58.552 # argv : -ERR
+21640:S 01 Sep 17:35:58.552 # c->argv[0]->ptr = -ERR
+21640:S 01 Sep 17:35:59.426 # After: *1
 $4
 PING
 
-15400:M 14 Aug 17:06:37.649 # After backlog = *1
+21640:S 01 Sep 17:35:59.426 # c->argv[0]->ptr = PING
+21640:S 01 Sep 17:36:00.327 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,1a490bb5a42b291a975b51f7f02b7c21c2e90737,0,mymaster,127.0.0.1,3000,0
+
+21640:S 01 Sep 17:36:00.327 # c->argv[0]->ptr = PUBLISH
+21640:S 01 Sep 17:36:00.445 # After: *1
+$4
+PING
+IBE
+$18
+__sentinel__:hello
+
+21640:S 01 Sep 17:36:00.445 # c->argv[0]->ptr = PING
+21640:S 01 Sep 17:36:01.465 # After: *1
 $4
 PING
 
-
-15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
-
-
-15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
-$4
-
-
-15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
-$4
-PING
-
-15400:M 14 Aug 17:06:37.649 # ######################################switch_buf = *1
-$4
-PING
-
-
-15400:M 14 Aug 17:06:38.158 # Before: 
-15400:M 14 Aug 17:06:38.158 # After: 
-15400:M 14 Aug 17:06:38.158 # Connection with slave 127.0.0.1:3001 lost.
-15400:M 14 Aug 17:06:38.651 # port = 3000
-15400:M 14 Aug 17:06:38.652 # !!!!!!!repl_backlog = *1
-$4
-PING
-
-15400:signal-handler (1597392399) Received SIGINT scheduling shutdown...
-15400:M 14 Aug 17:06:39.153 # User requested shutdown...
-15400:M 14 Aug 17:06:39.153 * Removing the pid file.
-15400:M 14 Aug 17:06:39.153 # Redis is now ready to exit, bye bye...
+21640:S 01 Sep 17:36:01.465 # c->argv[0]->ptr = PING
+21640:signal-handler (1598949361) Received SIGINT scheduling shutdown...
+21640:S 01 Sep 17:36:01.959 # User requested shutdown...
+21640:S 01 Sep 17:36:01.959 * Removing the pid file.
+21640:S 01 Sep 17:36:01.959 # Redis is now ready to exit, bye bye...

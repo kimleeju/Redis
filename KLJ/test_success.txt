@@ -1,0 +1,456 @@
+2038:X 02 Sep 18:02:14.872 # c->name : module
+2038:X 02 Sep 18:02:14.872 # c->name : get
+2038:X 02 Sep 18:02:14.872 # c->name : set
+2038:X 02 Sep 18:02:14.872 # c->name : setnx
+2038:X 02 Sep 18:02:14.872 # c->name : setex
+2038:X 02 Sep 18:02:14.872 # c->name : psetex
+2038:X 02 Sep 18:02:14.872 # c->name : append
+2038:X 02 Sep 18:02:14.872 # c->name : strlen
+2038:X 02 Sep 18:02:14.872 # c->name : del
+2038:X 02 Sep 18:02:14.872 # c->name : unlink
+2038:X 02 Sep 18:02:14.872 # c->name : exists
+2038:X 02 Sep 18:02:14.872 # c->name : setbit
+2038:X 02 Sep 18:02:14.872 # c->name : getbit
+2038:X 02 Sep 18:02:14.872 # c->name : bitfield
+2038:X 02 Sep 18:02:14.872 # c->name : setrange
+2038:X 02 Sep 18:02:14.872 # c->name : getrange
+2038:X 02 Sep 18:02:14.872 # c->name : substr
+2038:X 02 Sep 18:02:14.872 # c->name : incr
+2038:X 02 Sep 18:02:14.872 # c->name : decr
+2038:X 02 Sep 18:02:14.872 # c->name : mget
+2038:X 02 Sep 18:02:14.872 # c->name : rpush
+2038:X 02 Sep 18:02:14.872 # c->name : lpush
+2038:X 02 Sep 18:02:14.872 # c->name : rpushx
+2038:X 02 Sep 18:02:14.872 # c->name : lpushx
+2038:X 02 Sep 18:02:14.872 # c->name : linsert
+2038:X 02 Sep 18:02:14.872 # c->name : rpop
+2038:X 02 Sep 18:02:14.872 # c->name : lpop
+2038:X 02 Sep 18:02:14.872 # c->name : brpop
+2038:X 02 Sep 18:02:14.872 # c->name : brpoplpush
+2038:X 02 Sep 18:02:14.872 # c->name : blpop
+2038:X 02 Sep 18:02:14.872 # c->name : llen
+2038:X 02 Sep 18:02:14.872 # c->name : lindex
+2038:X 02 Sep 18:02:14.872 # c->name : lset
+2038:X 02 Sep 18:02:14.872 # c->name : lrange
+2038:X 02 Sep 18:02:14.872 # c->name : ltrim
+2038:X 02 Sep 18:02:14.872 # c->name : lrem
+2038:X 02 Sep 18:02:14.872 # c->name : rpoplpush
+2038:X 02 Sep 18:02:14.872 # c->name : sadd
+2038:X 02 Sep 18:02:14.872 # c->name : srem
+2038:X 02 Sep 18:02:14.872 # c->name : smove
+2038:X 02 Sep 18:02:14.872 # c->name : sismember
+2038:X 02 Sep 18:02:14.872 # c->name : scard
+2038:X 02 Sep 18:02:14.872 # c->name : spop
+2038:X 02 Sep 18:02:14.872 # c->name : srandmember
+2038:X 02 Sep 18:02:14.872 # c->name : sinter
+2038:X 02 Sep 18:02:14.872 # c->name : sinterstore
+2038:X 02 Sep 18:02:14.872 # c->name : sunion
+2038:X 02 Sep 18:02:14.872 # c->name : sunionstore
+2038:X 02 Sep 18:02:14.872 # c->name : sdiff
+2038:X 02 Sep 18:02:14.872 # c->name : sdiffstore
+2038:X 02 Sep 18:02:14.872 # c->name : smembers
+2038:X 02 Sep 18:02:14.872 # c->name : sscan
+2038:X 02 Sep 18:02:14.872 # c->name : zadd
+2038:X 02 Sep 18:02:14.872 # c->name : zincrby
+2038:X 02 Sep 18:02:14.872 # c->name : zrem
+2038:X 02 Sep 18:02:14.872 # c->name : zremrangebyscore
+2038:X 02 Sep 18:02:14.872 # c->name : zremrangebyrank
+2038:X 02 Sep 18:02:14.872 # c->name : zremrangebylex
+2038:X 02 Sep 18:02:14.872 # c->name : zunionstore
+2038:X 02 Sep 18:02:14.872 # c->name : zinterstore
+2038:X 02 Sep 18:02:14.872 # c->name : zrange
+2038:X 02 Sep 18:02:14.872 # c->name : zrangebyscore
+2038:X 02 Sep 18:02:14.872 # c->name : zrevrangebyscore
+2038:X 02 Sep 18:02:14.872 # c->name : zrangebylex
+2038:X 02 Sep 18:02:14.872 # c->name : zrevrangebylex
+2038:X 02 Sep 18:02:14.872 # c->name : zcount
+2038:X 02 Sep 18:02:14.872 # c->name : zlexcount
+2038:X 02 Sep 18:02:14.872 # c->name : zrevrange
+2038:X 02 Sep 18:02:14.872 # c->name : zcard
+2038:X 02 Sep 18:02:14.872 # c->name : zscore
+2038:X 02 Sep 18:02:14.872 # c->name : zrank
+2038:X 02 Sep 18:02:14.872 # c->name : zrevrank
+2038:X 02 Sep 18:02:14.872 # c->name : zscan
+2038:X 02 Sep 18:02:14.872 # c->name : hset
+2038:X 02 Sep 18:02:14.872 # c->name : hsetnx
+2038:X 02 Sep 18:02:14.872 # c->name : hget
+2038:X 02 Sep 18:02:14.872 # c->name : hmset
+2038:X 02 Sep 18:02:14.872 # c->name : hmget
+2038:X 02 Sep 18:02:14.872 # c->name : hincrby
+2038:X 02 Sep 18:02:14.872 # c->name : hincrbyfloat
+2038:X 02 Sep 18:02:14.872 # c->name : hdel
+2038:X 02 Sep 18:02:14.872 # c->name : hlen
+2038:X 02 Sep 18:02:14.872 # c->name : hstrlen
+2039:C 02 Sep 18:02:14.872 # c->name : module
+2038:X 02 Sep 18:02:14.872 # c->name : hkeys
+2038:X 02 Sep 18:02:14.872 # c->name : hvals
+2038:X 02 Sep 18:02:14.872 # c->name : hgetall
+2039:C 02 Sep 18:02:14.872 # c->name : get
+2038:X 02 Sep 18:02:14.872 # c->name : hexists
+2038:X 02 Sep 18:02:14.872 # c->name : hscan
+2039:C 02 Sep 18:02:14.872 # c->name : set
+2038:X 02 Sep 18:02:14.872 # c->name : incrby
+2039:C 02 Sep 18:02:14.872 # c->name : setnx
+2038:X 02 Sep 18:02:14.872 # c->name : decrby
+2039:C 02 Sep 18:02:14.872 # c->name : setex
+2038:X 02 Sep 18:02:14.872 # c->name : incrbyfloat
+2038:X 02 Sep 18:02:14.872 # c->name : getset
+2038:X 02 Sep 18:02:14.872 # c->name : mset
+2039:C 02 Sep 18:02:14.872 # c->name : psetex
+2038:X 02 Sep 18:02:14.872 # c->name : msetnx
+2039:C 02 Sep 18:02:14.872 # c->name : append
+2038:X 02 Sep 18:02:14.872 # c->name : randomkey
+2039:C 02 Sep 18:02:14.872 # c->name : strlen
+2038:X 02 Sep 18:02:14.872 # c->name : select
+2039:C 02 Sep 18:02:14.872 # c->name : del
+2038:X 02 Sep 18:02:14.872 # c->name : swapdb
+2038:X 02 Sep 18:02:14.873 # c->name : move
+2039:C 02 Sep 18:02:14.873 # c->name : unlink
+2038:X 02 Sep 18:02:14.873 # c->name : rename
+2039:C 02 Sep 18:02:14.873 # c->name : exists
+2038:X 02 Sep 18:02:14.873 # c->name : renamenx
+2039:C 02 Sep 18:02:14.873 # c->name : setbit
+2038:X 02 Sep 18:02:14.873 # c->name : expire
+2039:C 02 Sep 18:02:14.873 # c->name : getbit
+2038:X 02 Sep 18:02:14.873 # c->name : expireat
+2038:X 02 Sep 18:02:14.873 # c->name : pexpire
+2039:C 02 Sep 18:02:14.873 # c->name : bitfield
+2038:X 02 Sep 18:02:14.873 # c->name : pexpireat
+2039:C 02 Sep 18:02:14.873 # c->name : setrange
+2038:X 02 Sep 18:02:14.873 # c->name : keys
+2039:C 02 Sep 18:02:14.873 # c->name : getrange
+2038:X 02 Sep 18:02:14.873 # c->name : scan
+2039:C 02 Sep 18:02:14.873 # c->name : substr
+2038:X 02 Sep 18:02:14.873 # c->name : dbsize
+2038:X 02 Sep 18:02:14.873 # c->name : auth
+2038:X 02 Sep 18:02:14.873 # c->name : ping
+2039:C 02 Sep 18:02:14.873 # c->name : incr
+2038:X 02 Sep 18:02:14.873 # c->name : echo
+2039:C 02 Sep 18:02:14.873 # c->name : decr
+2038:X 02 Sep 18:02:14.873 # c->name : save
+2039:C 02 Sep 18:02:14.873 # c->name : mget
+2038:X 02 Sep 18:02:14.873 # c->name : bgsave
+2039:C 02 Sep 18:02:14.873 # c->name : rpush
+2038:X 02 Sep 18:02:14.873 # c->name : bgrewriteaof
+2039:C 02 Sep 18:02:14.873 # c->name : lpush
+2038:X 02 Sep 18:02:14.873 # c->name : shutdown
+2038:X 02 Sep 18:02:14.873 # c->name : lastsave
+2039:C 02 Sep 18:02:14.873 # c->name : rpushx
+2038:X 02 Sep 18:02:14.873 # c->name : type
+2039:C 02 Sep 18:02:14.873 # c->name : lpushx
+2038:X 02 Sep 18:02:14.873 # c->name : multi
+2039:C 02 Sep 18:02:14.873 # c->name : linsert
+2038:X 02 Sep 18:02:14.873 # c->name : exec
+2038:X 02 Sep 18:02:14.873 # c->name : discard
+2039:C 02 Sep 18:02:14.873 # c->name : rpop
+2038:X 02 Sep 18:02:14.873 # c->name : sync
+2039:C 02 Sep 18:02:14.873 # c->name : lpop
+2038:X 02 Sep 18:02:14.873 # c->name : psync
+2039:C 02 Sep 18:02:14.873 # c->name : brpop
+2038:X 02 Sep 18:02:14.873 # c->name : replconf
+2039:C 02 Sep 18:02:14.873 # c->name : brpoplpush
+2038:X 02 Sep 18:02:14.873 # c->name : flushdb
+2039:C 02 Sep 18:02:14.873 # c->name : blpop
+2038:X 02 Sep 18:02:14.873 # c->name : flushall
+2039:C 02 Sep 18:02:14.873 # c->name : llen
+2038:X 02 Sep 18:02:14.873 # c->name : sort
+2039:C 02 Sep 18:02:14.873 # c->name : lindex
+2038:X 02 Sep 18:02:14.873 # c->name : info
+2039:C 02 Sep 18:02:14.873 # c->name : lset
+2038:X 02 Sep 18:02:14.873 # c->name : monitor
+2038:X 02 Sep 18:02:14.873 # c->name : ttl
+2039:C 02 Sep 18:02:14.873 # c->name : lrange
+2038:X 02 Sep 18:02:14.873 # c->name : touch
+2039:C 02 Sep 18:02:14.873 # c->name : ltrim
+2038:X 02 Sep 18:02:14.873 # c->name : pttl
+2039:C 02 Sep 18:02:14.873 # c->name : lrem
+2038:X 02 Sep 18:02:14.873 # c->name : persist
+2039:C 02 Sep 18:02:14.873 # c->name : rpoplpush
+2038:X 02 Sep 18:02:14.873 # c->name : slaveof
+2039:C 02 Sep 18:02:14.873 # c->name : sadd
+2038:X 02 Sep 18:02:14.873 # c->name : role
+2039:C 02 Sep 18:02:14.873 # c->name : srem
+2038:X 02 Sep 18:02:14.873 # c->name : debug
+2039:C 02 Sep 18:02:14.873 # c->name : smove
+2038:X 02 Sep 18:02:14.873 # c->name : config
+2039:C 02 Sep 18:02:14.873 # c->name : sismember
+2038:X 02 Sep 18:02:14.873 # c->name : subscribe
+2039:C 02 Sep 18:02:14.873 # c->name : scard
+2038:X 02 Sep 18:02:14.873 # c->name : unsubscribe
+2039:C 02 Sep 18:02:14.873 # c->name : spop
+2038:X 02 Sep 18:02:14.873 # c->name : psubscribe
+2039:C 02 Sep 18:02:14.873 # c->name : srandmember
+2038:X 02 Sep 18:02:14.873 # c->name : punsubscribe
+2039:C 02 Sep 18:02:14.873 # c->name : sinter
+2038:X 02 Sep 18:02:14.873 # c->name : publish
+2039:C 02 Sep 18:02:14.873 # c->name : sinterstore
+2038:X 02 Sep 18:02:14.873 # c->name : pubsub
+2039:C 02 Sep 18:02:14.873 # c->name : sunion
+2038:X 02 Sep 18:02:14.873 # c->name : watch
+2039:C 02 Sep 18:02:14.873 # c->name : sunionstore
+2038:X 02 Sep 18:02:14.873 # c->name : unwatch
+2039:C 02 Sep 18:02:14.873 # c->name : sdiff
+2038:X 02 Sep 18:02:14.873 # c->name : cluster
+2039:C 02 Sep 18:02:14.873 # c->name : sdiffstore
+2038:X 02 Sep 18:02:14.873 # c->name : restore
+2039:C 02 Sep 18:02:14.873 # c->name : smembers
+2038:X 02 Sep 18:02:14.873 # c->name : restore-asking
+2038:X 02 Sep 18:02:14.873 # c->name : migrate
+2039:C 02 Sep 18:02:14.873 # c->name : sscan
+2038:X 02 Sep 18:02:14.873 # c->name : asking
+2039:C 02 Sep 18:02:14.873 # c->name : zadd
+2038:X 02 Sep 18:02:14.873 # c->name : readonly
+2039:C 02 Sep 18:02:14.873 # c->name : zincrby
+2038:X 02 Sep 18:02:14.873 # c->name : readwrite
+2039:C 02 Sep 18:02:14.873 # c->name : zrem
+2038:X 02 Sep 18:02:14.873 # c->name : dump
+2039:C 02 Sep 18:02:14.873 # c->name : zremrangebyscore
+2038:X 02 Sep 18:02:14.873 # c->name : object
+2039:C 02 Sep 18:02:14.873 # c->name : zremrangebyrank
+2038:X 02 Sep 18:02:14.873 # c->name : memory
+2039:C 02 Sep 18:02:14.873 # c->name : zremrangebylex
+2038:X 02 Sep 18:02:14.873 # c->name : client
+2039:C 02 Sep 18:02:14.873 # c->name : zunionstore
+2038:X 02 Sep 18:02:14.873 # c->name : eval
+2039:C 02 Sep 18:02:14.873 # c->name : zinterstore
+2038:X 02 Sep 18:02:14.873 # c->name : evalsha
+2039:C 02 Sep 18:02:14.873 # c->name : zrange
+2038:X 02 Sep 18:02:14.873 # c->name : slowlog
+2039:C 02 Sep 18:02:14.873 # c->name : zrangebyscore
+2038:X 02 Sep 18:02:14.873 # c->name : script
+2039:C 02 Sep 18:02:14.873 # c->name : zrevrangebyscore
+2038:X 02 Sep 18:02:14.873 # c->name : time
+2038:X 02 Sep 18:02:14.873 # c->name : bitop
+2039:C 02 Sep 18:02:14.873 # c->name : zrangebylex
+2038:X 02 Sep 18:02:14.873 # c->name : bitcount
+2039:C 02 Sep 18:02:14.873 # c->name : zrevrangebylex
+2038:X 02 Sep 18:02:14.873 # c->name : bitpos
+2038:X 02 Sep 18:02:14.873 # c->name : wait
+2039:C 02 Sep 18:02:14.873 # c->name : zcount
+2038:X 02 Sep 18:02:14.873 # c->name : command
+2039:C 02 Sep 18:02:14.873 # c->name : zlexcount
+2038:X 02 Sep 18:02:14.873 # c->name : geoadd
+2039:C 02 Sep 18:02:14.873 # c->name : zrevrange
+2038:X 02 Sep 18:02:14.873 # c->name : georadius
+2039:C 02 Sep 18:02:14.873 # c->name : zcard
+2038:X 02 Sep 18:02:14.873 # c->name : georadius_ro
+2039:C 02 Sep 18:02:14.873 # c->name : zscore
+2038:X 02 Sep 18:02:14.873 # c->name : georadiusbymember
+2039:C 02 Sep 18:02:14.873 # c->name : zrank
+2038:X 02 Sep 18:02:14.873 # c->name : georadiusbymember_ro
+2038:X 02 Sep 18:02:14.873 # c->name : geohash
+2039:C 02 Sep 18:02:14.873 # c->name : zrevrank
+2038:X 02 Sep 18:02:14.873 # c->name : geopos
+2039:C 02 Sep 18:02:14.873 # c->name : zscan
+2038:X 02 Sep 18:02:14.873 # c->name : geodist
+2038:X 02 Sep 18:02:14.873 # c->name : pfselftest
+2039:C 02 Sep 18:02:14.873 # c->name : hset
+2038:X 02 Sep 18:02:14.873 # c->name : pfadd
+2039:C 02 Sep 18:02:14.873 # c->name : hsetnx
+2038:X 02 Sep 18:02:14.873 # c->name : pfcount
+2038:X 02 Sep 18:02:14.873 # c->name : pfmerge
+2039:C 02 Sep 18:02:14.873 # c->name : hget
+2038:X 02 Sep 18:02:14.873 # c->name : pfdebug
+2039:C 02 Sep 18:02:14.873 # c->name : hmset
+2038:X 02 Sep 18:02:14.873 # c->name : post
+2039:C 02 Sep 18:02:14.873 # c->name : hmget
+2038:X 02 Sep 18:02:14.873 # c->name : host:
+2039:C 02 Sep 18:02:14.873 # c->name : hincrby
+2038:X 02 Sep 18:02:14.873 # c->name : latency
+2039:C 02 Sep 18:02:14.873 # c->name : hincrbyfloat
+2038:X 02 Sep 18:02:14.873 # c->name : switch
+2039:C 02 Sep 18:02:14.873 # c->name : hdel
+2038:X 02 Sep 18:02:14.873 # c->name : synchronous
+2039:C 02 Sep 18:02:14.873 # c->name : hlen
+2039:C 02 Sep 18:02:14.873 # c->name : hstrlen
+2039:C 02 Sep 18:02:14.873 # c->name : hkeys
+2039:C 02 Sep 18:02:14.873 # c->name : hvals
+2039:C 02 Sep 18:02:14.873 # c->name : hgetall
+2039:C 02 Sep 18:02:14.873 # c->name : hexists
+2039:C 02 Sep 18:02:14.873 # c->name : hscan
+2039:C 02 Sep 18:02:14.874 # c->name : incrby
+2039:C 02 Sep 18:02:14.874 # c->name : decrby
+2039:C 02 Sep 18:02:14.874 # c->name : incrbyfloat
+2039:C 02 Sep 18:02:14.874 # c->name : getset
+2039:C 02 Sep 18:02:14.874 # c->name : mset
+2039:C 02 Sep 18:02:14.874 # c->name : msetnx
+2039:C 02 Sep 18:02:14.874 # c->name : randomkey
+2039:C 02 Sep 18:02:14.874 # c->name : select
+2039:C 02 Sep 18:02:14.874 # c->name : swapdb
+2039:C 02 Sep 18:02:14.874 # c->name : move
+2039:C 02 Sep 18:02:14.874 # c->name : rename
+2039:C 02 Sep 18:02:14.874 # c->name : renamenx
+2039:C 02 Sep 18:02:14.874 # c->name : expire
+2039:C 02 Sep 18:02:14.874 # c->name : expireat
+2039:C 02 Sep 18:02:14.874 # c->name : pexpire
+2039:C 02 Sep 18:02:14.874 # c->name : pexpireat
+2039:C 02 Sep 18:02:14.874 # c->name : keys
+2039:C 02 Sep 18:02:14.874 # c->name : scan
+2039:C 02 Sep 18:02:14.874 # c->name : dbsize
+2039:C 02 Sep 18:02:14.874 # c->name : auth
+2039:C 02 Sep 18:02:14.874 # c->name : ping
+2039:C 02 Sep 18:02:14.874 # c->name : echo
+2039:C 02 Sep 18:02:14.874 # c->name : save
+2039:C 02 Sep 18:02:14.874 # c->name : bgsave
+2039:C 02 Sep 18:02:14.874 # c->name : bgrewriteaof
+2039:C 02 Sep 18:02:14.874 # c->name : shutdown
+2038:X 02 Sep 18:02:14.874 # USING NOT NVM
+2039:C 02 Sep 18:02:14.874 # c->name : lastsave
+2038:X 02 Sep 18:02:14.874 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2039:C 02 Sep 18:02:14.874 # c->name : type
+2038:X 02 Sep 18:02:14.874 # Redis version=4.0.0, bits=64, commit=a771c909, modified=1, pid=2038, just started
+2039:C 02 Sep 18:02:14.874 # c->name : multi
+2038:X 02 Sep 18:02:14.874 # Configuration loaded
+2039:C 02 Sep 18:02:14.874 # c->name : exec
+2039:C 02 Sep 18:02:14.874 # c->name : discard
+2039:C 02 Sep 18:02:14.874 # c->name : sync
+2039:C 02 Sep 18:02:14.874 # c->name : psync
+2039:C 02 Sep 18:02:14.874 # c->name : replconf
+2039:C 02 Sep 18:02:14.874 # c->name : flushdb
+2039:C 02 Sep 18:02:14.874 # c->name : flushall
+2039:C 02 Sep 18:02:14.874 # c->name : sort
+2039:C 02 Sep 18:02:14.874 # c->name : info
+2039:C 02 Sep 18:02:14.874 # c->name : monitor
+2039:C 02 Sep 18:02:14.874 # c->name : ttl
+2039:C 02 Sep 18:02:14.874 # c->name : touch
+2039:C 02 Sep 18:02:14.874 # c->name : pttl
+2039:C 02 Sep 18:02:14.874 # c->name : persist
+2039:C 02 Sep 18:02:14.874 # c->name : slaveof
+2039:C 02 Sep 18:02:14.874 # c->name : role
+2039:C 02 Sep 18:02:14.874 # c->name : debug
+2039:C 02 Sep 18:02:14.874 # c->name : config
+2039:C 02 Sep 18:02:14.874 # c->name : subscribe
+2039:C 02 Sep 18:02:14.874 # c->name : unsubscribe
+2039:C 02 Sep 18:02:14.874 # c->name : psubscribe
+2039:C 02 Sep 18:02:14.874 # c->name : punsubscribe
+2039:C 02 Sep 18:02:14.874 # c->name : publish
+2039:C 02 Sep 18:02:14.874 # c->name : pubsub
+2039:C 02 Sep 18:02:14.874 # c->name : watch
+2039:C 02 Sep 18:02:14.874 # c->name : unwatch
+2039:C 02 Sep 18:02:14.874 # c->name : cluster
+2039:C 02 Sep 18:02:14.874 # c->name : restore
+2039:C 02 Sep 18:02:14.874 # c->name : restore-asking
+2039:C 02 Sep 18:02:14.874 # c->name : migrate
+2039:C 02 Sep 18:02:14.874 # c->name : asking
+2039:C 02 Sep 18:02:14.874 # c->name : readonly
+2039:C 02 Sep 18:02:14.874 # c->name : readwrite
+2039:C 02 Sep 18:02:14.874 # c->name : dump
+2039:C 02 Sep 18:02:14.874 # c->name : object
+2039:C 02 Sep 18:02:14.874 # c->name : memory
+2039:C 02 Sep 18:02:14.874 # c->name : client
+2039:C 02 Sep 18:02:14.874 # c->name : eval
+2039:C 02 Sep 18:02:14.874 # c->name : evalsha
+2039:C 02 Sep 18:02:14.874 # c->name : slowlog
+2039:C 02 Sep 18:02:14.874 # c->name : script
+2039:C 02 Sep 18:02:14.874 # c->name : time
+2039:C 02 Sep 18:02:14.874 # c->name : bitop
+2039:C 02 Sep 18:02:14.874 # c->name : bitcount
+2039:C 02 Sep 18:02:14.874 # c->name : bitpos
+2039:C 02 Sep 18:02:14.874 # c->name : wait
+2039:C 02 Sep 18:02:14.874 # c->name : command
+2039:C 02 Sep 18:02:14.874 # c->name : geoadd
+2039:C 02 Sep 18:02:14.874 # c->name : georadius
+2039:C 02 Sep 18:02:14.874 # c->name : georadius_ro
+2039:C 02 Sep 18:02:14.874 # c->name : georadiusbymember
+2039:C 02 Sep 18:02:14.874 # c->name : georadiusbymember_ro
+2039:C 02 Sep 18:02:14.874 # c->name : geohash
+2039:C 02 Sep 18:02:14.874 # c->name : geopos
+2039:C 02 Sep 18:02:14.875 # c->name : geodist
+2039:C 02 Sep 18:02:14.875 # c->name : pfselftest
+2039:C 02 Sep 18:02:14.875 # c->name : pfadd
+2039:C 02 Sep 18:02:14.875 # c->name : pfcount
+2039:C 02 Sep 18:02:14.875 # c->name : pfmerge
+2039:C 02 Sep 18:02:14.875 # c->name : pfdebug
+2039:C 02 Sep 18:02:14.875 # c->name : post
+2039:C 02 Sep 18:02:14.875 # c->name : host:
+2039:C 02 Sep 18:02:14.875 # c->name : latency
+2039:C 02 Sep 18:02:14.875 # c->name : switch
+2039:C 02 Sep 18:02:14.875 # c->name : synchronous
+2038:X 02 Sep 18:02:14.875 # server.port 3100 , server.ipfd[j] : 6
+2038:X 02 Sep 18:02:14.875 # server.port 3100 , server.ipfd[j] : 7
+2038:X 02 Sep 18:02:14.876 * Running mode=sentinel, port=3100.
+2038:X 02 Sep 18:02:14.876 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+2038:X 02 Sep 18:02:14.876 # Sentinel ID is 1a490bb5a42b291a975b51f7f02b7c21c2e90737
+2038:X 02 Sep 18:02:14.876 # +monitor master mymaster 127.0.0.1 3000 quorum 1
+2039:C 02 Sep 18:02:14.877 # USING NOT NVM
+2039:C 02 Sep 18:02:14.877 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2039:C 02 Sep 18:02:14.877 # Redis version=4.0.0, bits=64, commit=a771c909, modified=1, pid=2039, just started
+2039:C 02 Sep 18:02:14.877 # Configuration loaded
+2039:M 02 Sep 18:02:14.878 # server.port 3000 , server.ipfd[j] : 6
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.0 (a771c909/1) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3000
+ |    `-._   `._    /     _.-'    |     PID: 2039
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+2039:M 02 Sep 18:02:14.879 # WARNING: The TCP backlog setting of 511 cannot be enforced because /proc/sys/net/core/somaxconn is set to the lower value of 128.
+2039:M 02 Sep 18:02:14.879 # Server initialized
+2039:M 02 Sep 18:02:14.879 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+2039:M 02 Sep 18:02:14.879 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+2039:M 02 Sep 18:02:14.879 * Ready to accept connections
+2039:M 02 Sep 18:02:29.006 # aux : PING
+2039:M 02 Sep 18:02:29.006 # argv : PING
+2039:M 02 Sep 18:02:29.006 # aux : REPLCONF listening-port 3001
+2039:M 02 Sep 18:02:29.006 # argv : REPLCONF
+2039:M 02 Sep 18:02:29.006 # aux : REPLCONF capa eof capa psync2
+2039:M 02 Sep 18:02:29.006 # argv : REPLCONF
+2039:M 02 Sep 18:02:29.006 # aux : PSYNC ? -1
+2039:M 02 Sep 18:02:29.006 # argv : PSYNC
+2039:M 02 Sep 18:02:29.006 * Slave 127.0.0.1:3001 asks for synchronization
+2039:M 02 Sep 18:02:29.006 * Full resync requested by slave 127.0.0.1:3001
+2039:M 02 Sep 18:02:29.006 * Delay next BGSAVE for diskless SYNC
+2039:M 02 Sep 18:02:34.926 * Starting BGSAVE for SYNC with target: slaves sockets
+2039:M 02 Sep 18:02:34.926 * Background RDB transfer started by pid 2093
+2093:C 02 Sep 18:02:34.927 * RDB: 0 MB of memory used by copy-on-write
+2039:M 02 Sep 18:02:35.026 * Background RDB transfer terminated with success
+2039:M 02 Sep 18:02:35.026 # Slave 127.0.0.1:3001 correctly received the streamed RDB file.
+2039:M 02 Sep 18:02:35.026 * Streamed RDB transfer with slave 127.0.0.1:3001 succeeded (socket). Waiting for REPLCONF ACK from slave to enable streaming
+2039:M 02 Sep 18:02:36.023 * Synchronization with slave 127.0.0.1:3001 succeeded
+2038:X 02 Sep 18:02:36.028 * +slave slave 127.0.0.1:3001 127.0.0.1 3001 @ mymaster 127.0.0.1 3000
+2038:X 02 Sep 18:02:46.228 # 444444444444444444444444444444444444444$$$
+2038:X 02 Sep 18:02:46.318 * +failover-state-wait-promotion slave 127.0.0.1:3001 127.0.0.1 3001 @ mymaster 127.0.0.1 3000
+2039:M 02 Sep 18:02:46.318 # Connection with slave 127.0.0.1:3001 lost.
+2038:X 02 Sep 18:02:47.186 # +promoted-slave slave 127.0.0.1:3001 127.0.0.1 3001 @ mymaster 127.0.0.1 3000
+2038:X 02 Sep 18:02:47.186 # +failover-state-reconf-slaves master mymaster 127.0.0.1 3000
+2038:X 02 Sep 18:02:47.267 # +failover-end master mymaster 127.0.0.1 3000
+2038:X 02 Sep 18:02:47.267 # +switch-master mymaster 127.0.0.1 3000 127.0.0.1 3001
+2038:X 02 Sep 18:02:47.267 * +slave slave 127.0.0.1:3000 127.0.0.1 3000 @ mymaster 127.0.0.1 3001
+2038:X 02 Sep 18:02:57.373 * +convert-to-slave slave 127.0.0.1:3000 127.0.0.1 3000 @ mymaster 127.0.0.1 3001
+2039:S 02 Sep 18:02:57.373 * Before turning into a slave, using my master parameters to synthesize a cached master: I may be able to synchronize with the new master with just a partial transfer.
+2039:S 02 Sep 18:02:57.373 * SLAVE OF 127.0.0.1:3001 enabled (user request from 'id=5 addr=127.0.0.1:41220 fd=7 name=sentinel-1a490bb5-cmd age=10 idle=0 flags=x db=0 sub=0 psub=0 multi=3 qbuf=0 qbuf-free=32768 obl=36 oll=0 omem=0 events=r cmd=exec')
+2039:S 02 Sep 18:02:57.375 # CONFIG REWRITE executed with success.
+2039:S 02 Sep 18:02:57.970 * Connecting to MASTER 127.0.0.1:3001
+2039:S 02 Sep 18:02:57.970 * MASTER <-> SLAVE sync started
+2039:S 02 Sep 18:02:57.970 * Non blocking connect for SYNC fired the event.
+2039:S 02 Sep 18:02:57.970 * Master replied to PING, replication can continue...
+2039:S 02 Sep 18:02:57.970 * Trying a partial resynchronization (request 59167c3fdac4672500f3fa8a6b336c384b18dc16:2209).
+2039:S 02 Sep 18:03:03.082 * Full resync from master: 7b2af803aa46265bbbaa5bb4d4390d1a4141d4f6:2514
+2039:S 02 Sep 18:03:03.083 * Discarding previously cached master state.
+2039:S 02 Sep 18:03:03.083 * MASTER <-> SLAVE sync: receiving streamed RDB from master
+2039:S 02 Sep 18:03:03.084 * MASTER <-> SLAVE sync: Flushing old data
+2039:S 02 Sep 18:03:03.084 * MASTER <-> SLAVE sync: Loading DB in memory
+2039:S 02 Sep 18:03:03.084 * MASTER <-> SLAVE sync: Finished with success
+2039:S 02 Sep 18:03:06.291 # Connection with master lost.
+2039:S 02 Sep 18:03:06.291 * Caching the disconnected master state.
+2039:S 02 Sep 18:03:06.990 * Connecting to MASTER 127.0.0.1:3001
+2039:S 02 Sep 18:03:06.990 * MASTER <-> SLAVE sync started
+2039:S 02 Sep 18:03:06.990 # Error condition on socket for SYNC: Connection refused
+20382039:signal-handler (:signal-handler (15990373871599037387) ) Received SIGINT scheduling shutdown...Received SIGINT scheduling shutdown...
+
+2038:X 02 Sep 18:03:07.307 # User requested shutdown...
+2038:X 02 Sep 18:03:07.307 # Sentinel is now ready to exit, bye bye...
+2039:S 02 Sep 18:03:07.391 # User requested shutdown...
+2039:S 02 Sep 18:03:07.391 * Removing the pid file.
+2039:S 02 Sep 18:03:07.391 # Redis is now ready to exit, bye bye...

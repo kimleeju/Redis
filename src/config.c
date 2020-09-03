@@ -581,7 +581,7 @@ void loadServerConfigFromString(char *config) {
             /* Otherwise we re-add the command under a different name. */
             if (sdslen(argv[2]) != 0) {
                 sds copy = sdsdup(argv[2]);
-
+				
                 retval = dictAdd(server.commands, copy, cmd);
                 if (retval != DICT_OK) {
                     sdsfree(copy);
