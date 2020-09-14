@@ -1151,7 +1151,6 @@ void replconfCommand(client *c) {
 			//sentinel한테 알려주는 부분
 			//switch가 완전히 끝나면 bool_switch_ready = 0으로 바꿔야함
 		 }
-
 #endif
 		else {
             addReplyErrorFormat(c,"Unrecognized REPLCONF option: %s",
