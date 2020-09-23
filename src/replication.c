@@ -436,16 +436,14 @@ void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc) {
             len = ll2string(aux+1,sizeof(aux)-1,objlen);
             aux[len+1] = '\r';
             aux[len+2] = '\n';
+
 			feedReplicationSwitchBuf(aux,len+3); // $(명령어 크기) 삽입
-            
 			feedReplicationSwitchBufWithObject(argv[j]); // 명령어 삽입 
-			
 			feedReplicationSwitchBuf(aux+len+1,2);
     
 		}
-
-    	//serverLog(LL_WARNING, "server.switch_buf = %s",server.switch_buf);
     }
+	serverLog(LL_WARNING,"replication switch buf = %s", server.switch_buf);
 }
 
 
@@ -1007,9 +1005,6 @@ void syncCommand(client *c) {
         clearReplicationId2();
         createReplicationBacklog();
     }
-	if(server.switch_buf == NULL){
-		createReplicationSwitchBuf();
-	}
 
     /* CASE 1: BGSAVE is in progress, with disk target. */
     if (server.rdb_child_pid != -1 &&
@@ -1147,6 +1142,8 @@ void replconfCommand(client *c) {
         } 
 #ifdef __KLJ__
          else if (!strcasecmp(c->argv[j]->ptr,"finish")) {
+        	if (server.switch_buf == NULL) createReplicationSwitchBuf();
+			//replicationFeedSwitchBuf
 			server.bool_switch_ready = 1;
 			//sentinel한테 알려주는 부분
 			//switch가 완전히 끝나면 bool_switch_ready = 0으로 바꿔야함
@@ -1615,7 +1612,6 @@ void readSyncBulkPayload(aeEventLoop *el, int fd, void *privdata, int mask) {
          * or not, in order to behave correctly if they are promoted to
          * masters after a failover. */
         if (server.repl_backlog == NULL) createReplicationBacklog();
-        if (server.switch_buf == NULL) createReplicationSwitchBuf();
         serverLog(LL_NOTICE, "MASTER <-> SLAVE sync: Finished with success");
 		server.bool_connect_master = 1;
         /* Restart the AOF subsystem now that we finished the sync. This

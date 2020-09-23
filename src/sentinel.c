@@ -4218,8 +4218,17 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
     }
     dictReleaseIterator(di);
 
+#ifdef __KLJ__
     /* Check if all the slaves are reconfigured and handle timeout. */
     sentinelFailoverDetectEnd(master);
+
+	di = dictGetIterator(master->slaves);
+	while((de = dictNext(di)) != NULL) {
+		sentinelRedisInstance *slave = dictGetVal(de);
+		redisAsyncCommand(slave->link->cc, sentinelDiscardReplyCallback, slave,"END");
+	}
+#endif
+
 }
 
 /* This function is called when the slave is in
