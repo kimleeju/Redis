@@ -205,7 +205,7 @@ void feedReplicationSwitchBufWithObject(robj *o) {
         len = sdslen(o->ptr);
         p = o->ptr;
     }
-	serverLog(LL_WARNING,"%s",p);
+	//serverLog(LL_WARNING,"%s",p);
     feedReplicationSwitchBuf(p,len);
 }
 #endif
@@ -865,7 +865,7 @@ int startBgsaveForReplication(int mincapa) {
 }
 #ifdef __KLJ__
 void endCommand(client *c){
-		serverLog(LL_WARNING,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+	serverLog(LL_WARNING,"%s",server.switch_buf);	
 }
 		
 void switchCommand(client *c) {
