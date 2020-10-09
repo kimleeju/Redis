@@ -210,6 +210,7 @@ typedef struct sentinelRedisInstance {
 	int new_master;
 	int temp;
 	int bool_switch_ready;
+	int finish_switch;
 	int bool_connect_master;
 #endif	
 	
@@ -2093,6 +2094,9 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
         if (sdslen(l) >= 18 && !memcmp(l,"bool_switch_ready:",18)){
 			ri->bool_switch_ready = atoi(l+18);
 		}
+		if (sdslen(l) >= 14 && !memcmp(l,"finish_switch:",14)){
+			ri->finish_switch = atoi(l+14);
+		}
 		if (sdslen(l) >= 20 && !memcmp(l,"bool_connect_master:",20)){
 			ri->bool_connect_master = atoi(l+20);
 		}
@@ -2221,7 +2225,7 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
                         ri->master->addr->port);
                 if (retval == C_OK)
                     sentinelEvent(LL_NOTICE,"+convert-to-slave",ri,"%@");
-            }
+			}
         }
     }
 
@@ -2537,7 +2541,7 @@ int sentinelSendHello(sentinelRedisInstance *ri) {
     retval = redisAsyncCommand(ri->link->cc,
         sentinelPublishReplyCallback, ri, "PUBLISH %s %s",
             SENTINEL_HELLO_CHANNEL,payload);
-    if (retval != C_OK) return C_ERR;
+	if (retval != C_OK) return C_ERR;
     ri->link->pending_commands++;
     return C_OK;
 }
@@ -4218,17 +4222,8 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
     }
     dictReleaseIterator(di);
 
-#ifdef __KLJ__
     /* Check if all the slaves are reconfigured and handle timeout. */
     sentinelFailoverDetectEnd(master);
-
-	di = dictGetIterator(master->slaves);
-	while((de = dictNext(di)) != NULL) {
-		sentinelRedisInstance *slave = dictGetVal(de);
-		redisAsyncCommand(slave->link->cc, sentinelDiscardReplyCallback, slave,"END");
-	}
-#endif
-
 }
 
 /* This function is called when the slave is in
@@ -4345,7 +4340,11 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 			ri->master->new_master=0;
 			ri->temp = 0;
 		}
-	
+		
+		if(ri->temp == 1 && ri->finish_switch == 1){
+				ri->temp = 0;
+				redisAsyncCommand(ri->link->cc, sentinelDiscardReplyCallback, ri,"END");
+		}
 		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && !(ri->master->new_master) && ri->bool_connect_master){
 			if(ri->temp != 1){
 				int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"SWITCH");

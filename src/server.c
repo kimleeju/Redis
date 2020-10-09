@@ -317,7 +317,7 @@ struct redisCommand redisCommandTable[] = {
     {"host:",securityWarningCommand,-1,"lt",0,NULL,0,0,0,0,0},
     {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0},
 #ifdef __KLJ__
-	//{"end",endCommand,1,"ars",0,NULL,0,0,0,0,0},
+	{"end",endCommand,1,"ars",0,NULL,0,0,0,0,0},
 	{"switch",switchCommand,1,"ars",0,NULL,0,0,0,0,0},
     {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},
 #endif
@@ -1515,6 +1515,7 @@ void initServerConfig(void) {
 #ifdef __KLJ__
 	server.memory_priority = CONFIG_DEFAULT_MEMORY_PRIORITY;
 	server.bool_switch_ready = 0;
+	server.finish_switch = 0;
 	server.master_switch_offset = 0;
 	server.switch_buf = NULL;
 	server.switch_buf_size = CONFIG_DEFAULT_SWITCH_BUF;
@@ -3388,8 +3389,9 @@ sds genRedisInfoString(char *section) {
             "role:%s\r\n"
 			"memory_priority:%d\r\n"
 			"bool_switch_ready:%d\r\n"
+			"finish_switch:%d\r\n"
 			"bool_connect_master:%d\r\n",
-            server.masterhost == NULL ? "master" : "slave",server.memory_priority,server.bool_switch_ready,server.bool_connect_master);
+            server.masterhost == NULL ? "master" : "slave",server.memory_priority,server.bool_switch_ready,server.finish_switch,server.bool_connect_master);
         
 		if (server.masterhost) {
             long long slave_repl_offset = 1;

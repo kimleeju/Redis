@@ -1166,6 +1166,7 @@ struct redisServer {
 #ifdef __KLJ__
 	int memory_priority;
 	int bool_switch_ready;
+	int finish_switch;
 	int bool_connect_master;
 #endif
 	
@@ -2024,6 +2025,7 @@ void sdiffCommand(client *c);
 void sdiffstoreCommand(client *c);
 void sscanCommand(client *c);
 #ifdef __KLJ__
+void endCommand(client *c);
 void switchCommand(client *c);
 void synchronousCommand(client *c);
 #endif

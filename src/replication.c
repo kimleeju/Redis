@@ -205,6 +205,7 @@ void feedReplicationSwitchBufWithObject(robj *o) {
         len = sdslen(o->ptr);
         p = o->ptr;
     }
+	serverLog(LL_WARNING,"%s",p);
     feedReplicationSwitchBuf(p,len);
 }
 #endif
@@ -443,7 +444,6 @@ void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc) {
     
 		}
     }
-	serverLog(LL_WARNING,"replication switch buf = %s", server.switch_buf);
 }
 
 
@@ -864,6 +864,10 @@ int startBgsaveForReplication(int mincapa) {
     return retval;
 }
 #ifdef __KLJ__
+void endCommand(client *c){
+		serverLog(LL_WARNING,"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+}
+		
 void switchCommand(client *c) {
     /* ignore SYNC if already slave or in monitor mode */
     if (c->flags & CLIENT_SLAVE) return;
@@ -2354,7 +2358,9 @@ void slaveofCommand(client *c) {
         sds client = catClientInfoString(sdsempty(),c);
         serverLog(LL_NOTICE,"SLAVE OF %s:%d enabled (user request from '%s')",
             server.masterhost, server.masterport, client);
-        sdsfree(client);
+        if(server.bool_switch_ready)
+				server.finish_switch = 1;
+		sdsfree(client);
     }
     addReply(c,shared.ok);
 }
