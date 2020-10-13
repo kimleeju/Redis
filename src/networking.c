@@ -218,7 +218,7 @@ int _addReplyToBuffer(client *c, const char *s, size_t len) {
     if (len > available) return C_ERR;
 
     memcpy(c->buf+c->bufpos,s,len);
-    c->bufpos+=len;
+	c->bufpos+=len;
     return C_OK;
 }
 

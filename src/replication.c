@@ -140,12 +140,11 @@ void freeReplicationBacklog(void) {
 void feedReplicationBacklog(void *ptr, size_t len) {
 //	serverLog(LL_WARNING, "Before backlog = %s\n",server.repl_backlog);
 	unsigned char *p = ptr;
-
     server.master_repl_offset += len;
-
     /* This is a circular buffer, so write as much data we can at every
      * iteration and rewind the "idx" index if we reach the limit. */
-    while(len) {
+    
+	while(len) {
         size_t thislen = server.repl_backlog_size - server.repl_backlog_idx;
 		if (thislen > len) thislen = len;
         memcpy(server.repl_backlog+server.repl_backlog_idx,p,thislen);
@@ -154,15 +153,16 @@ void feedReplicationBacklog(void *ptr, size_t len) {
             server.repl_backlog_idx = 0;
         len -= thislen;
         p += thislen;
-        server.repl_backlog_histlen += thislen;
-    }
+        
+		server.repl_backlog_histlen += thislen;
+	}
     if (server.repl_backlog_histlen > server.repl_backlog_size)
         server.repl_backlog_histlen = server.repl_backlog_size;
     /* Set the offset of the first byte we have in the backlog. */
     server.repl_backlog_off = server.master_repl_offset -
                               server.repl_backlog_histlen + 1;
 
-//	serverLog(LL_WARNING, "After backlog = %s\n",server.repl_backlog);
+	//	serverLog(LL_WARNING, "After backlog = %s\n",server.repl_backlog);
 }
 #ifdef __KLJ__
 void feedReplicationSwitchBuf(void *ptr, size_t len) {
@@ -172,17 +172,19 @@ void feedReplicationSwitchBuf(void *ptr, size_t len) {
 
     /* This is a circular buffer, so write as much data we can at every
      * iteration and rewind the "idx" index if we reach the limit. */
-    while(len) {
+   
+	while(len) {
         size_t thislen = server.switch_buf_size - server.switch_buf_idx;
-        if (thislen > len) thislen = len; 
+		if (thislen > len) thislen = len; 
         memcpy(server.switch_buf+server.switch_buf_idx,p,thislen);
         server.switch_buf_idx += thislen;
         if (server.switch_buf_idx == server.switch_buf_size)
             server.switch_buf_idx = 0; 
         len -= thislen;
         p += thislen;
+
         server.switch_buf_histlen += thislen;
-    }    
+	}    
     if (server.switch_buf_histlen > server.switch_buf_size)
         server.switch_buf_histlen = server.switch_buf_size;
     /* Set the offset of the first byte we have in the backlog. */
@@ -205,7 +207,6 @@ void feedReplicationSwitchBufWithObject(robj *o) {
         len = sdslen(o->ptr);
         p = o->ptr;
     }
-	//serverLog(LL_WARNING,"%s",p);
     feedReplicationSwitchBuf(p,len);
 }
 #endif
@@ -543,32 +544,33 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
     serverLog(LL_DEBUG, "[PSYNC] Current index: %lld",
              server.repl_backlog_idx);
 
-    /* Compute the amount of bytes we need to discard. */
+	/* Compute the amount of bytes we need to discard. */
     skip = offset - server.repl_backlog_off;
     serverLog(LL_DEBUG, "[PSYNC] Skipping: %lld", skip);
 
     /* Point j to the oldest byte, that is actually our
      * server.repl_backlog_off byte. */
     j = (server.repl_backlog_idx +
-        (server.repl_backlog_size-server.repl_backlog_histlen)) %
+        (server.repl_backlog_size)) %
         server.repl_backlog_size;
     serverLog(LL_DEBUG, "[PSYNC] Index of first byte: %lld", j);
 
     /* Discard the amount of data to seek to the specified 'offset'. */
-    j = (j + skip) % server.repl_backlog_size;
-
-    /* Feed slave with data. Since it is a circular buffer we have to
+	
+	j = (j + skip) % server.repl_backlog_size;
+	/* Feed slave with data. Since it is a circular buffer we have to
      * split the reply in two parts if we are cross-boundary. */
     len = server.repl_backlog_histlen - skip;
     serverLog(LL_DEBUG, "[PSYNC] Reply total length: %lld", len);
+
     while(len) {
         long long thislen =
             ((server.repl_backlog_size - j) < len) ?
             (server.repl_backlog_size - j) : len;
 
         serverLog(LL_DEBUG, "[PSYNC] addReply() length: %lld", thislen);
-        addReplySds(c,sdsnewlen(server.repl_backlog + j, thislen));
-        len -= thislen;
+		addReplySds(c,sdsnewlen(server.repl_backlog + j, thislen));
+		len -= thislen;
         j = 0;
     }
     return server.repl_backlog_histlen - skip;
@@ -577,17 +579,14 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
 #ifdef __KLJ__
 long long addSwitchBuf(client *c, long long offset) {
     long long j, skip, len;
-
-    serverLog(LL_WARNING, "55555");
     serverLog(LL_DEBUG, "[PSYNC] Slave request offset: %lld", offset);
-
-#if 0
-    if (server.switch_buf_histlen == 0) {
-        serverLog(LL_DEBUG, "[PSYNC] Backlog history len is zero");
+    
+	if (server.switch_buf_histlen == 0) {
+		serverLog(LL_DEBUG, "[PSYNC] Backlog history len is zero");
         return 0;
     }
-#endif
-    serverLog(LL_DEBUG, "[PSYNC] Backlog size: %lld",
+    
+	serverLog(LL_DEBUG, "[PSYNC] Backlog size: %lld",
              server.switch_buf_size);
     serverLog(LL_DEBUG, "[PSYNC] First byte: %lld",
              server.switch_buf_off);
@@ -598,36 +597,40 @@ long long addSwitchBuf(client *c, long long offset) {
 
     /* Compute the amount of bytes we need to discard. */
     skip = offset - server.switch_buf_off;
-    serverLog(LL_DEBUG, "[PSYNC] Skipping: %lld", skip);
+	
+	
+	serverLog(LL_DEBUG, "[PSYNC] Skipping: %lld", skip);
 
     /* Point j to the oldest byte, that is actually our
      * server.repl_backlog_off byte. */
+    
     j = (server.switch_buf_idx +
+        (server.switch_buf_size)) %
+        server.switch_buf_size;
+#if 0
+	j = (server.switch_buf_idx +
         (server.switch_buf_size-server.switch_buf_histlen)) %
         server.switch_buf_size;
-    serverLog(LL_DEBUG, "[PSYNC] Index of first byte: %lld", j);
-
+#endif
     /* Discard the amount of data to seek to the specified 'offset'. */
     j = (j + skip) % server.switch_buf_size;
 
+    serverLog(LL_DEBUG, "[PSYNC] Index of first byte: %lld", j);
     /* Feed slave with data. Since it is a circular buffer we have to
      * split the reply in two parts if we are cross-boundary. */
     len = server.switch_buf_histlen - skip;
-    serverLog(LL_DEBUG, "[PSYNC] Reply total length: %lld", len);
-    
-    		serverLog(LL_WARNING, "9999999");
+	
+	serverLog(LL_DEBUG, "[PSYNC] Reply total length: %lld", len);
 	while(len) {
         long long thislen =
             ((server.switch_buf_size - j) < len) ?
             (server.switch_buf_size - j) : len;
-
-        serverLog(LL_DEBUG, "[PSYNC] addReply() length: %lld", thislen);
-        addReplySds(c,sdsnewlen(server.switch_buf + j, thislen));
-        len -= thislen;
+		serverLog(LL_DEBUG, "[PSYNC] addReply() length: %lld", thislen);
+		
+		addReplySds(c,sdsnewlen(server.switch_buf + j, thislen));
+		len -= thislen;
         j = 0;
     }
-    		serverLog(LL_WARNING, "c->buf = %s",c->buf);
-    		serverLog(LL_WARNING, "88888888");
     return server.switch_buf_histlen - skip;
 }
 #endif
@@ -637,7 +640,7 @@ long long addSwitchBuf(client *c, long long offset) {
  * the BGSAVE process started and before executing any other command
  * from clients. */
 long long getPsyncInitialOffset(void) {
-    return server.master_repl_offset;
+	return server.master_repl_offset;
 }
 
 /* Send a FULLRESYNC reply in the specific case of a full resynchronization,
@@ -865,7 +868,12 @@ int startBgsaveForReplication(int mincapa) {
 }
 #ifdef __KLJ__
 void endCommand(client *c){
-	serverLog(LL_WARNING,"%s",server.switch_buf);	
+
+    long long psync_offset;
+    //getLongLongFromObjectOrReply(c,c->argv[2],&psync_offset,NULL) != C_OK;
+	//serverLog(LL_WARNING,"psync_offset = %d",psync_offset);
+	addSwitchBuf(server.master,strlen(server.switch_buf));			
+	//serverLog(LL_WARNING,"%s",server.switch_buf);	
 }
 		
 void switchCommand(client *c) {
@@ -1400,7 +1408,7 @@ void replicationCreateMasterClient(int fd, int dbid) {
     server.master = createClient(fd);
     server.master->flags |= CLIENT_MASTER;
     server.master->authenticated = 1;
-    server.master->reploff = server.master_initial_offset;
+	server.master->reploff = server.master_initial_offset;
     server.master->read_reploff = server.master->reploff;
     memcpy(server.master->replid, server.master_replid,
         sizeof(server.master_replid));
@@ -1609,8 +1617,8 @@ void readSyncBulkPayload(aeEventLoop *el, int fd, void *privdata, int mask) {
          * offset of the master. The secondary ID / offset are cleared since
          * we are starting a new history. */
         memcpy(server.replid,server.master->replid,sizeof(server.replid));
-        server.master_repl_offset = server.master->reploff;
-        clearReplicationId2();
+		server.master_repl_offset = server.master->reploff;
+		clearReplicationId2();
         /* Let's create the replication backlog if needed. Slaves need to
          * accumulate the backlog regardless of the fact they have sub-slaves
          * or not, in order to behave correctly if they are promoted to
@@ -1785,8 +1793,6 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
 	//__KLJ__ parital인지 full인지 검사
     reply = sendSynchronousCommand(SYNC_CMD_READ,fd,NULL);
 	   
-
-//	serverLog(LL_WARNING,"Out reply = %s",reply);
 	if (sdslen(reply) == 0) {
         /* The master may send empty newlines after it receives PSYNC
          * and before to reply, just to keep the connection alive. */
@@ -1818,8 +1824,9 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
         } else {
             memcpy(server.master_replid, replid, offset-replid-1);
             server.master_replid[CONFIG_RUN_ID_SIZE] = '\0';
-            server.master_initial_offset = strtoll(offset,NULL,10);
-            serverLog(LL_NOTICE,"Full resync from master: %s:%lld",
+            
+			server.master_initial_offset = strtoll(offset,NULL,10);
+			serverLog(LL_NOTICE,"Full resync from master: %s:%lld",
                 server.master_replid,
                 server.master_initial_offset);
         }
@@ -2533,7 +2540,9 @@ void replicationCacheMaster(client *c) {
 void replicationCacheMasterUsingMyself(void) {
     /* The master client we create can be set to any DBID, because
      * the new master will start its replication stream with SELECT. */
-    server.master_initial_offset = server.master_repl_offset;
+    
+	server.master_initial_offset = server.master_repl_offset;
+	
     replicationCreateMasterClient(-1,-1);
 
     /* Use our own ID / offset. */

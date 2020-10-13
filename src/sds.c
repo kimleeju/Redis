@@ -279,7 +279,7 @@ sds sdsnewlen(const void *init, size_t initlen) {
     s[initlen] = '\0';
     if (initlen && init)
         s_memcpy(s, init, initlen);
-    return s;
+	return s;
 }
 
 /* Create an empty (zero length) sds string. Even in this case the string

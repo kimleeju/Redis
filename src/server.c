@@ -3805,7 +3805,7 @@ void loadDataFromDisk(void) {
             if (rsi.repl_id_is_set && rsi.repl_offset != -1) {
                 memcpy(server.replid,rsi.repl_id,sizeof(server.replid));
                 server.master_repl_offset = rsi.repl_offset;
-                /* If we are a slave, create a cached master from this
+				/* If we are a slave, create a cached master from this
                  * information, in order to allow partial resynchronizations
                  * with masters. */
                 if (server.masterhost) replicationCacheMasterUsingMyself();
