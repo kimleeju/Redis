@@ -596,42 +596,25 @@ long long addSwitchBuf(client *c, long long offset) {
              server.switch_buf_idx);
 
     /* Compute the amount of bytes we need to discard. */
-    skip = offset - server.switch_buf_off;
-	
 	
 	serverLog(LL_DEBUG, "[PSYNC] Skipping: %lld", skip);
 
     /* Point j to the oldest byte, that is actually our
      * server.repl_backlog_off byte. */
-    
-    j = (server.switch_buf_idx +
-        (server.switch_buf_size)) %
-        server.switch_buf_size;
 #if 0
 	j = (server.switch_buf_idx +
         (server.switch_buf_size-server.switch_buf_histlen)) %
         server.switch_buf_size;
 #endif
     /* Discard the amount of data to seek to the specified 'offset'. */
-    j = (j + skip) % server.switch_buf_size;
 
     serverLog(LL_DEBUG, "[PSYNC] Index of first byte: %lld", j);
     /* Feed slave with data. Since it is a circular buffer we have to
      * split the reply in two parts if we are cross-boundary. */
-    len = server.switch_buf_histlen - skip;
-	
 	serverLog(LL_DEBUG, "[PSYNC] Reply total length: %lld", len);
-	while(len) {
-        long long thislen =
-            ((server.switch_buf_size - j) < len) ?
-            (server.switch_buf_size - j) : len;
-		serverLog(LL_DEBUG, "[PSYNC] addReply() length: %lld", thislen);
-		
-		addReplySds(c,sdsnewlen(server.switch_buf + j, thislen));
-		len -= thislen;
-        j = 0;
-    }
-    return server.switch_buf_histlen - skip;
+	serverLog(LL_WARNING,"sdsnewlen(server.switch_buf + j, thislen) = %s",sdsnewlen(server.switch_buf, strlen(server.switch_buf)));	
+	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
+    return 1;
 }
 #endif
 
@@ -868,12 +851,7 @@ int startBgsaveForReplication(int mincapa) {
 }
 #ifdef __KLJ__
 void endCommand(client *c){
-
-    long long psync_offset;
-    //getLongLongFromObjectOrReply(c,c->argv[2],&psync_offset,NULL) != C_OK;
-	//serverLog(LL_WARNING,"psync_offset = %d",psync_offset);
 	addSwitchBuf(server.master,strlen(server.switch_buf));			
-	//serverLog(LL_WARNING,"%s",server.switch_buf);	
 }
 		
 void switchCommand(client *c) {
@@ -912,8 +890,6 @@ void switchCommand(client *c) {
 			sync_argv[0] = createStringObject("synchronous",11);
         	replicationFeedSlaves(server.slaves, server.slaveseldb, sync_argv, 1);
 			decrRefCount(sync_argv[0]);
-						
-//			addSwitchBuf(c,server.switch_buf_off);
 			return;
 	}
 #endif
@@ -977,18 +953,6 @@ void syncCommand(client *c) {
             if (master_replid[0] != '?') server.stat_sync_partial_err++;
         }
     }
-#if 0
-#ifdef __KLJ__
-	else if(!strcasecmp(c->argv[0]->ptr,"switch")){
-    		serverLog(LL_WARNING, "222222");
-			
-			propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
-			
-			//addSwitchBuf(c,server.repl_backlog_off);
-			return;
-	}
-#endif
-#endif
 	else {
         /* If a slave uses SYNC, we are dealing with an old implementation
          * of the replication protocol (like redis-cli --slave). Flag the client

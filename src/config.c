@@ -403,7 +403,7 @@ void loadServerConfigFromString(char *config) {
                 err = "argument must be 'yes' or 'no'"; goto loaderr;
             }
         } else if (!strcasecmp(argv[0],"slave-read-only") && argc == 2) {
-            if ((server.repl_slave_ro = yesnotoi(argv[1])) == -1) {
+			if ((server.repl_slave_ro = yesnotoi(argv[1])) == -1) {
                 err = "argument must be 'yes' or 'no'"; goto loaderr;
             }
         } else if (!strcasecmp(argv[0],"rdbcompression") && argc == 2) {
