@@ -1372,6 +1372,7 @@ void createSharedObjects(void) {
 void initServerConfig(void) {
     int j;
 
+
     pthread_mutex_init(&server.next_client_id_mutex,NULL);
     pthread_mutex_init(&server.lruclock_mutex,NULL);
     pthread_mutex_init(&server.unixtime_mutex,NULL);
@@ -1513,6 +1514,7 @@ void initServerConfig(void) {
     server.repl_min_slaves_max_lag = CONFIG_DEFAULT_MIN_SLAVES_MAX_LAG;
     server.slave_priority = CONFIG_DEFAULT_SLAVE_PRIORITY;
 #ifdef __KLJ__
+	server.lock = 0 ;
 	server.memory_priority = CONFIG_DEFAULT_MEMORY_PRIORITY;
 	server.bool_switch_ready = 0;
 	server.finish_switch = 0;

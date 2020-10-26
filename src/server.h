@@ -923,7 +923,10 @@ struct clusterState;
 #define CHILD_INFO_TYPE_AOF 1
 
 struct redisServer {
-    /* General */
+#ifdef __KLJ__
+	int lock;
+#endif
+	/* General */
     pid_t pid;                  /* Main process pid. */
     char *configfile;           /* Absolute config file path, or NULL */
     char *executable;           /* Absolute executable file path. */
@@ -2026,6 +2029,7 @@ void sdiffstoreCommand(client *c);
 void sscanCommand(client *c);
 #ifdef __KLJ__
 void endCommand(client *c);
+void lockCommand(client *c);
 void switchCommand(client *c);
 void synchronousCommand(client *c);
 #endif

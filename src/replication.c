@@ -599,20 +599,12 @@ long long addSwitchBuf(client *c, long long offset) {
 	
 	serverLog(LL_DEBUG, "[PSYNC] Skipping: %lld", skip);
 
-    /* Point j to the oldest byte, that is actually our
-     * server.repl_backlog_off byte. */
-#if 0
-	j = (server.switch_buf_idx +
-        (server.switch_buf_size-server.switch_buf_histlen)) %
-        server.switch_buf_size;
-#endif
     /* Discard the amount of data to seek to the specified 'offset'. */
 
     serverLog(LL_DEBUG, "[PSYNC] Index of first byte: %lld", j);
     /* Feed slave with data. Since it is a circular buffer we have to
      * split the reply in two parts if we are cross-boundary. */
 	serverLog(LL_DEBUG, "[PSYNC] Reply total length: %lld", len);
-	serverLog(LL_WARNING,"sdsnewlen(server.switch_buf + j, thislen) = %s",sdsnewlen(server.switch_buf, strlen(server.switch_buf)));	
 	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
     return 1;
 }
@@ -851,9 +843,21 @@ int startBgsaveForReplication(int mincapa) {
 }
 #ifdef __KLJ__
 void endCommand(client *c){
+	lockCommand(server.master);
 	addSwitchBuf(server.master,strlen(server.switch_buf));			
 }
-		
+	
+void lockCommand(client *c){
+    if (c != NULL) {
+        c->flags |= CLIENT_MASTER_FORCE_REPLY;
+        addReplyMultiBulkLen(c,3);
+        addReplyBulkCString(c,"REPLCONF");
+        addReplyBulkCString(c,"LOCK");
+        addReplyBulkLongLong(c,c->reploff);
+        c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
+    }
+}
+
 void switchCommand(client *c) {
     /* ignore SYNC if already slave or in monitor mode */
     if (c->flags & CLIENT_SLAVE) return;
@@ -1119,10 +1123,9 @@ void replconfCommand(client *c) {
 #ifdef __KLJ__
          else if (!strcasecmp(c->argv[j]->ptr,"finish")) {
         	if (server.switch_buf == NULL) createReplicationSwitchBuf();
-			//replicationFeedSwitchBuf
 			server.bool_switch_ready = 1;
-			//sentinel한테 알려주는 부분
-			//switch가 완전히 끝나면 bool_switch_ready = 0으로 바꿔야함
+		 }else if (!strcasecmp(c->argv[j]->ptr,"lock")) {
+		 	server.lock = 1;
 		 }
 #endif
 		else {
@@ -2329,8 +2332,9 @@ void slaveofCommand(client *c) {
         sds client = catClientInfoString(sdsempty(),c);
         serverLog(LL_NOTICE,"SLAVE OF %s:%d enabled (user request from '%s')",
             server.masterhost, server.masterport, client);
-        if(server.bool_switch_ready)
-				server.finish_switch = 1;
+        if(server.bool_switch_ready){
+			server.finish_switch = 1;
+		}
 		sdsfree(client);
     }
     addReply(c,shared.ok);
