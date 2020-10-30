@@ -112,7 +112,7 @@ void execCommandPropagateMulti(client *c) {
 }
 
 void execCommand(client *c) {
-    int j;
+	int j;
     robj **orig_argv;
     int orig_argc;
     struct redisCommand *orig_cmd;

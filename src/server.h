@@ -2028,6 +2028,7 @@ void sdiffCommand(client *c);
 void sdiffstoreCommand(client *c);
 void sscanCommand(client *c);
 #ifdef __KLJ__
+void changeCommand(client *c);
 void endCommand(client *c);
 void lockCommand(client *c);
 void switchCommand(client *c);

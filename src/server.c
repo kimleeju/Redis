@@ -317,6 +317,7 @@ struct redisCommand redisCommandTable[] = {
     {"host:",securityWarningCommand,-1,"lt",0,NULL,0,0,0,0,0},
     {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0},
 #ifdef __KLJ__
+	{"change",changeCommand,1,"ars",0,NULL,0,0,0,0,0},
 	{"end",endCommand,1,"ars",0,NULL,0,0,0,0,0},
 	{"switch",switchCommand,1,"ars",0,NULL,0,0,0,0,0},
     {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},

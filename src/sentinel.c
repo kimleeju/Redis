@@ -3834,6 +3834,12 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
     if (retval == C_ERR) return retval;
     ri->link->pending_commands++;
 #endif
+#ifdef __KJL__
+    retval = redisAsyncCommand(ri->link->cc,
+        sentinelDiscardReplyCallback, ri, "CHANGE");
+    if (retval == C_ERR) return retval;
+    ri->link->pending_commands++;
+#endif
     retval = redisAsyncCommand(ri->link->cc,
         sentinelDiscardReplyCallback, ri, "EXEC");
     if (retval == C_ERR) return retval;
