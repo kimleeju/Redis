@@ -2441,16 +2441,9 @@ void call(client *c, int flags) {
         /* Call propagate() only if at least one of AOF / replication
          * propagation is needed. */
         if (propagate_flags != PROPAGATE_NONE){
-#ifndef __KLJ__
-            	propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
-#endif
 #ifdef __KLJ__
-			if(!server.bool_switch_ready){
+            if(!server.bool_switch_ready)	
 				propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
-			}
-			else{
-				propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
-			}
 #endif
 		}	
 	}

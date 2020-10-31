@@ -1343,7 +1343,10 @@ int processMultibulkBuffer(client *c) {
  * pending query buffer, already representing a full command, to process. */
 void processInputBuffer(client *c) {
     server.current_client = c;
-    /* Keep processing while there is something in the input buffer */
+#if 0 
+	serverLog(LL_WARNING,"KIMLEEJU = %s",c->querybuf);
+#endif
+	/* Keep processing while there is something in the input buffer */
 	/* 입력 버퍼에 무언가있는 동안 처리유지*/
     while(sdslen(c->querybuf)) {
 		/*버퍼에 데이터가 있는 경우*/
@@ -1463,13 +1466,6 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 #endif
 		c->pending_querybuf = sdscatlen(c->pending_querybuf,
 										c->querybuf+qblen,nread);
-#if 1
-#ifdef __KLJ__ 
-//		server.switch_buf = sdscatlen(server.switch_buf,
-//										c->querybuf+qblen,nread);
-//		serverLog(LL_WARNING,"server.swithc_buf = %s", server.switch_buf);
-#endif
-#endif
 	//	serverLog(LL_WARNING,"c->pending_querybuf = %s", c->pending_querybuf);
 	}
 
