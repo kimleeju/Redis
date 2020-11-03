@@ -449,7 +449,6 @@ void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc) {
 				
 			}
 		}
-		serverLog(LL_WARNING,"switch = %s",server.switch_buf);
     }
 }
 

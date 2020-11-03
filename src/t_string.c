@@ -158,9 +158,11 @@ void setCommand(client *c) {
 			c->argv[2] = tryObjectEncoding(c->argv[2]);
 			setGenericCommand(c,flags,c->argv[1],c->argv[2],expire,unit,NULL,NULL);
 	}
+#ifdef __KLJ__
 	else{
 		propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);	
 	}
+#endif
 }
 
 void setnxCommand(client *c) {
@@ -183,7 +185,6 @@ int getGenericCommand(client *c) {
     if(!server.bool_switch_ready){
 #endif
 		robj *o;
-
 		if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.nullbulk)) == NULL)
 			return C_OK;
 
@@ -195,10 +196,37 @@ int getGenericCommand(client *c) {
 			return C_OK;
 		}
 	}
+#ifdef __KLJ__
 	else{
 		robj *o;
-		
+		char *value = strstr(server.switch_buf,c->argv[1]->ptr);
+		char *tmp = "111";
+		if(value != NULL){
+			value = strtok(value,"*");
+			value = strtok(value,"\n");
+			while(tmp != NULL){
+				tmp = strtok(NULL,"\n");
+				if(tmp != NULL)
+					strcpy(value,tmp);
+			}
+			o = (void*)value;
+			addReplyBulk(c,o);
+			return C_OK;
+		}
+		else{
+			if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.nullbulk)) == NULL)
+				return C_OK;
+
+			if (o->type != OBJ_STRING) {
+				addReply(c,shared.wrongtypeerr);
+				return C_ERR;
+			} else {
+				addReplyBulk(c,o);
+				return C_OK;
+			}
+		}
 	}
+#endif
 }
 
 void getCommand(client *c) {

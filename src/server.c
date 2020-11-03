@@ -2357,8 +2357,7 @@ void preventCommandReplication(client *c) {
 void call(client *c, int flags) {
     long long dirty, start, duration;
     int client_old_flags = c->flags;
-
-
+	
 #if 0
     serverLog(LL_WARNING,"c->argv->ptr = %s",c->argv[0]->ptr);
 #endif
