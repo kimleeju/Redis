@@ -19,9 +19,10 @@ find / -name "*appendonly.aof" -exec rm {} \;
 #rm -rf /dev/pmem1/redis-port-7002-1GB-AEP
 #rm -rf /dev/pmem1/redis-port-7000-1GB-AEP
 
-/home/ljkim/redis_switch_master/pmem-redis-test/src/redis-sentinel /home/ljkim/redis_switch_master/pmem-redis-test/KLJ/sentinel_0.conf &
+../src/redis-sentinel sentinel_0.conf &
 
-/home/ljkim/redis_switch_master/pmem-redis-test/src/redis-server /home/ljkim/redis_switch_master/pmem-redis-test/KLJ/3000.conf
+../src/redis-server 3000.conf &
 
+../src/redis-server 3001.conf 
 #/home/ljkim/redis_switch_master/pmem-redis-test/src/redis-server /home/ljkim/redis_switch_master/pmem-redis-test/KLJ/3001.conf
 #/home/ljkim/redis_switch_master/pmem-redis-test/src/redis-server /home/ljkim/redis_switch_master/pmem-redis-test/KLJ/3000.conf

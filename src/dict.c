@@ -264,9 +264,8 @@ static void _dictRehashStep(dict *d) {
 /* Add an element to the target hash table */
 int dictAdd(dict *d, void *key, void *val)
 {
-    dictEntry *entry = dictAddRaw(d,key,NULL);
-
-    if (!entry) return DICT_ERR;
+	dictEntry *entry = dictAddRaw(d,key,NULL);
+	if (!entry) return DICT_ERR;
     dictSetVal(d, entry, val);
     return DICT_OK;
 }

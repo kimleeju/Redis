@@ -390,19 +390,8 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 
 
 #ifdef __KLJ__
-void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc) {
-    listNode *ln;
-    listIter li;
-    int j, len;
-    int cnt = 1000;
-	char llstr[LONG_STR_SIZE];
-
-    /* If the instance is not a top level master, return ASAP: we'll just proxy
-     * the stream of data we receive from our master instead, in order to
-     * propagate *identical* replication stream. In this way this slave can
-     * advertise the same replication ID as the master (since it shares the
-     * master replication history and has the same backlog and offsets). */
-    if (server.masterhost != NULL) return;
+void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc, client *c) {
+	if (server.masterhost != NULL || server.switch_buf == NULL) return;
 
     /* If there aren't slaves, and there is no backlog buffer to populate,
      * we can return ASAP. */
@@ -411,45 +400,17 @@ void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc) {
     /* We can't have slaves attached and no backlog. */
     serverAssert(!(listLength(slaves) != 0 && server.switch_buf == NULL));
 
-	//해야할일 ) 이 부분을 나중에 마스터 교체 할때 호출하는 곳으로 이동해야함
-   	/* Write the command to the switch_buf if any. */
-   
 	if (server.switch_buf) {
-		char aux[LONG_STR_SIZE+3];
-
-        /* Add the multi bulk reply length. */
-        aux[0] = '*';
-        len = ll2string(aux+1,sizeof(aux)-1,argc);
-        
-		aux[len+1] = '\r';
-        aux[len+2] = '\n';
-   		
-		if(!strcasecmp(argv[j]->ptr,"SET"))
-			feedReplicationSwitchBuf(aux,len+3);
-
-        for (j = 0; j < argc; j++) {
-			if(!strcasecmp(argv[j]->ptr,"SET")|| cnt < 3){
-				cnt++;
-				if(!strcasecmp(argv[j]->ptr,"SET"))
-						cnt = 0;
-				long objlen = stringObjectLen(argv[j]);
-				/* We need to feed the buffer with the object as a bulk reply
-				 * not just as a plain string, so create the $..CRLF payload len
-				 * and add the final CRLF */
-				aux[0] = '$';
-				len = ll2string(aux+1,sizeof(aux)-1,objlen);
-				aux[len+1] = '\r';
-				aux[len+2] = '\n';
-
-				feedReplicationSwitchBuf(aux,len+3); // $(명령어 크기) 삽입
-				feedReplicationSwitchBufWithObject(argv[j]); // 명령어 삽입 
-				feedReplicationSwitchBuf(aux+len+1,2);
-   			}
-			else if(argv[j]->ptr == "GET"){
-				
-			}
+		if(!strcasecmp(argv[0]->ptr,"SET")){
+    		setKey(c->sdb, argv[1], argv[2]);
+			addReply(c,shared.ok);	
+			return;
 		}
-    }
+
+		else if(!strcasecmp(argv[0]->ptr,"GET")){
+			getSwitchGenericCommand(c);
+		}
+	}
 }
 
 
@@ -852,7 +813,7 @@ void changeCommand(client *c){
 }
 
 void endCommand(client *c){
-	lockCommand(server.master);
+	//lockCommand(server.master);
 	addSwitchBuf(server.master,strlen(server.switch_buf));			
 }
 	

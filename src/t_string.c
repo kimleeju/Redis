@@ -111,58 +111,49 @@ void setGenericCommand(client *c, int flags, robj *key, robj *val, robj *expire,
 
 /* SET key value [NX] [XX] [EX <seconds>] [PX <milliseconds>] */
 void setCommand(client *c) {
-#ifdef __KLJ__
-    if(!server.bool_switch_ready){
-#endif
-			int j;
-			robj *expire = NULL;
-			int unit = UNIT_SECONDS;
-			int flags = OBJ_SET_NO_FLAGS;
+	int j;
+	robj *expire = NULL;
+	int unit = UNIT_SECONDS;
+	int flags = OBJ_SET_NO_FLAGS;
 
-			for (j = 3; j < c->argc; j++) {
-				char *a = c->argv[j]->ptr;
-				robj *next = (j == c->argc-1) ? NULL : c->argv[j+1];
+	for (j = 3; j < c->argc; j++) {
+		char *a = c->argv[j]->ptr;
+		robj *next = (j == c->argc-1) ? NULL : c->argv[j+1];
 
-				if ((a[0] == 'n' || a[0] == 'N') &&
-					(a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
-					!(flags & OBJ_SET_XX))
-				{
-					flags |= OBJ_SET_NX;
-				} else if ((a[0] == 'x' || a[0] == 'X') &&
-						   (a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
-						   !(flags & OBJ_SET_NX))
-				{
-					flags |= OBJ_SET_XX;
-				} else if ((a[0] == 'e' || a[0] == 'E') &&
-						   (a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
-						   !(flags & OBJ_SET_PX) && next)
-				{
-					flags |= OBJ_SET_EX;
-					unit = UNIT_SECONDS;
-					expire = next;
-					j++;
-				} else if ((a[0] == 'p' || a[0] == 'P') &&
-						   (a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
-						   !(flags & OBJ_SET_EX) && next)
-				{
-					flags |= OBJ_SET_PX;
-					unit = UNIT_MILLISECONDS;
-					expire = next;
-					j++;
-				} else {
-					addReply(c,shared.syntaxerr);
-					return;
-				}
-			}
-
-			c->argv[2] = tryObjectEncoding(c->argv[2]);
-			setGenericCommand(c,flags,c->argv[1],c->argv[2],expire,unit,NULL,NULL);
+		if ((a[0] == 'n' || a[0] == 'N') &&
+			(a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
+			!(flags & OBJ_SET_XX))
+		{
+			flags |= OBJ_SET_NX;
+		} else if ((a[0] == 'x' || a[0] == 'X') &&
+				   (a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
+				   !(flags & OBJ_SET_NX))
+		{
+			flags |= OBJ_SET_XX;
+		} else if ((a[0] == 'e' || a[0] == 'E') &&
+				   (a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
+				   !(flags & OBJ_SET_PX) && next)
+		{
+			flags |= OBJ_SET_EX;
+			unit = UNIT_SECONDS;
+			expire = next;
+			j++;
+		} else if ((a[0] == 'p' || a[0] == 'P') &&
+				   (a[1] == 'x' || a[1] == 'X') && a[2] == '\0' &&
+				   !(flags & OBJ_SET_EX) && next)
+		{
+			flags |= OBJ_SET_PX;
+			unit = UNIT_MILLISECONDS;
+			expire = next;
+			j++;
+		} else {
+			addReply(c,shared.syntaxerr);
+			return;
+		}
 	}
-#ifdef __KLJ__
-	else{
-		propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);	
-	}
-#endif
+
+	c->argv[2] = tryObjectEncoding(c->argv[2]);
+	setGenericCommand(c,flags,c->argv[1],c->argv[2],expire,unit,NULL,NULL);
 }
 
 void setnxCommand(client *c) {
@@ -181,53 +172,25 @@ void psetexCommand(client *c) {
 }
 
 int getGenericCommand(client *c) {
-#ifdef __KLJ__ 
-    if(!server.bool_switch_ready){
-#endif
-		robj *o;
-		if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.nullbulk)) == NULL)
-			return C_OK;
+	robj *o;
+	if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.nullbulk)) == NULL)
+		return C_OK;
 
-		if (o->type != OBJ_STRING) {
-			addReply(c,shared.wrongtypeerr);
-			return C_ERR;
-		} else {
-			addReplyBulk(c,o);
-			return C_OK;
-		}
+	if (o->type != OBJ_STRING) {
+		addReply(c,shared.wrongtypeerr);
+		return C_ERR;
+	} else {
+		addReplyBulk(c,o);
+		return C_OK;
 	}
-#ifdef __KLJ__
-	else{
-		robj *o;
-		char *value = strstr(server.switch_buf,c->argv[1]->ptr);
-		char *tmp = "111";
-		if(value != NULL){
-			value = strtok(value,"*");
-			value = strtok(value,"\n");
-			while(tmp != NULL){
-				tmp = strtok(NULL,"\n");
-				if(tmp != NULL)
-					strcpy(value,tmp);
-			}
-			o = (void*)value;
-			addReplyBulk(c,o);
-			return C_OK;
-		}
-		else{
-			if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.nullbulk)) == NULL)
-				return C_OK;
-
-			if (o->type != OBJ_STRING) {
-				addReply(c,shared.wrongtypeerr);
-				return C_ERR;
-			} else {
-				addReplyBulk(c,o);
-				return C_OK;
-			}
-		}
-	}
-#endif
 }
+
+#ifdef __KLJ__
+int getSwitchGenericCommand(client *c) {
+	lookupSwitchKeyReadOrReply(c,c->argv[1]);
+	return C_OK;
+}
+#endif
 
 void getCommand(client *c) {
     getGenericCommand(c);

@@ -230,12 +230,12 @@ sds sdsnewlen(const void *init, size_t initlen) {
     void *sh;
     sds s;
     char type = sdsReqType(initlen);
-    /* Empty strings are usually created in order to append. Use type 8
+	/* Empty strings are usually created in order to append. Use type 8
      * since type 5 is not good at this. */
     if (type == SDS_TYPE_5 && initlen == 0) type = SDS_TYPE_8;
     int hdrlen = sdsHdrSize(type);
-    unsigned char *fp; /* flags pointer. */
-
+    
+	unsigned char *fp; /* flags pointer. */
     sh = s_malloc(hdrlen+initlen+1);
     if (!init)
         memset(sh, 0, hdrlen+initlen+1);
@@ -290,7 +290,7 @@ sds sdsempty(void) {
 
 /* Create a new sds string starting from a null terminated C string. */
 sds sdsnew(const char *init) {
-    size_t initlen = (init == NULL) ? 0 : strlen(init);
+	size_t initlen = (init == NULL) ? 0 : strlen(init);
     return sdsnewlen(init, initlen);
 }
 

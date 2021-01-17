@@ -1973,8 +1973,8 @@ void initServer(void) {
         exit(1);
     }
     server.db = zmalloc(sizeof(redisDb)*server.dbnum);
-
-    /* Open the TCP listening socket for the user commands. */
+	
+	/* Open the TCP listening socket for the user commands. */
     if (server.port != 0 &&
         listenToPort(server.port,server.ipfd,&server.ipfd_count) == C_ERR)
         exit(1);
@@ -2007,6 +2007,16 @@ void initServer(void) {
         server.db[j].id = j;
         server.db[j].avg_ttl = 0;
     }
+
+
+#ifdef __KLJ__
+	server.sdb.dict = dictCreate(&dbDictType,NULL);
+	server.sdb.expires = dictCreate(&keyptrDictType,NULL);
+	server.sdb.blocking_keys = dictCreate(&keylistDictType,NULL);
+	server.sdb.ready_keys = dictCreate(&objectKeyPointerValueDictType,NULL);
+	server.sdb.watched_keys = dictCreate(&keylistDictType,NULL);        
+	server.sdb.avg_ttl = 0;
+#endif
 
 #ifdef AEP_COW
     server.forked_dict = cow_createforknvmdict();
@@ -2258,10 +2268,6 @@ void propagate(struct redisCommand *cmd, int dbid, robj **argv, int argc,
         feedAppendOnlyFile(cmd,dbid,argv,argc);
     if (flags & PROPAGATE_REPL)
         replicationFeedSlaves(server.slaves,dbid,argv,argc);
-#ifdef __KLJ__
-	if (flags & PROPAGATE_SWITCH && (server.switch_buf != NULL))
-		replicationFeedSwitchBuf(server.slaves,dbid,argv,argc);
-#endif
 }
 
 /* Used inside commands to schedule the propagation of additional commands
@@ -2440,10 +2446,6 @@ void call(client *c, int flags) {
         /* Call propagate() only if at least one of AOF / replication
          * propagation is needed. */
         if (propagate_flags != PROPAGATE_NONE){
-#ifdef __KLJ__
-            if(!server.bool_switch_ready)	
-				propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
-#endif
 		}	
 	}
 
@@ -2501,6 +2503,7 @@ int processCommand(client *c) {
    
 #ifdef __KLJ__
 	
+		//	serverLog(LL_WARNING, "55555555555555555555555555555555555555555\n");
 //    serverLog(LL_WARNING,"c->argv[0]->ptr = %s",c->argv[0]->ptr);
 #endif
 	//여기가 문제!
@@ -2613,7 +2616,7 @@ int processCommand(client *c) {
         !(c->flags & CLIENT_MASTER) &&
         c->cmd->flags & CMD_WRITE)
     {
-		//addReply(c, shared.roslaveerr);
+		addReply(c, shared.roslaveerr);
         return C_OK;
     }
 
@@ -2670,8 +2673,16 @@ int processCommand(client *c) {
         queueMultiCommand(c);
         addReply(c,shared.queued);
     } else {
-        call(c,CMD_CALL_FULL);
-        c->woff = server.master_repl_offset;
+#ifndef __KLJ__
+		call(c,CMD_CALL_FULL);
+#endif
+#ifdef __KLJ__
+		if(!server.bool_switch_ready)
+        	call(c,CMD_CALL_FULL);
+		else
+			replicationFeedSwitchBuf(server.slaves,c->db->id,c->argv,c->argc,c);
+#endif
+		c->woff = server.master_repl_offset;
         if (listLength(server.ready_keys))
             handleClientsBlockedOnLists();
     }

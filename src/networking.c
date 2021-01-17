@@ -523,7 +523,6 @@ void addReplyMultiBulkLen(client *c, long length) {
 /* Create the length prefix of a bulk reply, example: $2234 */
 void addReplyBulkLen(client *c, robj *obj) {
     size_t len;
-
     if (sdsEncodedObject(obj)) {
         len = sdslen(obj->ptr);
     } else {
@@ -539,7 +538,6 @@ void addReplyBulkLen(client *c, robj *obj) {
             len++;
         }
     }
-
     if (len < OBJ_SHARED_BULKHDR_LEN)
         addReply(c,shared.bulkhdr[len]);
     else
@@ -548,7 +546,7 @@ void addReplyBulkLen(client *c, robj *obj) {
 
 /* Add a Redis Object as a bulk reply */
 void addReplyBulk(client *c, robj *obj) {
-    addReplyBulkLen(c,obj);
+	addReplyBulkLen(c,obj);
     addReply(c,obj);
     addReply(c,shared.crlf);
 }

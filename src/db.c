@@ -68,6 +68,17 @@ robj *lookupKey(redisDb *db, robj *key, int flags) {
     }
 }
 
+#ifdef __KLJ__
+robj *lookupSwitchKey(redisDb *db, robj *key) {
+    dictEntry *de = dictFind(db->dict,key->ptr);
+    if (de) {
+        robj *val = dictGetVal(de);
+        return val;
+    } else {
+        return NULL;
+    }
+}
+#endif
 
 /* Lookup a key for read operations, or return NULL if the key is not found
  * in the specified DB.
@@ -139,7 +150,7 @@ robj *lookupKeyRead(redisDb *db, robj *key) {
  * Returns the linked value object if the key exists or NULL if the key
  * does not exist in the specified DB. */
 robj *lookupKeyWrite(redisDb *db, robj *key) {
-    expireIfNeeded(db,key);
+	expireIfNeeded(db,key);
     return lookupKey(db,key,LOOKUP_NONE);
 }
 
@@ -148,6 +159,16 @@ robj *lookupKeyReadOrReply(client *c, robj *key, robj *reply) {
     if (!o) addReply(c,reply);
     return o;
 }
+#ifdef __KLJ__
+void lookupSwitchKeyReadOrReply(client *c, robj *key) {
+    robj *val = lookupSwitchKey(c->sdb,key);
+	if(!val)
+		getCommand(c);
+	else 
+		addReplyBulk(c,val);
+	return;
+}
+#endif
 
 robj *lookupKeyWriteOrReply(client *c, robj *key, robj *reply) {
     robj *o = lookupKeyWrite(c->db, key);
@@ -165,13 +186,20 @@ void dbAdd(redisDb *db, robj *key, robj *val) {
 #else
     sds copy = sdsdup(key->ptr);
 #endif
-    
     int retval = dictAdd(db->dict, copy, val);
-
     serverAssertWithInfo(NULL,key,retval == DICT_OK);
     if (val->type == OBJ_LIST) signalListAsReady(db, key);
-    if (server.cluster_enabled) slotToKeyAdd(key);
+	if (server.cluster_enabled) slotToKeyAdd(key);
  }
+
+#ifdef __KLJ__
+void sdbAdd(redisDb *db, robj *key, robj *val) {
+	int retval = dictAdd(db->dict, key, val);
+    serverAssertWithInfo(NULL,key,retval == DICT_OK);
+    if (val->type == OBJ_LIST) signalListAsReady(db, key);
+	if (server.cluster_enabled) slotToKeyAdd(key);
+ }
+#endif
 
 /* Overwrite an existing key with a new value. Incrementing the reference
  * count of the new value is up to the caller.
@@ -347,7 +375,8 @@ int selectDb(client *c, int id) {
     if (id < 0 || id >= server.dbnum)
         return C_ERR;
     c->db = &server.db[id];
-    return C_OK;
+	c->sdb = &server.sdb;
+	return C_OK;
 }
 
 /*-----------------------------------------------------------------------------

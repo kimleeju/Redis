@@ -727,7 +727,10 @@ typedef struct client {
     uint64_t id;            /* Client incremental unique ID. */
     int fd;                 /* Client socket. */
     redisDb *db;            /* Pointer to currently SELECTed DB. */
-    robj *name;             /* As set by CLIENT SETNAME. */
+#ifdef __KLJ__
+	redisDb *sdb;
+#endif
+	robj *name;             /* As set by CLIENT SETNAME. */
     sds querybuf;           /* Buffer we use to accumulate client queries. */
     sds pending_querybuf;   /* If this is a master, this buffer represents the
                                yet not applied replication stream that we
@@ -793,7 +796,7 @@ struct moduleLoadQueueEntry {
 
 struct sharedObjectsStruct {
     robj *crlf, *ok, *err, *emptybulk, *czero, *cone, *cnegone, *pong, *space, *synchronous,
-    *colon, *nullbulk, *nullmultibulk, *queued,
+    *colon, *nullbulk, *nullmultibulk, *queued, *value,
     *emptymultibulk, *wrongtypeerr, *nokeyerr, *syntaxerr, *sameobjecterr,
     *outofrangeerr, *noscripterr, *loadingerr, *slowscripterr, *bgsaveerr,
     *masterdownerr, *roslaveerr, *execaborterr, *noautherr, *noreplicaserr,
@@ -933,6 +936,10 @@ struct redisServer {
     char **exec_argv;           /* Executable argv vector (copy). */
     int hz;                     /* serverCron() calls frequency in hertz */
     redisDb *db;
+#ifdef __KLJ__
+	redisDb sdb;
+#endif
+	
     dict *commands;             /* Command table */
     dict *orig_commands;        /* Command table before command renaming. */
     aeEventLoop *el;
@@ -1857,6 +1864,9 @@ robj *lookupKey(redisDb *db, robj *key, int flags);
 robj *lookupKeyRead(redisDb *db, robj *key);
 robj *lookupKeyWrite(redisDb *db, robj *key);
 robj *lookupKeyReadOrReply(client *c, robj *key, robj *reply);
+#ifdef __KLJ__
+void lookupSwitchKeyReadOrReply(client *c, robj *key);
+#endif
 robj *lookupKeyWriteOrReply(client *c, robj *key, robj *reply);
 robj *lookupKeyReadWithFlags(redisDb *db, robj *key, int flags);
 robj *objectCommandLookup(client *c, robj *key);
