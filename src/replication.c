@@ -543,13 +543,13 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
 }
 
 #ifdef __KLJ__
-long long addSwitchBuf(client *c, long long offset) {
-    long long j, skip, len;
+void sendSwitchBuf(client *c, long long offset) {
+	long long j, skip, len;
     serverLog(LL_DEBUG, "[PSYNC] Slave request offset: %lld", offset);
     
 	if (server.switch_buf_histlen == 0) {
 		serverLog(LL_DEBUG, "[PSYNC] Backlog history len is zero");
-        return 0;
+        return;
     }
     
 	serverLog(LL_DEBUG, "[PSYNC] Backlog size: %lld",
@@ -572,7 +572,7 @@ long long addSwitchBuf(client *c, long long offset) {
      * split the reply in two parts if we are cross-boundary. */
 	serverLog(LL_DEBUG, "[PSYNC] Reply total length: %lld", len);
 	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
-    return 1;
+    return;
 }
 #endif
 
@@ -814,7 +814,7 @@ void changeCommand(client *c){
 
 void endCommand(client *c){
 	//lockCommand(server.master);
-	addSwitchBuf(server.master,strlen(server.switch_buf));			
+	sendSwitchBuf(server.master,strlen(server.switch_buf));			
 }
 	
 void lockCommand(client *c){
@@ -2267,16 +2267,15 @@ void replicationHandleMasterDisconnection(void) {
 void slaveofCommand(client *c) {
     /* SLAVEOF is not allowed in cluster mode as replication is automatically
      * configured using the current address of the master node. */
-    if (server.cluster_enabled) {
+	if (server.cluster_enabled) {
         addReplyError(c,"SLAVEOF not allowed in cluster mode.");
         return;
     }
-
     /* The special host/port combination "NO" "ONE" turns the instance
      * into a master. Otherwise the new master address is set. */
     if (!strcasecmp(c->argv[1]->ptr,"no") &&
         !strcasecmp(c->argv[2]->ptr,"one")) {
-        if (server.masterhost) {
+		if (server.masterhost) {
             replicationUnsetMaster();
             sds client = catClientInfoString(sdsempty(),c);
             serverLog(LL_NOTICE,"MASTER MODE enabled (user request from '%s')",
@@ -2285,7 +2284,6 @@ void slaveofCommand(client *c) {
         }
     } else {
         long port;
-
         if ((getLongFromObjectOrReply(c, c->argv[2], &port, NULL) != C_OK))
             return;
 
@@ -2302,11 +2300,12 @@ void slaveofCommand(client *c) {
         sds client = catClientInfoString(sdsempty(),c);
         serverLog(LL_NOTICE,"SLAVE OF %s:%d enabled (user request from '%s')",
             server.masterhost, server.masterport, client);
-        if(server.bool_switch_ready){
-			server.finish_switch = 1;
-		}
 		sdsfree(client);
     }
+	if(server.bool_switch_ready){
+		printf("port = %d\n",server.port);
+		server.finish_switch = 1;
+	}
     addReply(c,shared.ok);
 }
 

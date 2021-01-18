@@ -2501,14 +2501,7 @@ int processCommand(client *c) {
     /* Now lookup the command and check ASAP about trivial error conditions
      * such as wrong arity, bad command name and so forth. */
    
-#ifdef __KLJ__
-	
-		//	serverLog(LL_WARNING, "55555555555555555555555555555555555555555\n");
-//    serverLog(LL_WARNING,"c->argv[0]->ptr = %s",c->argv[0]->ptr);
-#endif
-	//여기가 문제!
 	c->cmd = c->lastcmd = lookupCommand(c->argv[0]->ptr);
-
 	if (!c->cmd) {
 		flagTransaction(c);
         addReplyErrorFormat(c,"unknown command '%s'",

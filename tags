@@ -1492,8 +1492,8 @@ EFAULT	deps/memkind/jemalloc/include/msvc_compat/windows_extra.h	17;"	d
 EINVAL	deps/jemalloc/include/msvc_compat/windows_extra.h	8;"	d
 EINVAL	deps/memkind/jemalloc/include/msvc_compat/windows_extra.h	8;"	d
 EMIT	deps/memkind/test/performance/operations.hpp	45;"	d
-EMPTYDB_ASYNC	src/server.h	1883;"	d
-EMPTYDB_NO_FLAGS	src/server.h	1882;"	d
+EMPTYDB_ASYNC	src/server.h	1886;"	d
+EMPTYDB_NO_FLAGS	src/server.h	1885;"	d
 ENDCOLOR	deps/Makefile	/^ENDCOLOR="\\033[0m"$/;"	m
 ENDCOLOR	src/Makefile	/^ENDCOLOR="\\033[0m"$/;"	m
 END_TEST	deps/memkind/test/allocator_perf_tool/WrappersMacros.hpp	36;"	d
@@ -3073,7 +3073,7 @@ LFUGetTimeInMinutes	src/evict.c	/^unsigned long LFUGetTimeInMinutes(void) {$/;"	
 LFULogIncr	src/evict.c	/^uint8_t LFULogIncr(uint8_t counter) {$/;"	f
 LFUTimeElapsed	src/evict.c	/^unsigned long LFUTimeElapsed(unsigned long ldt) {$/;"	f
 LFU_DECR_INTERVAL	src/evict.c	355;"	d	file:
-LFU_INIT_VAL	src/server.h	1956;"	d
+LFU_INIT_VAL	src/server.h	1959;"	d
 LG	deps/lua/src/lstate.c	/^typedef struct LG {$/;"	s	file:
 LG	deps/lua/src/lstate.c	/^} LG;$/;"	t	typeref:struct:LG	file:
 LG_BITMAP_GROUP_NBITS	deps/jemalloc/include/jemalloc/internal/bitmap.h	14;"	d
@@ -3182,8 +3182,8 @@ LOOKUP_MAXCLASS	deps/jemalloc/include/jemalloc/internal/size_classes.h	181;"	d
 LOOKUP_MAXCLASS	deps/jemalloc/include/jemalloc/internal/size_classes.h	332;"	d
 LOOKUP_MAXCLASS	deps/jemalloc/include/jemalloc/internal/size_classes.h	481;"	d
 LOOKUP_MAXCLASS	deps/jemalloc/include/jemalloc/internal/size_classes.h	795;"	d
-LOOKUP_NONE	src/server.h	1871;"	d
-LOOKUP_NOTOUCH	src/server.h	1872;"	d
+LOOKUP_NONE	src/server.h	1874;"	d
+LOOKUP_NOTOUCH	src/server.h	1875;"	d
 LOW	src/rand.c	48;"	d	file:
 LRUTestGenKey	src/redis-cli.c	/^void LRUTestGenKey(char *buf, size_t buflen) {$/;"	f
 LRUTestMode	src/redis-cli.c	/^static void LRUTestMode(void) {$/;"	f	file:
@@ -4473,12 +4473,12 @@ PROTO_REPLY_CHUNK_BYTES	src/server.h	220;"	d
 PROTO_REQ_INLINE	src/server.h	300;"	d
 PROTO_REQ_MULTIBULK	src/server.h	301;"	d
 PROTO_SHARED_SELECT_CMDS	src/server.h	124;"	d
-PSYNC_CONTINUE	src/replication.c	1752;"	d	file:
-PSYNC_FULLRESYNC	src/replication.c	1753;"	d	file:
-PSYNC_NOT_SUPPORTED	src/replication.c	1754;"	d	file:
-PSYNC_TRY_LATER	src/replication.c	1755;"	d	file:
-PSYNC_WAIT_REPLY	src/replication.c	1751;"	d	file:
-PSYNC_WRITE_ERROR	src/replication.c	1750;"	d	file:
+PSYNC_CONTINUE	src/replication.c	1688;"	d	file:
+PSYNC_FULLRESYNC	src/replication.c	1689;"	d	file:
+PSYNC_NOT_SUPPORTED	src/replication.c	1690;"	d	file:
+PSYNC_TRY_LATER	src/replication.c	1691;"	d	file:
+PSYNC_WAIT_REPLY	src/replication.c	1687;"	d	file:
+PSYNC_WRITE_ERROR	src/replication.c	1686;"	d	file:
 PT	src/Makefile	/^	echo OPT=$(OPT) >> .make-settings$/;"	m
 PTRDIFF_MAX	deps/jemalloc/include/msvc_compat/C99/stdint.h	193;"	d
 PTRDIFF_MAX	deps/jemalloc/include/msvc_compat/C99/stdint.h	196;"	d
@@ -4901,7 +4901,7 @@ REDZONE_MINSIZE	deps/jemalloc/include/jemalloc/internal/arena.h	14;"	d
 REDZONE_MINSIZE	deps/memkind/jemalloc/include/jemalloc/internal/arena.h	14;"	d
 REGISTER_API	src/module.c	3590;"	d	file:
 REGISTER_TYPED_TEST_CASE_P	deps/memkind/test/gtest_fused/gtest/gtest.h	17459;"	d
-REPL_MAX_WRITTEN_BEFORE_FSYNC	src/replication.c	1439;"	d	file:
+REPL_MAX_WRITTEN_BEFORE_FSYNC	src/replication.c	1375;"	d	file:
 REPL_STATE_CONNECT	src/server.h	316;"	d
 REPL_STATE_CONNECTED	src/server.h	332;"	d
 REPL_STATE_CONNECTING	src/server.h	317;"	d
@@ -5620,9 +5620,9 @@ SUPERVISED_UPSTART	src/server.h	370;"	d
 SUPPORT_PBA	src/Makefile	/^	SUPPORT_PBA = yes$/;"	m
 SWAPINIT	src/pqsort.c	65;"	d	file:
 SYNCIO__RESOLUTION	src/syncio.c	43;"	d	file:
-SYNC_CMD_FULL	src/replication.c	1653;"	d	file:
-SYNC_CMD_READ	src/replication.c	1651;"	d	file:
-SYNC_CMD_WRITE	src/replication.c	1652;"	d	file:
+SYNC_CMD_FULL	src/replication.c	1589;"	d	file:
+SYNC_CMD_READ	src/replication.c	1587;"	d	file:
+SYNC_CMD_WRITE	src/replication.c	1588;"	d	file:
 SYSCALL_H	deps/aofguard/src/syscall.h	2;"	d
 SYS_write	deps/jemalloc/include/jemalloc/internal/jemalloc_internal_decls.h	15;"	d
 SYS_write	deps/memkind/jemalloc/include/jemalloc/internal/jemalloc_internal_decls.h	15;"	d
@@ -7786,7 +7786,6 @@ addReplyStatusFormat	src/networking.c	/^void addReplyStatusFormat(client *c, con
 addReplyStatusLength	src/networking.c	/^void addReplyStatusLength(client *c, const char *s, size_t len) {$/;"	f
 addReplyString	src/networking.c	/^void addReplyString(client *c, const char *s, size_t len) {$/;"	f
 addSdsToMoveListPBA	src/aof.c	/^void addSdsToMoveListPBA(sds* psds)$/;"	f
-addSwitchBuf	src/replication.c	/^long long addSwitchBuf(client *c, long long offset) {$/;"	f
 addWrite	deps/hiredis/adapters/qt.h	/^        void addWrite() {$/;"	f	class:RedisQtAdapter
 addWrite	deps/hiredis/async.h	/^        void (*addWrite)(void *privdata);$/;"	m	struct:redisAsyncContext::__anon52
 addZiplistToMoveListPBA	src/aof.c	/^void addZiplistToMoveListPBA(unsigned char** pzl)$/;"	f
@@ -14138,8 +14137,8 @@ lookupKeyReadWithFlags	src/db.c	/^robj *lookupKeyReadWithFlags(redisDb *db, robj
 lookupKeyWrite	src/db.c	/^robj *lookupKeyWrite(redisDb *db, robj *key) {$/;"	f
 lookupKeyWriteOrReply	src/db.c	/^robj *lookupKeyWriteOrReply(client *c, robj *key, robj *reply) {$/;"	f
 lookupStringForBitCommand	src/bitops.c	/^robj *lookupStringForBitCommand(client *c, size_t maxbit) {$/;"	f
-lookupSwitchKey	src/db.c	/^robj *lookupSwitchKey(redisDb *db, robj *key, int flags) {$/;"	f
-lookupSwitchKeyReadOrReply	src/db.c	/^robj *lookupSwitchKeyReadOrReply(client *c, robj *key, robj *reply) {$/;"	f
+lookupSwitchKey	src/db.c	/^robj *lookupSwitchKey(redisDb *db, robj *key) {$/;"	f
+lookupSwitchKeyReadOrReply	src/db.c	/^void lookupSwitchKeyReadOrReply(client *c, robj *key) {$/;"	f
 loop	deps/hiredis/adapters/ae.h	/^    aeEventLoop *loop;$/;"	m	struct:redisAeEvents
 loop	deps/hiredis/adapters/libev.h	/^    struct ev_loop *loop;$/;"	m	struct:redisLibevEvents	typeref:struct:redisLibevEvents::ev_loop
 loop	deps/hiredis/examples/example-ae.c	/^static aeEventLoop *loop;$/;"	v	file:
@@ -18156,8 +18155,8 @@ redisCopy	utils/redis-copy.rb	/^def redisCopy(opts={})$/;"	f
 redisCreateSocket	deps/hiredis/net.c	/^static int redisCreateSocket(redisContext *c, int type) {$/;"	f	file:
 redisDb	src/server.h	/^typedef struct redisDb {$/;"	s
 redisDb	src/server.h	/^} redisDb;$/;"	t	typeref:struct:redisDb
-redisDebug	src/server.h	2181;"	d
-redisDebugMark	src/server.h	2183;"	d
+redisDebug	src/server.h	2184;"	d
+redisDebugMark	src/server.h	2186;"	d
 redisDisconnectCallback	deps/hiredis/async.h	/^typedef void (redisDisconnectCallback)(const struct redisAsyncContext*, int status);$/;"	t
 redisEnableKeepAlive	deps/hiredis/hiredis.c	/^int redisEnableKeepAlive(redisContext *c) {$/;"	f
 redisFormatCommand	deps/hiredis/hiredis.c	/^int redisFormatCommand(char **target, const char *format, ...) {$/;"	f
@@ -18866,6 +18865,7 @@ scanCommand	src/db.c	/^void scanCommand(client *c) {$/;"	f
 scanDatabaseForReadyLists	src/db.c	/^void scanDatabaseForReadyLists(redisDb *db) {$/;"	f
 scanGenericCommand	src/db.c	/^void scanGenericCommand(client *c, robj *o, unsigned long cursor) {$/;"	f
 scanMode	src/redis-cli.c	/^static void scanMode(void) {$/;"	f	file:
+scanSwitchGenericCommand	src/db.c	/^void scanSwitchGenericCommand(client *c, robj *o, unsigned long cursor) {$/;"	f
 scan_entry	utils/lru/lfu-simulation.c	/^uint8_t scan_entry(struct entry *e) {$/;"	f
 scan_mode	src/redis-cli.c	/^    int scan_mode;$/;"	m	struct:config	file:
 scanformat	deps/lua/src/lstrlib.c	/^static const char *scanformat (lua_State *L, const char *strfrmt, char *form) {$/;"	f	file:
@@ -19034,6 +19034,7 @@ sendBulkToSlave	src/replication.c	/^void sendBulkToSlave(aeEventLoop *el, int fd
 sendChildInfo	src/childinfo.c	/^void sendChildInfo(int ptype) {$/;"	f
 sendReplyToClient	src/networking.c	/^void sendReplyToClient(aeEventLoop *el, int fd, void *privdata, int mask) {$/;"	f
 sendScan	src/redis-cli.c	/^static redisReply *sendScan(unsigned long long *it) {$/;"	f	file:
+sendSwitchDb	src/replication.c	/^void sendSwitchDb(client *c, long long offset) {$/;"	f
 sendSync	src/redis-cli.c	/^unsigned long long sendSync(int fd) {$/;"	f
 sendSynchronousCommand	src/replication.c	/^char *sendSynchronousCommand(int flags, int fd, ...) {$/;"	f
 send_data_packet	tests/test_helper.tcl	/^proc send_data_packet {fd status data} {$/;"	p

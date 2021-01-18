@@ -4347,9 +4347,9 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 			ri->master->new_master=0;
 			ri->temp = 0;
 		}
-		
 		if(ri->temp == 1 && ri->finish_switch == 1){
 				ri->temp = 0;
+				printf("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq\n");
 				redisAsyncCommand(ri->link->cc, sentinelDiscardReplyCallback, ri,"END");
 		}
 		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && !(ri->master->new_master) && ri->bool_connect_master){
@@ -4381,9 +4381,18 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
             }
         }
     }
-    if (switch_to_promoted)//FAILOVER가 완전히 끝난 후
-        sentinelFailoverSwitchToPromotedSlave(switch_to_promoted);
-    dictReleaseIterator(di);
+    if (switch_to_promoted){//FAILOVER가 완전히 끝난 후
+		sentinelFailoverSwitchToPromotedSlave(switch_to_promoted);
+		di = dictGetIterator(instances);
+		while((de = dictNext(di)) != NULL) {
+			sentinelRedisInstance *ri = dictGetVal(de);
+			printf("port = %d\n",ri->addr->port);
+			if(ri->master != NULL){
+				printf("master = %d\n",ri->master->addr->port);
+			}
+		}
+	}
+	dictReleaseIterator(di);
 }
 
 /* This function checks if we need to enter the TITL mode.
