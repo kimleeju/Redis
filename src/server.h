@@ -1176,7 +1176,6 @@ struct redisServer {
 #ifdef __KLJ__
 	int memory_priority;
 	int bool_switch_ready;
-	int finish_switch;
 	int bool_connect_master;
 #endif
 	

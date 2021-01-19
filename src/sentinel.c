@@ -666,7 +666,9 @@ void sentinelGenerateInitialMonitorEvents(void) {
     di = dictGetIterator(sentinel.masters);
     while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
-        sentinelEvent(LL_WARNING,"+monitor",ri,"%@ quorum %d",ri->quorum);
+        ri->new_master = 0;
+		ri->temp=0;
+		sentinelEvent(LL_WARNING,"+monitor",ri,"%@ quorum %d",ri->quorum);
     }
     dictReleaseIterator(di);
 }
@@ -2005,7 +2007,7 @@ int sentinelMasterLooksSane(sentinelRedisInstance *master) {
 
 /* Process the INFO output from masters. */
 void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
-    sds *lines;
+	sds *lines;
     int numlines, j;
     int role = 0;
 
@@ -3812,11 +3814,27 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
         sentinelDiscardReplyCallback, ri, "MULTI");
     if (retval == C_ERR) return retval;
     ri->link->pending_commands++;
-
+#ifndef __KLJ__
     retval = redisAsyncCommand(ri->link->cc,
         sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s", host, portstr);
     if (retval == C_ERR) return retval;
-    ri->link->pending_commands++;
+#endif
+#if 1
+#ifdef __KLJ__
+	if(!(ri->master->new_master)){
+		printf("1111111 port = %d\n",ri->master->addr->port);
+		retval = redisAsyncCommand(ri->link->cc,
+			sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s", host, portstr);
+	}
+	else{
+		printf("555555555555 port = %d\n",ri->master->addr->port);
+		retval = redisAsyncCommand(ri->link->cc,
+			sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s %s", host, portstr, "switch");
+	}
+    if (retval == C_ERR) return retval;
+#endif
+#endif
+	ri->link->pending_commands++;
 
     retval = redisAsyncCommand(ri->link->cc,
         sentinelDiscardReplyCallback, ri, "CONFIG REWRITE");
@@ -4343,31 +4361,30 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 	while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
 #ifdef __KLJ__
-		if(ri->master != NULL && ri->master->new_master !=1 && ri->temp != 1){
-			ri->master->new_master=0;
-			ri->temp = 0;
-		}
-		if(ri->temp == 1 && ri->finish_switch == 1){
-				ri->temp = 0;
-				printf("qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq\n");
-				redisAsyncCommand(ri->link->cc, sentinelDiscardReplyCallback, ri,"END");
-		}
+//		if(ri->master != NULL && ri->master->new_master !=1 && ri->temp != 1){
+			//ri->master->new_master=0;
+			//ri->temp = 0;
+//		}
 		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && !(ri->master->new_master) && ri->bool_connect_master){
 			if(ri->temp != 1){
 				int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"SWITCH");
 				ri->temp = 1;
 				if(retval == C_ERR) return;
 			}
-
+			#if 0
+			printf("22222222222 switch_ready = %d\n",ri->bool_switch_ready);
 			if(ri->master->bool_switch_ready){
+				printf("22222222\n");
 				ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
 				ri->master->promoted_slave = ri;
 				ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;
 
 				ri->master->link->pending_commands++;
+				//printf("44444444       ri->master = %d\n",ri->master->addr->port);
 				ri->master->new_master = 1;
 				ri->flags |= SRI_PROMOTED;
 			}
+			#endif
 		}
 #endif
 		/*new_master가 생겼다면 플래그설정해놓음 */	
@@ -4383,14 +4400,6 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
     }
     if (switch_to_promoted){//FAILOVER가 완전히 끝난 후
 		sentinelFailoverSwitchToPromotedSlave(switch_to_promoted);
-		di = dictGetIterator(instances);
-		while((de = dictNext(di)) != NULL) {
-			sentinelRedisInstance *ri = dictGetVal(de);
-			printf("port = %d\n",ri->addr->port);
-			if(ri->master != NULL){
-				printf("master = %d\n",ri->master->addr->port);
-			}
-		}
 	}
 	dictReleaseIterator(di);
 }
@@ -4441,4 +4450,3 @@ void sentinelTimer(void) {
      * election because of split brain voting). */
     server.hz = CONFIG_DEFAULT_HZ + rand() % CONFIG_DEFAULT_HZ;
 }
-

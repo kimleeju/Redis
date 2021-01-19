@@ -167,27 +167,26 @@ void feedReplicationBacklog(void *ptr, size_t len) {
 void feedReplicationSwitchBuf(void *ptr, size_t len) {
 	unsigned char *p = ptr; 
 
-    server.master_switch_offset += len; 
+	server.master_switch_offset += len; 
 
-    /* This is a circular buffer, so write as much data we can at every
-     * iteration and rewind the "idx" index if we reach the limit. */
-   
+	/* This is a circular buffer, so write as much data we can at every
+	* iteration and rewind the "idx" index if we reach the limit. */
+
 	while(len) {
-        size_t thislen = server.switch_buf_size - server.switch_buf_idx;
+		size_t thislen = server.switch_buf_size - server.switch_buf_idx;
 		if (thislen > len) thislen = len; 
-        memcpy(server.switch_buf+server.switch_buf_idx,p,thislen);
-        server.switch_buf_idx += thislen;
-        if (server.switch_buf_idx == server.switch_buf_size)
-            server.switch_buf_idx = 0; 
-        len -= thislen;
-        p += thislen;
-
-        server.switch_buf_histlen += thislen;
+		memcpy(server.switch_buf+server.switch_buf_idx,p,thislen);
+		server.switch_buf_idx += thislen;
+		if (server.switch_buf_idx == server.switch_buf_size)
+			server.switch_buf_idx = 0; 
+		len -= thislen;
+			p += thislen;
+		server.switch_buf_histlen += thislen;
 	}    
-    if (server.switch_buf_histlen > server.switch_buf_size)
-        server.switch_buf_histlen = server.switch_buf_size;
+	if (server.switch_buf_histlen > server.switch_buf_size)
+		server.switch_buf_histlen = server.switch_buf_size;
     /* Set the offset of the first byte we have in the backlog. */
-    server.switch_buf_off = server.master_switch_offset -
+	server.switch_buf_off = server.master_switch_offset -
                               server.switch_buf_histlen + 1; 
 }
 
@@ -235,7 +234,7 @@ void feedReplicationBacklogWithObject(robj *o) {
  * stream. Instead if the instance is a slave and has sub-slaves attached,
  * we use replicationFeedSlavesFromMaster() */
 void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
-    listNode *ln;
+	listNode *ln;
     listIter li;
     int j, len;
     char llstr[LONG_STR_SIZE];
@@ -366,9 +365,7 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 
     /* Write the command to every slave. */
     listRewind(slaves,&li);
-    
 	while((ln = listNext(&li))) {
-
         client *slave = ln->value;
 
         /* Don't feed slaves that are still waiting for BGSAVE to start */
@@ -391,19 +388,40 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 
 #ifdef __KLJ__
 void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc, client *c) {
+	int j,len;
 	if (server.masterhost != NULL || server.switch_buf == NULL) return;
 
     /* If there aren't slaves, and there is no backlog buffer to populate,
      * we can return ASAP. */
     if (server.switch_buf == NULL && listLength(slaves) == 0) return;
-
+	
     /* We can't have slaves attached and no backlog. */
     serverAssert(!(listLength(slaves) != 0 && server.switch_buf == NULL));
 
 	if (server.switch_buf) {
 		if(!strcasecmp(argv[0]->ptr,"SET")){
-    		setKey(c->sdb, argv[1], argv[2]);
-			addReply(c,shared.ok);	
+			//SDB에 넣는 부분
+			setKey(c->sdb, argv[1], argv[2]);
+			
+			//buffer에 넣는 부분
+			char aux[LONG_STR_SIZE+3];
+			aux[0] = '*';
+			len = ll2string(aux+1,sizeof(aux)-1,argc);
+			aux[len+1] = '\r';
+        	aux[len+2] = '\n';
+    		
+			feedReplicationSwitchBuf(aux,len+3);
+			for (j = 0; j < argc; j++) {
+				long objlen = stringObjectLen(argv[j]);
+				aux[0] = '$';
+				len = ll2string(aux+1,sizeof(aux)-1,objlen);
+				aux[len+1] = '\r';
+				aux[len+2] = '\n';
+				feedReplicationSwitchBuf(aux,len+3);
+				feedReplicationSwitchBufWithObject(argv[j]);
+				feedReplicationSwitchBuf(aux+len+1,2);
+			}
+			addReply(c,shared.ok);
 			return;
 		}
 
@@ -813,6 +831,7 @@ void changeCommand(client *c){
 }
 
 void endCommand(client *c){
+	printf("eeeeeeeeeeeeeeee\n");
 	//lockCommand(server.master);
 	sendSwitchBuf(server.master,strlen(server.switch_buf));			
 }
@@ -830,7 +849,7 @@ void lockCommand(client *c){
 
 void switchCommand(client *c) {
     /* ignore SYNC if already slave or in monitor mode */
-    if (c->flags & CLIENT_SLAVE) return;
+	if (c->flags & CLIENT_SLAVE) return;
 
     /* Refuse SYNC requests if we are a slave but the link with our master
      * is not ok... */
@@ -848,23 +867,14 @@ void switchCommand(client *c) {
         return;
     }
 
-    /* Try a partial resynchronization if this is a PSYNC command.
-     * If it fails, we continue with usual full resynchronization, however
-     * when this happens masterTryPartialResynchronization() already
-     * replied with:
-     *
-     * +FULLRESYNC <replid> <offset>
-     *
-     * So the slave knows the new replid and offset to try a PSYNC later
-     * if the connection with the master is lost. */
-#ifdef __KLJ__
+    #ifdef __KLJ__
 	if(!strcasecmp(c->argv[0]->ptr,"switch")){
-			propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
-			robj *sync_argv[1];
-			sync_argv[0] = createStringObject("synchronous",11);
-        	replicationFeedSlaves(server.slaves, server.slaveseldb, sync_argv, 1);
-			decrRefCount(sync_argv[0]);
-			return;
+		propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
+		robj *sync_argv[1];
+		sync_argv[0] = createStringObject("synchronous",11);
+        replicationFeedSlaves(server.slaves, server.slaveseldb, sync_argv, 1);
+		decrRefCount(sync_argv[0]);
+		return;
 	}
 #endif
 	else {
@@ -1563,7 +1573,7 @@ void readSyncBulkPayload(aeEventLoop *el, int fd, void *privdata, int mask) {
         if (server.repl_backlog == NULL) createReplicationBacklog();
         serverLog(LL_NOTICE, "MASTER <-> SLAVE sync: Finished with success");
 		server.bool_connect_master = 1;
-        /* Restart the AOF subsystem now that we finished the sync. This
+		/* Restart the AOF subsystem now that we finished the sync. This
          * will trigger an AOF rewrite, and when done will start appending
          * to the new file. */
         if (aof_is_enabled) restartAOF();
@@ -2304,7 +2314,6 @@ void slaveofCommand(client *c) {
     }
 	if(server.bool_switch_ready){
 		printf("port = %d\n",server.port);
-		server.finish_switch = 1;
 	}
     addReply(c,shared.ok);
 }

@@ -1515,10 +1515,8 @@ void initServerConfig(void) {
     server.repl_min_slaves_max_lag = CONFIG_DEFAULT_MIN_SLAVES_MAX_LAG;
     server.slave_priority = CONFIG_DEFAULT_SLAVE_PRIORITY;
 #ifdef __KLJ__
-	server.lock = 0 ;
 	server.memory_priority = CONFIG_DEFAULT_MEMORY_PRIORITY;
 	server.bool_switch_ready = 0;
-	server.finish_switch = 0;
 	server.master_switch_offset = 0;
 	server.switch_buf = NULL;
 	server.switch_buf_size = CONFIG_DEFAULT_SWITCH_BUF;
@@ -2363,7 +2361,6 @@ void preventCommandReplication(client *c) {
 void call(client *c, int flags) {
     long long dirty, start, duration;
     int client_old_flags = c->flags;
-	
 #if 0
     serverLog(LL_WARNING,"c->argv->ptr = %s",c->argv[0]->ptr);
 #endif
@@ -2446,6 +2443,7 @@ void call(client *c, int flags) {
         /* Call propagate() only if at least one of AOF / replication
          * propagation is needed. */
         if (propagate_flags != PROPAGATE_NONE){
+			propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
 		}	
 	}
 
@@ -2671,7 +2669,7 @@ int processCommand(client *c) {
 #endif
 #ifdef __KLJ__
 		if(!server.bool_switch_ready)
-        	call(c,CMD_CALL_FULL);
+			call(c,CMD_CALL_FULL);
 		else
 			replicationFeedSwitchBuf(server.slaves,c->db->id,c->argv,c->argc,c);
 #endif
@@ -3379,7 +3377,6 @@ sds genRedisInfoString(char *section) {
             server.stat_active_defrag_key_hits,
             server.stat_active_defrag_key_misses);
     }
-
     /* Replication */
     if (allsections || defsections || !strcasecmp(section,"replication")) {
         if (sections++) info = sdscat(info,"\r\n");
@@ -3388,10 +3385,9 @@ sds genRedisInfoString(char *section) {
             "role:%s\r\n"
 			"memory_priority:%d\r\n"
 			"bool_switch_ready:%d\r\n"
-			"finish_switch:%d\r\n"
 			"bool_connect_master:%d\r\n",
-            server.masterhost == NULL ? "master" : "slave",server.memory_priority,server.bool_switch_ready,server.finish_switch,server.bool_connect_master);
-        
+            server.masterhost == NULL ? "master" : "slave",server.memory_priority,server.bool_switch_ready,server.bool_connect_master);
+    	printf("server.port = %d, server.bool_switch_ready = %d\n",server.port, server.bool_switch_ready);
 		if (server.masterhost) {
             long long slave_repl_offset = 1;
 
