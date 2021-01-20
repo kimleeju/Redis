@@ -1257,7 +1257,7 @@ void beforeSleep(struct aeEventLoop *eventLoop) {
     flushAppendOnlyFile(0);
 
     /* Handle writes with pending output buffers. */
-    handleClientsWithPendingWrites();
+    //handleClientsWithPendingWrites();
 
     /* Before we are going to sleep, let the threads access the dataset by
      * releasing the GIL. Redis main thread will not touch anything at this
@@ -2670,8 +2670,9 @@ int processCommand(client *c) {
 #ifdef __KLJ__
 		if(!server.bool_switch_ready)
 			call(c,CMD_CALL_FULL);
-		else
+		else{
 			replicationFeedSwitchBuf(server.slaves,c->db->id,c->argv,c->argc,c);
+		}
 #endif
 		c->woff = server.master_repl_offset;
         if (listLength(server.ready_keys))
@@ -3060,8 +3061,10 @@ sds genRedisInfoString(char *section) {
             "hz:%d\r\n"
             "lru_clock:%ld\r\n"
             "executable:%s\r\n"
-            "config_file:%s\r\n",
-            REDIS_VERSION,
+            "config_file:%s\r\n"
+			"memory_priority:%d\r\n"
+			"bool_switch_ready:%d\r\n",
+			REDIS_VERSION,
             redisGitSHA1(),
             strtol(redisGitDirty(),NULL,10) > 0,
             (unsigned long long) redisBuildId(),
@@ -3083,8 +3086,10 @@ sds genRedisInfoString(char *section) {
             server.hz,
             (unsigned long) lruclock,
             server.executable ? server.executable : "",
-            server.configfile ? server.configfile : "");
-    }
+            server.configfile ? server.configfile : "",
+			server.memory_priority,
+			server.bool_switch_ready);
+	}
 
     /* Clients */
     if (allsections || defsections || !strcasecmp(section,"clients")) {
@@ -3377,17 +3382,15 @@ sds genRedisInfoString(char *section) {
             server.stat_active_defrag_key_hits,
             server.stat_active_defrag_key_misses);
     }
+	
     /* Replication */
     if (allsections || defsections || !strcasecmp(section,"replication")) {
         if (sections++) info = sdscat(info,"\r\n");
         info = sdscatprintf(info,
             "# Replication\r\n"
             "role:%s\r\n"
-			"memory_priority:%d\r\n"
-			"bool_switch_ready:%d\r\n"
 			"bool_connect_master:%d\r\n",
-            server.masterhost == NULL ? "master" : "slave",server.memory_priority,server.bool_switch_ready,server.bool_connect_master);
-    	printf("server.port = %d, server.bool_switch_ready = %d\n",server.port, server.bool_switch_ready);
+            server.masterhost == NULL ? "master" : "slave",server.bool_connect_master);
 		if (server.masterhost) {
             long long slave_repl_offset = 1;
 

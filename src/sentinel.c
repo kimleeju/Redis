@@ -207,11 +207,11 @@ typedef struct sentinelRedisInstance {
     int slave_priority; /* Slave priority according to its INFO output. */
 #ifdef __KLJ__
 	int memory_priority;
-	int new_master;
+	bool new_master;
 	int temp;
-	int bool_switch_ready;
-	int finish_switch;
-	int bool_connect_master;
+	bool bool_switch_ready;
+	bool finish_switch;
+	bool bool_connect_master;
 #endif	
 	
 	mstime_t slave_reconf_sent_time; /* Time at which we sent SLAVE OF <new> */
@@ -1485,7 +1485,6 @@ int sentinelResetMasterAndChangeAddress(sentinelRedisInstance *master, char *ip,
     int numslaves = 0, j;
     dictIterator *di;
     dictEntry *de;
-
     newaddr = createSentinelAddr(ip,port);
     if (newaddr == NULL) return C_ERR;
 
@@ -2093,9 +2092,8 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
         if (sdslen(l) >= 16 && !memcmp(l,"memory_priority:",16))
                 ri->memory_priority = atoi(l+16);
 
-        if (sdslen(l) >= 18 && !memcmp(l,"bool_switch_ready:",18)){
+        if (sdslen(l) >= 18 && !memcmp(l,"bool_switch_ready:",18))
 			ri->bool_switch_ready = atoi(l+18);
-		}
 		if (sdslen(l) >= 14 && !memcmp(l,"finish_switch:",14)){
 			ri->finish_switch = atoi(l+14);
 		}
@@ -2175,13 +2173,15 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
          * considered to be unreachable by Sentinel, so eventually
          * a failover will be triggered. */
     }
+	if((ri->master !=NULL) && (ri->master->promoted_slave == ri)){
+		role = SRI_MASTER;
+	}
 
-	
-	if ((ri->flags & SRI_SLAVE) && role == SRI_MASTER) {
-
+//	if (((ri->flags & SRI_SLAVE) && role == SRI_MASTER ) || ((ri->master !=NULL) && (ri->master->promoted_slave == ri)) ) {
+		printf("ri->port = %d,ri->flags = %d, role = %d\n",ri->addr->port, ri->flags, role);
+		if ((ri->flags & SRI_SLAVE) && role == SRI_MASTER) {
         /* If this is a promoted slave we can change state to the
          * failover state machine. */
-
         if ((ri->flags & SRI_PROMOTED) &&
             (ri->master->flags & SRI_FAILOVER_IN_PROGRESS) &&
             (ri->master->failover_state ==
@@ -2193,7 +2193,7 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
              * election to perform this failover. This will force the other
              * Sentinels to update their config (assuming there is not
              * a newer one already available). */
-            
+           	printf("111111111111111111111\n"); 
 			ri->master->config_epoch = ri->master->failover_epoch;
             ri->master->failover_state = SENTINEL_FAILOVER_STATE_RECONF_SLAVES;
             ri->master->failover_state_change_time = mstime();
@@ -2211,6 +2211,7 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
 
 		else {
 
+           	printf("222222222222\n"); 
             /* A slave turned into a master. We want to force our view and
              * reconfigure as slave. Wait some time after the change before
              * going forward, to receive new configs if any. */
@@ -2221,6 +2222,7 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
                  sentinelRedisInstanceNoDownFor(ri,wait_time) &&
                  mstime() - ri->role_reported_time > wait_time)
             {
+				printf("333333333333333333\n");
      			//기존 마스터
 				int retval = sentinelSendSlaveOf(ri,
                         ri->master->addr->ip,
@@ -3049,7 +3051,7 @@ void sentinelCommand(client *c) {
         }
         serverLog(LL_WARNING,"Executing user requested FAILOVER of '%s'",
             ri->name);
-        sentinelStartFailover(ri);
+		sentinelStartFailover(ri);
         ri->flags |= SRI_FORCE_FAILOVER;
         addReply(c,shared.ok);
     } else if (!strcasecmp(c->argv[1]->ptr,"pending-scripts")) {
@@ -3525,7 +3527,7 @@ void sentinelCheckObjectivelyDown(sentinelRedisInstance *master) {
     unsigned int quorum = 0, odown = 0;
 
     if (master->flags & SRI_S_DOWN) {
-        /* Is down for enough sentinels? */
+		/* Is down for enough sentinels? */
         quorum = 1; /* the current sentinel. */
         /* Count all the other sentinels. */
         di = dictGetIterator(master->sentinels);
@@ -3819,20 +3821,16 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
         sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s", host, portstr);
     if (retval == C_ERR) return retval;
 #endif
-#if 1
 #ifdef __KLJ__
 	if(!(ri->master->new_master)){
-		printf("1111111 port = %d\n",ri->master->addr->port);
 		retval = redisAsyncCommand(ri->link->cc,
 			sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s", host, portstr);
 	}
 	else{
-		printf("555555555555 port = %d\n",ri->master->addr->port);
 		retval = redisAsyncCommand(ri->link->cc,
 			sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s %s", host, portstr, "switch");
 	}
     if (retval == C_ERR) return retval;
-#endif
 #endif
 	ri->link->pending_commands++;
 
@@ -3892,17 +3890,15 @@ void sentinelStartFailover(sentinelRedisInstance *master) {
  *
  * Return non-zero if a failover was started. */
 int sentinelStartFailoverIfNeeded(sentinelRedisInstance *master) {
-    /* We can't failover if the master is not in O_DOWN state. */
+	/* We can't failover if the master is not in O_DOWN state. */
     if (!(master->flags & SRI_O_DOWN)) return 0;
-
     /* Failover already in progress? */
     if (master->flags & SRI_FAILOVER_IN_PROGRESS) return 0;
-
     /* Last failover attempt started too little time ago? */
     if (mstime() - master->failover_start_time <
         master->failover_timeout*2)
     {
-        if (master->failover_delay_logged != master->failover_start_time) {
+		if (master->failover_delay_logged != master->failover_start_time) {
             time_t clock = (master->failover_start_time +
                             master->failover_timeout*2) / 1000;
             char ctimebuf[26];
@@ -3916,7 +3912,6 @@ int sentinelStartFailoverIfNeeded(sentinelRedisInstance *master) {
         }
         return 0;
     }
-
     sentinelStartFailover(master);
     return 1;
 }
@@ -4089,7 +4084,6 @@ void sentinelFailoverSelectSlave(sentinelRedisInstance *ri) {
 
 void sentinelFailoverSendSlaveOfNoOne(sentinelRedisInstance *ri) {
     int retval;
-
     /* We can't send the command to the promoted slave if it is now
      * disconnected. Retry again and again with this state until the timeout
      * is reached, then abort the failover. */
@@ -4108,10 +4102,11 @@ void sentinelFailoverSendSlaveOfNoOne(sentinelRedisInstance *ri) {
     //새 master 
 	retval = sentinelSendSlaveOf(ri->promoted_slave,NULL,0);
     if (retval != C_OK) return;
+
     sentinelEvent(LL_NOTICE, "+failover-state-wait-promotion",
         ri->promoted_slave,"%@");
     ri->failover_state = SENTINEL_FAILOVER_STATE_WAIT_PROMOTION;
-    ri->failover_state_change_time = mstime();
+	ri->failover_state_change_time = mstime();
 }
 
 /* We actually wait for promotion indirectly checking with INFO when the
@@ -4119,7 +4114,6 @@ void sentinelFailoverSendSlaveOfNoOne(sentinelRedisInstance *ri) {
 void sentinelFailoverWaitPromotion(sentinelRedisInstance *ri) {
     /* Just handle the timeout. Switching to the next state is handled
      * by the function parsing the INFO command of the promoted slave. */
-    
 	if (mstime() - ri->failover_state_change_time > ri->failover_timeout) {
         sentinelEvent(LL_WARNING,"-failover-abort-slave-timeout",ri,"%@");
         sentinelAbortFailover(ri);
@@ -4192,10 +4186,11 @@ void sentinelFailoverDetectEnd(sentinelRedisInstance *master) {
 /* Send SLAVE OF <new master address> to all the remaining slaves that
  * still don't appear to have the configuration updated. */
 void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
-    dictIterator *di;
+	dictIterator *di;
     dictEntry *de;
     int in_progress = 0;
 
+	printf("zzzzzzzzzzzzzzzzzzzzzz\n");	
     di = dictGetIterator(master->slaves);
     while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *slave = dictGetVal(de);
@@ -4205,6 +4200,7 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
     }
     dictReleaseIterator(di);
 
+	printf("xxxxxxxxxxxxxxxxxxxx\n");	
     di = dictGetIterator(master->slaves);
     while(in_progress < master->parallel_syncs &&
           (de = dictNext(di)) != NULL)
@@ -4245,6 +4241,8 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
             in_progress++;
         }
     }
+
+	printf("ccccccccccccccccc\n");	
     dictReleaseIterator(di);
 
     /* Check if all the slaves are reconfigured and handle timeout. */
@@ -4268,8 +4266,8 @@ void sentinelFailoverSwitchToPromotedSlave(sentinelRedisInstance *master) {
 void sentinelFailoverStateMachine(sentinelRedisInstance *ri) {
 
 	serverAssert(ri->flags & SRI_MASTER);
-    if (!(ri->flags & SRI_FAILOVER_IN_PROGRESS)) return;
-    switch(ri->failover_state) {
+	if (!(ri->flags & SRI_FAILOVER_IN_PROGRESS)) return;
+	switch(ri->failover_state) {
         case SENTINEL_FAILOVER_STATE_WAIT_START:
             sentinelFailoverWaitStart(ri);
             break;
@@ -4341,11 +4339,11 @@ void sentinelHandleRedisInstance(sentinelRedisInstance *ri) {
     /* Only masters */
     if (ri->flags & SRI_MASTER) {
         sentinelCheckObjectivelyDown(ri);
-        if (sentinelStartFailoverIfNeeded(ri))
+		if (sentinelStartFailoverIfNeeded(ri))
 				sentinelAskMasterStateToOtherSentinels(ri,SENTINEL_ASK_FORCED);
-		sentinelFailoverStateMachine(ri);
+    	sentinelFailoverStateMachine(ri);
         sentinelAskMasterStateToOtherSentinels(ri,SENTINEL_NO_FLAGS);
-    }
+	}
 }
 
 /* Perform scheduled operations for all the instances in the dictionary.
@@ -4361,30 +4359,21 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 	while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
 #ifdef __KLJ__
-//		if(ri->master != NULL && ri->master->new_master !=1 && ri->temp != 1){
-			//ri->master->new_master=0;
-			//ri->temp = 0;
-//		}
-		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && !(ri->master->new_master) && ri->bool_connect_master){
+		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && ri->bool_connect_master){
 			if(ri->temp != 1){
 				int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"SWITCH");
 				ri->temp = 1;
 				if(retval == C_ERR) return;
 			}
-			#if 0
-			printf("22222222222 switch_ready = %d\n",ri->bool_switch_ready);
-			if(ri->master->bool_switch_ready){
-				printf("22222222\n");
-				ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
-				ri->master->promoted_slave = ri;
-				ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;
-
-				ri->master->link->pending_commands++;
-				//printf("44444444       ri->master = %d\n",ri->master->addr->port);
-				ri->master->new_master = 1;
-				ri->flags |= SRI_PROMOTED;
-			}
-			#endif
+	
+		}
+		if(ri->master != NULL && ri->master->bool_switch_ready && (!ri->master->new_master)  && !ri->master->failover_state){
+			ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
+			ri->master->promoted_slave = ri;
+			ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;
+			ri->master->link->pending_commands++;
+			ri->master->new_master = 1;
+			ri->flags |= SRI_PROMOTED;
 		}
 #endif
 		/*new_master가 생겼다면 플래그설정해놓음 */	
@@ -4395,7 +4384,7 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 			sentinelHandleDictOfRedisInstances(ri->sentinels);//sentinel중에 죽은 놈 있나 검사
 			if (ri->failover_state == SENTINEL_FAILOVER_STATE_UPDATE_CONFIG) {//FAILOVER가 완전히 끝남
 				switch_to_promoted = ri;
-            }
+			}
         }
     }
     if (switch_to_promoted){//FAILOVER가 완전히 끝난 후

@@ -389,6 +389,50 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 #ifdef __KLJ__
 void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc, client *c) {
 	int j,len;
+
+	if(!strcasecmp(argv[0]->ptr,"PING")){
+		pingCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"REPLCONF")){
+		replconfCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"PUBLISH")){
+		publishCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"CLIENT")){
+		clientCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"INFO")){
+		infoCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"SUBSCRIBE")){
+		subscribeCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"MULTI")){
+		multiCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"CONFIG")){
+		configCommand(c);
+		return;
+	}
+	else if(!strcasecmp(argv[0]->ptr,"EXEC")){
+		execCommand(c);
+		return;
+	}
+	printf("argv = %s\n",argv[0]->ptr);
+#if 0
+	else if(!strcasecmp(argv[0]->ptr,"ROLE")){
+		roleCommand(c);
+		return;
+	}
+#endif
 	if (server.masterhost != NULL || server.switch_buf == NULL) return;
 
     /* If there aren't slaves, and there is no backlog buffer to populate,
@@ -853,6 +897,7 @@ void switchCommand(client *c) {
 
     /* Refuse SYNC requests if we are a slave but the link with our master
      * is not ok... */
+
     if (server.masterhost && server.repl_state != REPL_STATE_CONNECTED) {
         addReplySds(c,sdsnew("-NOMASTERLINK Can't SYNC while not connected with my master\r\n"));
         return;
@@ -862,10 +907,6 @@ void switchCommand(client *c) {
      * the client about already issued commands. We need a fresh reply
      * buffer registering the differences between the BGSAVE and the current
      * dataset, so that we can copy to other slaves if needed. */
-    if (clientHasPendingReplies(c)) {
-        addReplyError(c,"SYNC and PSYNC are invalid with pending output");
-        return;
-    }
 
     #ifdef __KLJ__
 	if(!strcasecmp(c->argv[0]->ptr,"switch")){
