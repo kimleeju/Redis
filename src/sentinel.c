@@ -4359,6 +4359,9 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 	while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
 #ifdef __KLJ__
+		if(ri->master != NULL){
+			printf("master = %d, ri = %d\n",ri->master->memory_priority, ri->memory_priority);
+		}
 		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && ri->bool_connect_master){
 			if(ri->temp != 1){
 				int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"SWITCH");
