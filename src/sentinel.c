@@ -666,8 +666,10 @@ void sentinelGenerateInitialMonitorEvents(void) {
     di = dictGetIterator(sentinel.masters);
     while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
-        ri->new_master = 0;
+#ifdef __KLJ__
+		ri->new_master = 0;
 		ri->temp=0;
+#endif
 		sentinelEvent(LL_WARNING,"+monitor",ri,"%@ quorum %d",ri->quorum);
     }
     dictReleaseIterator(di);
@@ -1216,8 +1218,10 @@ sentinelRedisInstance *createSentinelRedisInstance(char *name, int flags, char *
                             SENTINEL_DEFAULT_DOWN_AFTER;
     ri->master_link_down_time = 0;
     ri->auth_pass = NULL;
-    ri->slave_priority = SENTINEL_DEFAULT_SLAVE_PRIORITY;
-    ri->memory_priority = SENTINEL_DEFAULT_MEMORY_PRIORITY; 
+	ri->slave_priority = SENTINEL_DEFAULT_SLAVE_PRIORITY;
+#ifdef __KLJ__
+	ri->memory_priority = SENTINEL_DEFAULT_MEMORY_PRIORITY; 
+#endif	
 	ri->slave_reconf_sent_time = 0;
     ri->slave_master_host = NULL;
     ri->slave_master_port = 0;
@@ -1427,7 +1431,7 @@ void sentinelResetMaster(sentinelRedisInstance *ri, int flags) {
     }
     instanceLinkCloseConnection(ri->link,ri->link->cc);
     instanceLinkCloseConnection(ri->link,ri->link->pc);
-    ri->flags &= SRI_MASTER;
+	ri->flags &= SRI_MASTER;
     if (ri->leader) {
         sdsfree(ri->leader);
         ri->leader = NULL;
@@ -2173,12 +2177,6 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
          * considered to be unreachable by Sentinel, so eventually
          * a failover will be triggered. */
     }
-	if((ri->master !=NULL) && (ri->master->promoted_slave == ri)){
-		role = SRI_MASTER;
-	}
-
-//	if (((ri->flags & SRI_SLAVE) && role == SRI_MASTER ) || ((ri->master !=NULL) && (ri->master->promoted_slave == ri)) ) {
-		printf("ri->port = %d,ri->flags = %d, role = %d\n",ri->addr->port, ri->flags, role);
 		if ((ri->flags & SRI_SLAVE) && role == SRI_MASTER) {
         /* If this is a promoted slave we can change state to the
          * failover state machine. */
@@ -2193,7 +2191,6 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
              * election to perform this failover. This will force the other
              * Sentinels to update their config (assuming there is not
              * a newer one already available). */
-           	printf("111111111111111111111\n"); 
 			ri->master->config_epoch = ri->master->failover_epoch;
             ri->master->failover_state = SENTINEL_FAILOVER_STATE_RECONF_SLAVES;
             ri->master->failover_state_change_time = mstime();
@@ -2210,8 +2207,6 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
         } 
 
 		else {
-
-           	printf("222222222222\n"); 
             /* A slave turned into a master. We want to force our view and
              * reconfigure as slave. Wait some time after the change before
              * going forward, to receive new configs if any. */
@@ -2222,7 +2217,6 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
                  sentinelRedisInstanceNoDownFor(ri,wait_time) &&
                  mstime() - ri->role_reported_time > wait_time)
             {
-				printf("333333333333333333\n");
      			//기존 마스터
 				int retval = sentinelSendSlaveOf(ri,
                         ri->master->addr->ip,
@@ -3816,11 +3810,12 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
         sentinelDiscardReplyCallback, ri, "MULTI");
     if (retval == C_ERR) return retval;
     ri->link->pending_commands++;
-#ifndef __KLJ__
+#ifdef __KLJ__
     retval = redisAsyncCommand(ri->link->cc,
         sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s", host, portstr);
     if (retval == C_ERR) return retval;
 #endif
+#if 0
 #ifdef __KLJ__
 	if(!(ri->master->new_master)){
 		retval = redisAsyncCommand(ri->link->cc,
@@ -3831,6 +3826,7 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
 			sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s %s", host, portstr, "switch");
 	}
     if (retval == C_ERR) return retval;
+#endif
 #endif
 	ri->link->pending_commands++;
 
@@ -4190,7 +4186,6 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
     dictEntry *de;
     int in_progress = 0;
 
-	printf("zzzzzzzzzzzzzzzzzzzzzz\n");	
     di = dictGetIterator(master->slaves);
     while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *slave = dictGetVal(de);
@@ -4200,7 +4195,6 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
     }
     dictReleaseIterator(di);
 
-	printf("xxxxxxxxxxxxxxxxxxxx\n");	
     di = dictGetIterator(master->slaves);
     while(in_progress < master->parallel_syncs &&
           (de = dictNext(di)) != NULL)
@@ -4242,7 +4236,6 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
         }
     }
 
-	printf("ccccccccccccccccc\n");	
     dictReleaseIterator(di);
 
     /* Check if all the slaves are reconfigured and handle timeout. */
@@ -4359,9 +4352,6 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 	while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
 #ifdef __KLJ__
-		if(ri->master != NULL){
-			printf("master = %d, ri = %d\n",ri->master->memory_priority, ri->memory_priority);
-		}
 		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && ri->bool_connect_master){
 			if(ri->temp != 1){
 				int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"SWITCH");
@@ -4370,7 +4360,7 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 			}
 	
 		}
-		if(ri->master != NULL && ri->master->bool_switch_ready && (!ri->master->new_master)  && !ri->master->failover_state){
+		if(ri->master != NULL && ri->master->memory_priority > ri->memory_priority && ri->master->bool_switch_ready && (!ri->master->new_master)  && !ri->master->failover_state){
 			ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
 			ri->master->promoted_slave = ri;
 			ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;

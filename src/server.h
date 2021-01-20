@@ -28,7 +28,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#define __KLJ__
+//#define __KLJ__
 #define __LJS__
 
 #ifndef __REDIS_H

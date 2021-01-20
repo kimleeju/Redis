@@ -272,12 +272,8 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 
         /* Add the SELECT command into the backlog. */
         if (server.repl_backlog) feedReplicationBacklogWithObject(selectcmd);
-#if 0
-#ifdef __KLJ__
-        if (server.switch_buf) feedReplicationSwitchBufWithObject(selectcmd);
-#endif
-#endif
-        /* Send it to slaves. */
+        
+		/* Send it to slaves. */
         listRewind(slaves,&li);
         while((ln = listNext(&li))) {
             client *slave = ln->value;
@@ -313,65 +309,20 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
             aux[len+1] = '\r';
             aux[len+2] = '\n';
 			feedReplicationBacklog(aux,len+3); // $(명령어 크기) 삽입
-            
 			feedReplicationBacklogWithObject(argv[j]); // 명령어 삽입 
-			
 			feedReplicationBacklog(aux+len+1,2);
     
 		}
     }
 
-#if 0 
-#ifdef __KLJ__
-	//해야할일 ) 이 부분을 나중에 마스터 교체 할때 호출하는 곳으로 이동해야함
-   	/* Write the command to the switch_buf if any. */
-    
-	if (server.switch_buf) {
-
-		char aux[LONG_STR_SIZE+3];
-
-        /* Add the multi bulk reply length. */
-        aux[0] = '*';
-        len = ll2string(aux+1,sizeof(aux)-1,argc);
-        
-		aux[len+1] = '\r';
-        aux[len+2] = '\n';
-        
-		feedReplicationSwitchBuf(aux,len+3);
-
-        for (j = 0; j < argc; j++) {
-            long objlen = stringObjectLen(argv[j]);
-
-            /* We need to feed the buffer with the object as a bulk reply
-             * not just as a plain string, so create the $..CRLF payload len
-             * and add the final CRLF */
-            aux[0] = '$';
-            len = ll2string(aux+1,sizeof(aux)-1,objlen);
-            aux[len+1] = '\r';
-            aux[len+2] = '\n';
-			feedReplicationSwitchBuf(aux,len+3); // $(명령어 크기) 삽입
-            
-			feedReplicationSwitchBufWithObject(argv[j]); // 명령어 삽입 
-			
-			feedReplicationSwitchBuf(aux+len+1,2);
-    
-		}
-
-    	serverLog(LL_WARNING, "server.switch_buf = %s",server.switch_buf);
-    }
-
-#endif
-#endif
-
     /* Write the command to every slave. */
     listRewind(slaves,&li);
 	while((ln = listNext(&li))) {
         client *slave = ln->value;
-
         /* Don't feed slaves that are still waiting for BGSAVE to start */
         if (slave->replstate == SLAVE_STATE_WAIT_BGSAVE_START) continue;
 
-        /* Feed slaves that are waiting for the initial SYNC (so these commands
+		/* Feed slaves that are waiting for the initial SYNC (so these commands
          * are queued in the output buffer until the initial SYNC completes),
          * or are already in sync with the master. */
 
@@ -426,7 +377,6 @@ void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc, c
 		execCommand(c);
 		return;
 	}
-	printf("argv = %s\n",argv[0]->ptr);
 #if 0
 	else if(!strcasecmp(argv[0]->ptr,"ROLE")){
 		roleCommand(c);
@@ -497,11 +447,7 @@ void replicationFeedSlavesFromMasterStream(list *slaves, char *buf, size_t bufle
     }
 
     if (server.repl_backlog) feedReplicationBacklog(buf,buflen);
-#if 0
-#ifdef __KLJ__
-    if (server.switch_buf) feedReplicationSwitchBuf(buf,buflen);
-#endif
-#endif
+	
 	listRewind(slaves,&li);
     while((ln = listNext(&li))) {
         client *slave = ln->value;
@@ -595,7 +541,6 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
         long long thislen =
             ((server.repl_backlog_size - j) < len) ?
             (server.repl_backlog_size - j) : len;
-
         serverLog(LL_DEBUG, "[PSYNC] addReply() length: %lld", thislen);
 		addReplySds(c,sdsnewlen(server.repl_backlog + j, thislen));
 		len -= thislen;
@@ -605,34 +550,7 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
 }
 
 #ifdef __KLJ__
-void sendSwitchBuf(client *c, long long offset) {
-	long long j, skip, len;
-    serverLog(LL_DEBUG, "[PSYNC] Slave request offset: %lld", offset);
-    
-	if (server.switch_buf_histlen == 0) {
-		serverLog(LL_DEBUG, "[PSYNC] Backlog history len is zero");
-        return;
-    }
-    
-	serverLog(LL_DEBUG, "[PSYNC] Backlog size: %lld",
-             server.switch_buf_size);
-    serverLog(LL_DEBUG, "[PSYNC] First byte: %lld",
-             server.switch_buf_off);
-    serverLog(LL_DEBUG, "[PSYNC] History len: %lld",
-             server.switch_buf_histlen);
-    serverLog(LL_DEBUG, "[PSYNC] Current index: %lld",
-             server.switch_buf_idx);
-
-    /* Compute the amount of bytes we need to discard. */
-	
-	serverLog(LL_DEBUG, "[PSYNC] Skipping: %lld", skip);
-
-    /* Discard the amount of data to seek to the specified 'offset'. */
-
-    serverLog(LL_DEBUG, "[PSYNC] Index of first byte: %lld", j);
-    /* Feed slave with data. Since it is a circular buffer we have to
-     * split the reply in two parts if we are cross-boundary. */
-	serverLog(LL_DEBUG, "[PSYNC] Reply total length: %lld", len);
+void sendSwitchBuf(client *c) {
 	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
     return;
 }
@@ -696,7 +614,6 @@ int masterTryPartialResynchronization(client *c) {
     char *master_replid = c->argv[1]->ptr;
     char buf[128];
     int buflen;
-
     /* Parse the replication offset asked by the slave. Go to full sync
      * on parse error: this should never happen but we try to handle
      * it in a robust way compared to aborting. */
@@ -765,11 +682,11 @@ int masterTryPartialResynchronization(client *c) {
     } else {
         buflen = snprintf(buf,sizeof(buf),"+CONTINUE\r\n");
     }
-	
     if (write(c->fd,buf,buflen) != buflen) {
         freeClientAsync(c);
         return C_OK;
     }
+
     psync_len = addReplyReplicationBacklog(c,psync_offset);
     serverLog(LL_NOTICE,
         "Partial resynchronization request from %s accepted. Sending %lld bytes of backlog starting from offset %lld.",
@@ -873,12 +790,13 @@ int startBgsaveForReplication(int mincapa) {
 void changeCommand(client *c){
 
 }
-
+#if 0
 void endCommand(client *c){
 	printf("eeeeeeeeeeeeeeee\n");
 	//lockCommand(server.master);
 	sendSwitchBuf(server.master,strlen(server.switch_buf));			
 }
+#endif
 	
 void lockCommand(client *c){
     if (c != NULL) {
@@ -910,7 +828,7 @@ void switchCommand(client *c) {
 
     #ifdef __KLJ__
 	if(!strcasecmp(c->argv[0]->ptr,"switch")){
-		propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
+//		propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
 		robj *sync_argv[1];
 		sync_argv[0] = createStringObject("synchronous",11);
         replicationFeedSlaves(server.slaves, server.slaveseldb, sync_argv, 1);
@@ -1394,7 +1312,12 @@ void replicationEmptyDbCallback(void *privdata) {
  * at server.master, starting from the specified file descriptor. */
 void replicationCreateMasterClient(int fd, int dbid) {
     server.master = createClient(fd);
-    server.master->flags |= CLIENT_MASTER;
+#ifdef __KLJ__
+	if(server.bool_switch_ready)
+		sendSwitchBuf(server.master);
+#endif
+
+	server.master->flags |= CLIENT_MASTER;
     server.master->authenticated = 1;
 	server.master->reploff = server.master_initial_offset;
     server.master->read_reploff = server.master->reploff;
@@ -1611,9 +1534,12 @@ void readSyncBulkPayload(aeEventLoop *el, int fd, void *privdata, int mask) {
          * accumulate the backlog regardless of the fact they have sub-slaves
          * or not, in order to behave correctly if they are promoted to
          * masters after a failover. */
-        if (server.repl_backlog == NULL) createReplicationBacklog();
-        serverLog(LL_NOTICE, "MASTER <-> SLAVE sync: Finished with success");
+#ifdef __KLJ__ 
+		if (server.repl_backlog == NULL) createReplicationBacklog();
 		server.bool_connect_master = 1;
+#endif
+		serverLog(LL_NOTICE, "MASTER <-> SLAVE sync: Finished with success");
+		
 		/* Restart the AOF subsystem now that we finished the sync. This
          * will trigger an AOF rewrite, and when done will start appending
          * to the new file. */
@@ -1826,7 +1752,7 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
 	//__KLJ__
 	//partial resync
 	if (!strncmp(reply,"+CONTINUE",9)) {
-    
+#if 1 
 		/* Partial resync was accepted. */
         serverLog(LL_NOTICE,
             "Successful partial resynchronization with master.");
@@ -1838,26 +1764,24 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
          * disconnection. */
         char *start = reply+10;
         char *end = reply+9;
-        
 		while(end[0] != '\r' && end[0] != '\n' && end[0] != '\0') end++;
-        
 		if (end-start == CONFIG_RUN_ID_SIZE) {
             char new[CONFIG_RUN_ID_SIZE+1];
             memcpy(new,start,CONFIG_RUN_ID_SIZE);
             new[CONFIG_RUN_ID_SIZE] = '\0';
-
+			 
             if (strcmp(new,server.cached_master->replid)) {
                 /* Master ID changed. */
                 serverLog(LL_WARNING,"Master replication ID changed to %s",new);
-
                 /* Set the old ID as our ID2, up to the current offset+1. */
                 memcpy(server.replid2,server.cached_master->replid,
                     sizeof(server.replid2));
-                server.second_replid_offset = server.master_repl_offset+1;
+				server.second_replid_offset = server.master_repl_offset+1;
 
                 /* Update the cached master ID and our own primary ID to the
                  * new one. */
                 memcpy(server.replid,new,sizeof(server.replid));
+
                 memcpy(server.cached_master->replid,new,sizeof(server.replid));
 
                 /* Disconnect all the sub-slaves: they need to be notified. */
@@ -1869,7 +1793,7 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
         
 		sdsfree(reply);
 		replicationResurrectCachedMaster(fd);
-	
+#endif
 		return PSYNC_CONTINUE;
 	
 	}
@@ -2115,7 +2039,7 @@ void syncWithMaster(aeEventLoop *el, int fd, void *privdata, int mask) {
 
     if (psync_result == PSYNC_CONTINUE) {
         serverLog(LL_NOTICE, "MASTER <-> SLAVE sync: Master accepted a Partial Resynchronization.");
-        return;
+		return;
     }
 
     /* PSYNC failed or is not supported: we want our slaves to resync with us
@@ -2316,7 +2240,7 @@ void replicationHandleMasterDisconnection(void) {
 }
 
 void slaveofCommand(client *c) {
-    /* SLAVEOF is not allowed in cluster mode as replication is automatically
+	/* SLAVEOF is not allowed in cluster mode as replication is automatically
      * configured using the current address of the master node. */
 	if (server.cluster_enabled) {
         addReplyError(c,"SLAVEOF not allowed in cluster mode.");
@@ -2353,9 +2277,8 @@ void slaveofCommand(client *c) {
             server.masterhost, server.masterport, client);
 		sdsfree(client);
     }
-	if(server.bool_switch_ready){
-		printf("port = %d\n",server.port);
-	}
+
+	
     addReply(c,shared.ok);
 }
 
@@ -2540,6 +2463,8 @@ void replicationCacheMasterUsingMyself(void) {
     server.cached_master = server.master;
     server.master = NULL;
     serverLog(LL_NOTICE,"Before turning into a slave, using my master parameters to synthesize a cached master: I may be able to synchronize with the new master with just a partial transfer.");
+	
+
 }
 
 /* Free a cached master, called when there are no longer the conditions for
@@ -2561,7 +2486,7 @@ void replicationDiscardCachedMaster(void) {
  * master left. */
 void replicationResurrectCachedMaster(int newfd) {
     server.master = server.cached_master;
-    server.cached_master = NULL;
+	server.cached_master = NULL;
     server.master->fd = newfd;
     server.master->flags &= ~(CLIENT_CLOSE_AFTER_REPLY|CLIENT_CLOSE_ASAP);
     server.master->authenticated = 1;

@@ -318,7 +318,7 @@ struct redisCommand redisCommandTable[] = {
     {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0},
 #ifdef __KLJ__
 	{"change",changeCommand,1,"ars",0,NULL,0,0,0,0,0},
-	{"end",endCommand,1,"ars",0,NULL,0,0,0,0,0},
+	//{"end",endCommand,1,"ars",0,NULL,0,0,0,0,0},
 	{"switch",switchCommand,1,"ars",0,NULL,0,0,0,0,0},
     {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},
 #endif
@@ -1959,8 +1959,9 @@ void initServer(void) {
     server.get_ack_from_slaves = 0;
     server.clients_paused = 0;
     server.system_memory_size = zmalloc_get_memory_size();
+#ifdef __KLJ__
 	server.bool_switch = 0;
-
+#endif
     createSharedObjects();
     adjustOpenFilesLimit();
     server.el = aeCreateEventLoop(server.maxclients+CONFIG_FDSET_INCR);
@@ -2361,9 +2362,6 @@ void preventCommandReplication(client *c) {
 void call(client *c, int flags) {
     long long dirty, start, duration;
     int client_old_flags = c->flags;
-#if 0
-    serverLog(LL_WARNING,"c->argv->ptr = %s",c->argv[0]->ptr);
-#endif
     /* Sent the command to clients in MONITOR mode, only if the commands are
      * not generated from reading an AOF. */
     if (listLength(server.monitors) &&
@@ -2486,11 +2484,12 @@ void call(client *c, int flags) {
  * other operations can be performed by the caller. Otherwise
  * if C_ERR is returned the client was destroyed (i.e. after QUIT). */
 int processCommand(client *c) {
-    /* The QUIT command is handled separately. Normal command procs will
+	/* The QUIT command is handled separately. Normal command procs will
      * go through checking for replication and QUIT will cause trouble
      * when FORCE_REPLICATION is enabled and would be implemented in
      * a regular command proc. */
-    if (!strcasecmp(c->argv[0]->ptr,"quit")) {
+    
+	if (!strcasecmp(c->argv[0]->ptr,"quit")) {
         addReply(c,shared.ok);
         c->flags |= CLIENT_CLOSE_AFTER_REPLY;
         return C_ERR;
@@ -3062,8 +3061,11 @@ sds genRedisInfoString(char *section) {
             "lru_clock:%ld\r\n"
             "executable:%s\r\n"
             "config_file:%s\r\n"
+#ifdef __KLJ__
 			"memory_priority:%d\r\n"
-			"bool_switch_ready:%d\r\n",
+			"bool_switch_ready:%d\r\n"
+#endif
+			,
 			REDIS_VERSION,
             redisGitSHA1(),
             strtol(redisGitDirty(),NULL,10) > 0,
@@ -3086,9 +3088,12 @@ sds genRedisInfoString(char *section) {
             server.hz,
             (unsigned long) lruclock,
             server.executable ? server.executable : "",
-            server.configfile ? server.configfile : "",
-			server.memory_priority,
-			server.bool_switch_ready);
+            server.configfile ? server.configfile : ""
+#ifdef __KLJ__		
+			,server.memory_priority,
+			server.bool_switch_ready
+#endif
+			);
 	}
 
     /* Clients */
@@ -3389,8 +3394,15 @@ sds genRedisInfoString(char *section) {
         info = sdscatprintf(info,
             "# Replication\r\n"
             "role:%s\r\n"
-			"bool_connect_master:%d\r\n",
-            server.masterhost == NULL ? "master" : "slave",server.bool_connect_master);
+#ifdef __KLJ__		
+			"bool_connect_master:%d\r\n"
+#endif
+			,
+			server.masterhost == NULL ? "master" : "slave"
+#ifdef __KLJ__
+			,server.bool_connect_master
+#endif
+			);
 		if (server.masterhost) {
             long long slave_repl_offset = 1;
 
@@ -3501,25 +3513,28 @@ sds genRedisInfoString(char *section) {
             "repl_backlog_size:%lld\r\n"
             "repl_backlog_first_byte_offset:%lld\r\n"
             "repl_backlog_histlen:%lld\r\n"
+#ifdef __KLJ__
 			"switch_buf_active:%d\r\n"
 			"switch_buf_size:%lld\r\n"
             "switch_buf_first_byte_offset:%lld\r\n"
-            "switch_buf_histlen:%lld\r\n",
-            server.replid,
+            "switch_buf_histlen:%lld\r\n"
+#endif		
+			,
+			server.replid,
             server.replid2,
             server.master_repl_offset,
             server.second_replid_offset,
             server.repl_backlog != NULL,
             server.repl_backlog_size,
             server.repl_backlog_off,
-            server.repl_backlog_histlen,
-			server.switch_buf != NULL,
+            server.repl_backlog_histlen
+#ifdef __KLJ__
+			,server.switch_buf != NULL,
             server.switch_buf_size,
             server.switch_buf_off,
-            server.switch_buf_histlen);
-   
-	
-	
+            server.switch_buf_histlen
+#endif		
+			);
 	}
 
     /* CPU */

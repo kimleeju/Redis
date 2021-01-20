@@ -375,7 +375,9 @@ int selectDb(client *c, int id) {
     if (id < 0 || id >= server.dbnum)
         return C_ERR;
     c->db = &server.db[id];
+#ifdef __KLJ__
 	c->sdb = &server.sdb;
+#endif
 	return C_OK;
 }
 

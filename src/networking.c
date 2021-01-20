@@ -1341,12 +1341,10 @@ int processMultibulkBuffer(client *c) {
  * pending query buffer, already representing a full command, to process. */
 void processInputBuffer(client *c) {
     server.current_client = c;
-#if 0 
-	serverLog(LL_WARNING,"KIMLEEJU = %s",c->querybuf);
-#endif
 	/* Keep processing while there is something in the input buffer */
 	/* 입력 버퍼에 무언가있는 동안 처리유지*/
     while(sdslen(c->querybuf)) {
+		
 		/*버퍼에 데이터가 있는 경우*/
 		/*클라이언트가 무언가 중간에 있는 경우 즉시 중단*/
         /* Return if clients are paused. */
@@ -1370,7 +1368,6 @@ void processInputBuffer(client *c) {
                 c->reqtype = PROTO_REQ_INLINE;
             }
         }
-/*querybuf에 들어온 타입 확인해서 명령어 전달 -->명령어 종류에 따라서 두부분에서 switch_buf에 적어야함 */
         if (c->reqtype == PROTO_REQ_INLINE) {
             if (processInlineBuffer(c) != C_OK) break;
         } else if (c->reqtype == PROTO_REQ_MULTIBULK) {
