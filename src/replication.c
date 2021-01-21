@@ -546,8 +546,9 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
 
 #ifdef __KLJ__
 void sendSwitchBuf(client *c) {
+	
 	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
-    return;
+	return;
 }
 #endif
 
@@ -823,7 +824,7 @@ void switchCommand(client *c) {
      * dataset, so that we can copy to other slaves if needed. */
 
 	if(!strcasecmp(c->argv[0]->ptr,"switch")){
-//		propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
+		//propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
 		robj *sync_argv[1];
 		sync_argv[0] = createStringObject("synchronous",11);
         replicationFeedSlaves(server.slaves, server.slaveseldb, sync_argv, 1);
@@ -1055,7 +1056,7 @@ void replconfCommand(client *c) {
          else if (!strcasecmp(c->argv[j]->ptr,"finish")) {
         	if (server.switch_buf == NULL) createReplicationSwitchBuf();
 			server.bool_switch_ready = 1;
-		 }else if (!strcasecmp(c->argv[j]->ptr,"lock")) {
+		 }else if (!strcasecmp(c->argv[j]->ptr,"promote")) {
 		 	//server.lock = 1;
 		 }
 #endif
@@ -1305,10 +1306,6 @@ void replicationEmptyDbCallback(void *privdata) {
  * at server.master, starting from the specified file descriptor. */
 void replicationCreateMasterClient(int fd, int dbid) {
     server.master = createClient(fd);
-#ifdef __KLJ__
-	if(server.bool_switch_ready)
-		sendSwitchBuf(server.master);
-#endif
 	server.master->flags |= CLIENT_MASTER;
     server.master->authenticated = 1;
     server.master->reploff = server.master_initial_offset;
@@ -2335,12 +2332,23 @@ void replicationSendFinish(void) {
         c->flags |= CLIENT_MASTER_FORCE_REPLY;
         addReplyMultiBulkLen(c,3);
         addReplyBulkCString(c,"REPLCONF");
-        addReplyBulkCString(c,"FINISH");
+		addReplyBulkCString(c,"FINISH");
         addReplyBulkLongLong(c,c->reploff);
         c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
     }
 }
 
+void replicationSendPromote(void) {
+	client *c = server.master;
+    if (c != NULL) {
+        c->flags |= CLIENT_MASTER_FORCE_REPLY;
+        addReplyMultiBulkLen(c,3);
+        addReplyBulkCString(c,"REPLCONF");
+		addReplyBulkCString(c,"PROMOTE");
+        addReplyBulkLongLong(c,c->reploff);
+        //c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
+    }
+}
 
 void replicationSendPsync(void) {
 	client *c = server.master;
@@ -2459,7 +2467,6 @@ void replicationResurrectCachedMaster(int newfd) {
     server.master->authenticated = 1;
     server.master->lastinteraction = server.unixtime;
     server.repl_state = REPL_STATE_CONNECTED;
-
     /* Re-add to the list of clients. */
     listAddNodeTail(server.clients,server.master);
     if (aeCreateFileEvent(server.el, newfd, AE_READABLE,
@@ -2477,6 +2484,10 @@ void replicationResurrectCachedMaster(int newfd) {
             freeClientAsync(server.master); /* Close ASAP. */
         }
     }
+#ifdef __KLJ__
+	if(server.bool_switch_ready)
+		sendSwitchBuf(server.master);
+#endif
 }
 
 /* ------------------------- MIN-SLAVES-TO-WRITE  --------------------------- */

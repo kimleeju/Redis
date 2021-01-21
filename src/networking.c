@@ -169,15 +169,33 @@ int prepareClientToWrite(client *c) {
     if (c->flags & (CLIENT_LUA|CLIENT_MODULE)) return C_OK;
 
     /* CLIENT REPLY OFF / SKIP handling: don't send replies. */
-    if (c->flags & (CLIENT_REPLY_OFF|CLIENT_REPLY_SKIP)) return C_ERR;
-
+    if (c->flags & (CLIENT_REPLY_OFF|CLIENT_REPLY_SKIP)) {
+		return C_ERR;
+	}
     /* Masters don't receive replies, unless CLIENT_MASTER_FORCE_REPLY flag
      * is set. */
-    if ((c->flags & CLIENT_MASTER) &&
-        !(c->flags & CLIENT_MASTER_FORCE_REPLY)) return C_ERR;
+#ifdef __KLJ__
+	if (server.bool_switch_ready)
+		goto JUMP;
+	else{
+		if ((c->flags & CLIENT_MASTER) &&
+        	!(c->flags & CLIENT_MASTER_FORCE_REPLY)) {
+			return C_ERR;
+		}
+	}
+#endif
 
-    if (c->fd <= 0) return C_ERR; /* Fake client for AOF loading. */
-
+#ifndef __KLJ__
+	if ((c->flags & CLIENT_MASTER) &&
+        !(c->flags & CLIENT_MASTER_FORCE_REPLY)) {
+		return C_ERR;
+	}
+#endif
+JUMP:
+    if (c->fd <= 0) 
+	{
+		return C_ERR; /* Fake client for AOF loading. */
+	}
     /* Schedule the client to write the output buffers to the socket only
      * if not already done (there were no pending writes already and the client
      * was yet not flagged), and, for slaves, if the slave can actually
@@ -206,20 +224,23 @@ int prepareClientToWrite(client *c) {
  * -------------------------------------------------------------------------- */
 
 int _addReplyToBuffer(client *c, const char *s, size_t len) {
-    size_t available = sizeof(c->buf)-c->bufpos;
+    
+	size_t available = sizeof(c->buf)-c->bufpos;
 
     if (c->flags & CLIENT_CLOSE_AFTER_REPLY) return C_OK;
-
+	
     /* If there already are entries in the reply list, we cannot
      * add anything more to the static buffer. */
-    if (listLength(c->reply) > 0) return C_ERR;
-
+    if (listLength(c->reply) > 0) {
+		return C_ERR;
+	}
     /* Check that the buffer has enough space available for this string. */
-    if (len > available) return C_ERR;
-
-    memcpy(c->buf+c->bufpos,s,len);
+    if (len > available){
+		return C_ERR;
+	}
+    memcpy(c->buf+c->bufpos,s,len);	
 	c->bufpos+=len;
-    return C_OK;
+	return C_OK;
 }
 
 void _addReplyObjectToList(client *c, robj *o) {
@@ -348,7 +369,7 @@ void addReply(client *c, robj *obj) {
 void addReplySds(client *c, sds s) {
     if (prepareClientToWrite(c) != C_OK) {
         /* The caller expects the sds to be free'd. */
-        sdsfree(s);
+		sdsfree(s);
         return;
     }
     if (_addReplyToBuffer(c,s,sdslen(s)) == C_OK) {
@@ -691,29 +712,23 @@ void acceptTcpHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
         acceptCommonHandler(cfd,0,cip);
     }
 #endif
-#ifdef __KLJ__
-	if(server.lock){
-	}
-	else{
-		int cport, cfd, max = MAX_ACCEPTS_PER_CALL;
-    	char cip[NET_IP_STR_LEN];
-    	UNUSED(el);
-    	UNUSED(mask);
-    	UNUSED(privdata);
+	int cport, cfd, max = MAX_ACCEPTS_PER_CALL;
+	char cip[NET_IP_STR_LEN];
+	UNUSED(el);
+	UNUSED(mask);
+	UNUSED(privdata);
 
-    	while(max--) {
-    	    cfd = anetTcpAccept(server.neterr, fd, cip, sizeof(cip), &cport);
-    	    if (cfd == ANET_ERR) {
-    	        if (errno != EWOULDBLOCK)
-    	            serverLog(LL_WARNING,
-    	                "Accepting client connection: %s", server.neterr);
-    	        return;
-    	    }
-    	    serverLog(LL_VERBOSE,"Accepted %s:%d", cip, cport);
-    	    acceptCommonHandler(cfd,0,cip);
-    	}
+	while(max--) {
+		cfd = anetTcpAccept(server.neterr, fd, cip, sizeof(cip), &cport);
+		if (cfd == ANET_ERR) {
+			if (errno != EWOULDBLOCK)
+				serverLog(LL_WARNING,
+					"Accepting client connection: %s", server.neterr);
+			return;
+		}
+		serverLog(LL_VERBOSE,"Accepted %s:%d", cip, cport);
+		acceptCommonHandler(cfd,0,cip);
 	}
-#endif
 }
 
 void acceptUnixHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
@@ -1092,32 +1107,14 @@ int processInlineBuffer(client *c) {
     /* Split the input buffer up to the \r\n */
     querylen = newline-(c->querybuf);
     aux = sdsnewlen(c->querybuf,querylen);
-#ifdef __KLJ__
-#if 0
-	serverLog(LL_WARNING, "aux : %s",aux);
-#endif
-#endif
 	
 	argv = sdssplitargs(aux,&argc);
-//명령어를 받아 들임
-#if 0
-	serverLog(LL_WARNING, "argv : %s",*argv);
-#endif
 	sdsfree(aux);
     if (argv == NULL) {
         addReplyError(c,"Protocol error: unbalanced quotes in request");
         setProtocolError("unbalanced quotes in inline request",c,0);
         return C_ERR;
     }
-/*
-#ifdef __LJS__
-	if(new_master가 생겼다면){
-		feedReplicationSwitchBufWithObject(c->name, &newline);    	 
-	}
-    else
-		pos += newline-(c->querybuf+pos)+2;	
-#endif 
-*/ 
 
     /* Newline from slaves can be used to refresh the last ACK time.
      * This is useful for a slave to ping back while loading a big

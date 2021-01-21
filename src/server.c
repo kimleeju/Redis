@@ -1372,8 +1372,6 @@ void createSharedObjects(void) {
 
 void initServerConfig(void) {
     int j;
-
-
     pthread_mutex_init(&server.next_client_id_mutex,NULL);
     pthread_mutex_init(&server.lruclock_mutex,NULL);
     pthread_mutex_init(&server.unixtime_mutex,NULL);
@@ -2667,8 +2665,9 @@ int processCommand(client *c) {
 		call(c,CMD_CALL_FULL);
 #endif
 #ifdef __KLJ__
-		if(!server.bool_switch_ready)
+		if(!server.bool_switch_ready){
 			call(c,CMD_CALL_FULL);
+		}
 		else{
 			replicationFeedSwitchBuf(server.slaves,c->db->id,c->argv,c->argc,c);
 		}
