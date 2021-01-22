@@ -803,6 +803,9 @@ struct sharedObjectsStruct {
     *busykeyerr, *oomerr, *plus, *messagebulk, *pmessagebulk, *subscribebulk,
     *unsubscribebulk, *psubscribebulk, *punsubscribebulk, *del, *unlink,
     *rpop, *lpop, *lpush, *emptyscan,
+#ifdef __KLJ__
+	*finishswitch,
+#endif
     *select[PROTO_SHARED_SELECT_CMDS],
     *integers[OBJ_SHARED_INTEGERS],
     *mbulkhdr[OBJ_SHARED_BULKHDR_LEN], /* "*<value>\r\n" */
@@ -1134,7 +1137,7 @@ struct redisServer {
 	long long switch_buf_idx;
 	long long switch_buf_off;
 	time_t switch_buf_time_limit;
-	int bool_switch;
+	bool finish_switch;
 #endif
 	char *repl_backlog;             /* Replication backlog for partial syncs */
     long long repl_backlog_size;    /* Backlog circular buffer size */

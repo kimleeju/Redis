@@ -1290,6 +1290,8 @@ void createSharedObjects(void) {
     shared.emptymultibulk = createObject(OBJ_STRING,sdsnew("*0\r\n"));
 #ifdef __KLJ__
 	shared.synchronous = createObject(OBJ_STRING,sdsnew("+SYNCHRONOUS\r\n"));
+    shared.finishswitch = createObject(OBJ_STRING,sdsnew(
+        "-ERR switch finished\r\n"));
 #endif
 	shared.pong = createObject(OBJ_STRING,sdsnew("+PONG\r\n"));
     shared.queued = createObject(OBJ_STRING,sdsnew("+QUEUED\r\n"));
@@ -1958,7 +1960,7 @@ void initServer(void) {
     server.clients_paused = 0;
     server.system_memory_size = zmalloc_get_memory_size();
 #ifdef __KLJ__
-	server.bool_switch = 0;
+	server.finish_switch = 0;
 #endif
     createSharedObjects();
     adjustOpenFilesLimit();
@@ -2830,7 +2832,7 @@ void authCommand(client *c) {
 void synchronousCommand(client *c) {
 	//sync맞춰줘야함
 	//replicationSendPsync();
-	replicationSendFinish();
+	replicationSendCommand("FINISH");
 }
 #endif
 

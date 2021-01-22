@@ -336,6 +336,10 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 #ifdef __KLJ__
 void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc, client *c) {
 	int j,len;
+	if(server.finish_switch){
+		addReply(c, shared.finishswitch);
+		return;
+	}
 
 	if(!strcasecmp(argv[0]->ptr,"PING")){
 		pingCommand(c);
@@ -548,7 +552,7 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
 void sendSwitchBuf(client *c) {
 	
 	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
-	return;
+	server.finish_switch = 1;	
 }
 #endif
 
@@ -2326,18 +2330,18 @@ void replicationSendAck(void) {
 }
 
 #ifdef __KLJ__
-void replicationSendFinish(void) {
+void replicationSendCommand(const char* command) {
 	client *c = server.master;
     if (c != NULL) {
         c->flags |= CLIENT_MASTER_FORCE_REPLY;
         addReplyMultiBulkLen(c,3);
         addReplyBulkCString(c,"REPLCONF");
-		addReplyBulkCString(c,"FINISH");
+		addReplyBulkCString(c,command);
         addReplyBulkLongLong(c,c->reploff);
         c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
     }
 }
-
+#if 0
 void replicationSendPromote(void) {
 	client *c = server.master;
     if (c != NULL) {
@@ -2349,7 +2353,7 @@ void replicationSendPromote(void) {
         //c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
     }
 }
-
+#endif
 void replicationSendPsync(void) {
 	client *c = server.master;
     if (c != NULL) {
