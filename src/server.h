@@ -1138,6 +1138,7 @@ struct redisServer {
 	long long switch_buf_off;
 	time_t switch_buf_time_limit;
 	bool finish_switch;
+	bool finish_sync;
 #endif
 	char *repl_backlog;             /* Replication backlog for partial syncs */
     long long repl_backlog_size;    /* Backlog circular buffer size */
@@ -1180,6 +1181,7 @@ struct redisServer {
 	int memory_priority;
 	int bool_switch_ready;
 	int bool_connect_master;
+	bool synchronizing;
 #endif
 	
 	int slave_announce_port;        /* Give the master this listening port. */

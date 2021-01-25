@@ -2062,7 +2062,7 @@ void saveCommand(client *c) {
     if (rdbSave(server.rdb_filename,NULL) == C_OK) {
         addReply(c,shared.ok);
     } else {
-        addReply(c,shared.err);
+		addReply(c,shared.err);
     }
 }
 

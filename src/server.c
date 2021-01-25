@@ -317,8 +317,6 @@ struct redisCommand redisCommandTable[] = {
     {"host:",securityWarningCommand,-1,"lt",0,NULL,0,0,0,0,0},
     {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0},
 #ifdef __KLJ__
-	{"change",changeCommand,1,"ars",0,NULL,0,0,0,0,0},
-	//{"end",endCommand,1,"ars",0,NULL,0,0,0,0,0},
 	{"switch",switchCommand,1,"ars",0,NULL,0,0,0,0,0},
     {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},
 #endif
@@ -1516,6 +1514,7 @@ void initServerConfig(void) {
     server.slave_priority = CONFIG_DEFAULT_SLAVE_PRIORITY;
 #ifdef __KLJ__
 	server.memory_priority = CONFIG_DEFAULT_MEMORY_PRIORITY;
+	server.synchronizing = 0;
 	server.bool_switch_ready = 0;
 	server.master_switch_offset = 0;
 	server.switch_buf = NULL;
@@ -1961,6 +1960,7 @@ void initServer(void) {
     server.system_memory_size = zmalloc_get_memory_size();
 #ifdef __KLJ__
 	server.finish_switch = 0;
+	server.finish_sync = 0;
 #endif
     createSharedObjects();
     adjustOpenFilesLimit();
@@ -2360,7 +2360,7 @@ void preventCommandReplication(client *c) {
  *
  */
 void call(client *c, int flags) {
-    long long dirty, start, duration;
+	long long dirty, start, duration;
     int client_old_flags = c->flags;
     /* Sent the command to clients in MONITOR mode, only if the commands are
      * not generated from reading an AOF. */
@@ -2442,7 +2442,7 @@ void call(client *c, int flags) {
          * propagation is needed. */
         if (propagate_flags != PROPAGATE_NONE){
 			propagate(c->cmd,c->db->id,c->argv,c->argc,propagate_flags);
-		}	
+		}
 	}
 
     /* Restore the old replication flags, since call() can be executed
@@ -2473,6 +2473,10 @@ void call(client *c, int flags) {
     }
     server.also_propagate = prev_also_propagate;
     server.stat_numcommands++;
+#ifdef __KLJ__
+	if(server.bool_switch_ready)
+		replicationFeedSwitchBuf(server.slaves,c->db->id,c->argv,c->argc);
+#endif
 }
 
 /* If this function gets called we already read a whole
@@ -2489,6 +2493,7 @@ int processCommand(client *c) {
      * when FORCE_REPLICATION is enabled and would be implemented in
      * a regular command proc. */
     
+//	printf("ccccccccccccc argv = %s\n",c->argv[0]->ptr);
 	if (!strcasecmp(c->argv[0]->ptr,"quit")) {
         addReply(c,shared.ok);
         c->flags |= CLIENT_CLOSE_AFTER_REPLY;
@@ -2608,6 +2613,21 @@ int processCommand(client *c) {
     {
 		addReply(c, shared.roslaveerr);
         return C_OK;
+#if 0
+#ifndef __KLJ__
+		addReply(c, shared.roslaveerr);
+        return C_OK;
+#endif
+#ifdef __KLJ__
+		if(finish_sync){
+			addReply(c, shared.roslaveerr);
+        	return C_OK;
+		}
+		else{
+		
+		}
+#endif
+#endif
     }
 
     /* Only allow SUBSCRIBE and UNSUBSCRIBE in the context of Pub/Sub */
@@ -2663,6 +2683,8 @@ int processCommand(client *c) {
         queueMultiCommand(c);
         addReply(c,shared.queued);
     } else {
+		call(c,CMD_CALL_FULL);
+#if 0
 #ifndef __KLJ__
 		call(c,CMD_CALL_FULL);
 #endif
@@ -2681,8 +2703,8 @@ int processCommand(client *c) {
 #ifdef SUPPORT_PBA
     server.pba.arg = 0;
 #endif
-
-  
+#endif
+ 	} 
     return C_OK;
 }
 

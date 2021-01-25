@@ -339,7 +339,7 @@ void debugCommand(client *c) {
         serverAssertWithInfo(c,c->argv[0],1 == 2);
     } else if (!strcasecmp(c->argv[1]->ptr,"reload")) {
         if (rdbSave(server.rdb_filename,NULL) != C_OK) {
-            addReply(c,shared.err);
+			addReply(c,shared.err);
             return;
         }
         emptyDb(-1,EMPTYDB_NO_FLAGS,NULL);
@@ -361,7 +361,7 @@ void debugCommand(client *c) {
         if (server.aof_state == AOF_ON) flushAppendOnlyFile(1);
         emptyDb(-1,EMPTYDB_NO_FLAGS,NULL);
         if (loadAppendOnlyFile(server.aof_filename) != C_OK) {
-            addReply(c,shared.err);
+			addReply(c,shared.err);
             return;
         }
         server.dirty = 0; /* Prevent AOF / replication */

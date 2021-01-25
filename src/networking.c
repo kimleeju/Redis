@@ -172,6 +172,7 @@ int prepareClientToWrite(client *c) {
     if (c->flags & (CLIENT_REPLY_OFF|CLIENT_REPLY_SKIP)) {
 		return C_ERR;
 	}
+
     /* Masters don't receive replies, unless CLIENT_MASTER_FORCE_REPLY flag
      * is set. */
 #ifdef __KLJ__
@@ -196,6 +197,7 @@ JUMP:
 	{
 		return C_ERR; /* Fake client for AOF loading. */
 	}
+
     /* Schedule the client to write the output buffers to the socket only
      * if not already done (there were no pending writes already and the client
      * was yet not flagged), and, for slaves, if the slave can actually
@@ -224,7 +226,6 @@ JUMP:
  * -------------------------------------------------------------------------- */
 
 int _addReplyToBuffer(client *c, const char *s, size_t len) {
-    
 	size_t available = sizeof(c->buf)-c->bufpos;
 
     if (c->flags & CLIENT_CLOSE_AFTER_REPLY) return C_OK;
@@ -367,12 +368,12 @@ void addReply(client *c, robj *obj) {
 }
 
 void addReplySds(client *c, sds s) {
-    if (prepareClientToWrite(c) != C_OK) {
+	if (prepareClientToWrite(c) != C_OK) {
         /* The caller expects the sds to be free'd. */
 		sdsfree(s);
         return;
     }
-    if (_addReplyToBuffer(c,s,sdslen(s)) == C_OK) {
+	if (_addReplyToBuffer(c,s,sdslen(s)) == C_OK) {
         sdsfree(s);
     } else {
         /* This method free's the sds when it is no longer needed. */
@@ -395,7 +396,7 @@ void addReplyString(client *c, const char *s, size_t len) {
 }
 
 void addReplyErrorLength(client *c, const char *s, size_t len) {
-    addReplyString(c,"-ERR ",5);
+	addReplyString(c,"-ERR ",5);
     addReplyString(c,s,len);
     addReplyString(c,"\r\n",2);
 }
@@ -693,7 +694,6 @@ static void acceptCommonHandler(int fd, int flags, char *ip) {
 }
 
 void acceptTcpHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
-#ifndef __KLJ__
 	int cport, cfd, max = MAX_ACCEPTS_PER_CALL;
     char cip[NET_IP_STR_LEN];
     UNUSED(el);
@@ -711,26 +711,7 @@ void acceptTcpHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
         serverLog(LL_VERBOSE,"Accepted %s:%d", cip, cport);
         acceptCommonHandler(cfd,0,cip);
     }
-#endif
-	int cport, cfd, max = MAX_ACCEPTS_PER_CALL;
-	char cip[NET_IP_STR_LEN];
-	UNUSED(el);
-	UNUSED(mask);
-	UNUSED(privdata);
-
-	while(max--) {
-		cfd = anetTcpAccept(server.neterr, fd, cip, sizeof(cip), &cport);
-		if (cfd == ANET_ERR) {
-			if (errno != EWOULDBLOCK)
-				serverLog(LL_WARNING,
-					"Accepting client connection: %s", server.neterr);
-			return;
-		}
-		serverLog(LL_VERBOSE,"Accepted %s:%d", cip, cport);
-		acceptCommonHandler(cfd,0,cip);
-	}
 }
-
 void acceptUnixHandler(aeEventLoop *el, int fd, void *privdata, int mask) {
     int cfd, max = MAX_ACCEPTS_PER_CALL;
     UNUSED(el);
@@ -1432,8 +1413,9 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 #endif
 #endif
 	nread = read(fd, c->querybuf+qblen, readlen);
-#if 0
-	serverLog(LL_WARNING, "After: %s",c->querybuf);
+#if 1
+	if(server.synchronizing)
+		serverLog(LL_WARNING, "After: %s",c->querybuf+qblen);
 #endif
 	if (nread == -1) {
         if (errno == EAGAIN) {

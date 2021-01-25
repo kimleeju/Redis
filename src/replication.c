@@ -28,7 +28,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 #include "server.h"
 
 #include <sys/time.h>
@@ -196,9 +195,8 @@ void feedReplicationSwitchBufWithObject(robj *o) {
 	char llstr[LONG_STR_SIZE];
     void *p;
     size_t len;
-
     if (o->encoding == OBJ_ENCODING_INT) {
-        len = ll2string(llstr,sizeof(llstr),(long)o->ptr);
+		len = ll2string(llstr,sizeof(llstr),(long)o->ptr);
         p = llstr;
     } else {
         len = sdslen(o->ptr);
@@ -334,55 +332,9 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 }
 
 #ifdef __KLJ__
-void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc, client *c) {
+void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc) {
 	int j,len;
-	if(server.finish_switch){
-		addReply(c, shared.finishswitch);
-		return;
-	}
-
-	if(!strcasecmp(argv[0]->ptr,"PING")){
-		pingCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"REPLCONF")){
-		replconfCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"PUBLISH")){
-		publishCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"CLIENT")){
-		clientCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"INFO")){
-		infoCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"SUBSCRIBE")){
-		subscribeCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"MULTI")){
-		multiCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"CONFIG")){
-		configCommand(c);
-		return;
-	}
-	else if(!strcasecmp(argv[0]->ptr,"EXEC")){
-		execCommand(c);
-		return;
-	}
-#if 0
-	else if(!strcasecmp(argv[0]->ptr,"ROLE")){
-		roleCommand(c);
-		return;
-	}
-#endif
+	
 	if (server.masterhost != NULL || server.switch_buf == NULL) return;
 
     /* If there aren't slaves, and there is no backlog buffer to populate,
@@ -391,37 +343,25 @@ void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc, c
 	
     /* We can't have slaves attached and no backlog. */
     serverAssert(!(listLength(slaves) != 0 && server.switch_buf == NULL));
-
-	if (server.switch_buf) {
-		if(!strcasecmp(argv[0]->ptr,"SET")){
-			//SDB에 넣는 부분
-			setKey(c->sdb, argv[1], argv[2]);
-			
-			//buffer에 넣는 부분
-			char aux[LONG_STR_SIZE+3];
-			aux[0] = '*';
-			len = ll2string(aux+1,sizeof(aux)-1,argc);
+	if(!strcasecmp(argv[0]->ptr,"SET")){
+		char aux[LONG_STR_SIZE+3];
+		aux[0] = '*';
+		len = ll2string(aux+1,sizeof(aux)-1,argc);
+		aux[len+1] = '\r';
+		aux[len+2] = '\n';
+		
+		feedReplicationSwitchBuf(aux,len+3);
+		for (j = 0; j < argc; j++) {
+			long objlen = stringObjectLen(argv[j]);
+			aux[0] = '$';
+			len = ll2string(aux+1,sizeof(aux)-1,objlen);
 			aux[len+1] = '\r';
-        	aux[len+2] = '\n';
-    		
+			aux[len+2] = '\n';
 			feedReplicationSwitchBuf(aux,len+3);
-			for (j = 0; j < argc; j++) {
-				long objlen = stringObjectLen(argv[j]);
-				aux[0] = '$';
-				len = ll2string(aux+1,sizeof(aux)-1,objlen);
-				aux[len+1] = '\r';
-				aux[len+2] = '\n';
-				feedReplicationSwitchBuf(aux,len+3);
-				feedReplicationSwitchBufWithObject(argv[j]);
-				feedReplicationSwitchBuf(aux+len+1,2);
-			}
-			addReply(c,shared.ok);
-			return;
+			feedReplicationSwitchBufWithObject(argv[j]);
+			feedReplicationSwitchBuf(aux+len+1,2);
 		}
-
-		else if(!strcasecmp(argv[0]->ptr,"GET")){
-			getSwitchGenericCommand(c);
-		}
+		return;
 	}
 }
 
@@ -550,9 +490,10 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
 
 #ifdef __KLJ__
 void sendSwitchBuf(client *c) {
-	
+	replicationSendCommand("PROMOTE\r\n");
 	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
-	server.finish_switch = 1;	
+	server.finish_switch = 1;
+	zfree(server.switch_buf);
 }
 #endif
 
@@ -788,63 +729,10 @@ int startBgsaveForReplication(int mincapa) {
 }
 
 #ifdef __KLJ__
-void changeCommand(client *c){
-
-}
-#if 0
-void endCommand(client *c){
-	printf("eeeeeeeeeeeeeeee\n");
-	//lockCommand(server.master);
-	sendSwitchBuf(server.master,strlen(server.switch_buf));			
-}
-#endif
-
-void lockCommand(client *c){
-    if (c != NULL) {
-        c->flags |= CLIENT_MASTER_FORCE_REPLY;
-        addReplyMultiBulkLen(c,3);
-        addReplyBulkCString(c,"REPLCONF");
-        addReplyBulkCString(c,"LOCK");
-        addReplyBulkLongLong(c,c->reploff);
-        c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
-    }
-}
-
 void switchCommand(client *c) {
-    /* ignore SYNC if already slave or in monitor mode */
-	if (c->flags & CLIENT_SLAVE) return;
-
-    /* Refuse SYNC requests if we are a slave but the link with our master
-     * is not ok... */
-
-    if (server.masterhost && server.repl_state != REPL_STATE_CONNECTED) {
-        addReplySds(c,sdsnew("-NOMASTERLINK Can't SYNC while not connected with my master\r\n"));
-        return;
-    }
-
-    /* SYNC can't be issued when the server has pending data to send to
-     * the client about already issued commands. We need a fresh reply
-     * buffer registering the differences between the BGSAVE and the current
-     * dataset, so that we can copy to other slaves if needed. */
-
-	if(!strcasecmp(c->argv[0]->ptr,"switch")){
-		//propagate(c->cmd,c->db->id,c->argv,c->argc,PROPAGATE_SWITCH);
-		robj *sync_argv[1];
-		sync_argv[0] = createStringObject("synchronous",11);
-        replicationFeedSlaves(server.slaves, server.slaveseldb, sync_argv, 1);
-		decrRefCount(sync_argv[0]);
-		return;
-	}
-	else {
-        /* If a slave uses SYNC, we are dealing with an old implementation
-         * of the replication protocol (like redis-cli --slave). Flag the client
-         * so that we don't expect to receive REPLCONF ACK feedbacks. */
-        c->flags |= CLIENT_PRE_PSYNC;
-    }
-
+	if(server.switch_buf == NULL) createReplicationSwitchBuf();
+	server.bool_switch_ready = 1;
 }
-
-
 #endif
 
 /* SYNC and PSYNC command implemenation. */
@@ -880,7 +768,7 @@ void syncCommand(client *c) {
      *
      * So the slave knows the new replid and offset to try a PSYNC later
      * if the connection with the master is lost. */
-    if (!strcasecmp(c->argv[0]->ptr,"psync")) {
+	if (!strcasecmp(c->argv[0]->ptr,"psync")) {
         if (masterTryPartialResynchronization(c) == C_OK) {
             server.stat_sync_partial_ok++;
             return; /* No full resync needed, return. */
@@ -998,7 +886,7 @@ void syncCommand(client *c) {
  * the replication to initiate an incremental replication instead of a
  * full resync. */
 void replconfCommand(client *c) {
-    int j;
+	int j;
 
     if ((c->argc % 2) == 0) {
         /* Number of arguments must be odd to make sure that every
@@ -1032,39 +920,46 @@ void replconfCommand(client *c) {
             else if (!strcasecmp(c->argv[j+1]->ptr,"psync2"))
                 c->slave_capa |= SLAVE_CAPA_PSYNC2;
         } else if (!strcasecmp(c->argv[j]->ptr,"ack")) {
-            /* REPLCONF ACK is used by slave to inform the master the amount
+			/* REPLCONF ACK is used by slave to inform the master the amount
              * of replication stream that it processed so far. It is an
              * internal only command that normal clients should never use. */
             long long offset;
-
-            if (!(c->flags & CLIENT_SLAVE)) return;
+			if (!(c->flags & CLIENT_SLAVE)) return;
             if ((getLongLongFromObject(c->argv[j+1], &offset) != C_OK))
                 return;
-            if (offset > c->repl_ack_off)
+			if (offset > c->repl_ack_off)
                 c->repl_ack_off = offset;
             c->repl_ack_time = server.unixtime;
             /* If this was a diskless replication, we need to really put
              * the slave online when the first ACK is received (which
              * confirms slave is online and ready to get more data). */
-            if (c->repl_put_online_on_ack && c->replstate == SLAVE_STATE_ONLINE)
-                putSlaveOnline(c);
-            /* Note: this command does not reply anything! */
+			if (c->repl_put_online_on_ack && c->replstate == SLAVE_STATE_ONLINE)
+				putSlaveOnline(c);
+			/* Note: this command does not reply anything! */
             return;
         } else if (!strcasecmp(c->argv[j]->ptr,"getack")) {
             /* REPLCONF GETACK is used in order to request an ACK ASAP
              * to the slave. */
-            if (server.masterhost && server.master) replicationSendAck();
-            return;
+            if (server.masterhost && server.master) 
+				replicationSendAck();
+			return;
         } 
 #ifdef __KLJ__
          else if (!strcasecmp(c->argv[j]->ptr,"finish")) {
-        	if (server.switch_buf == NULL) createReplicationSwitchBuf();
-			server.bool_switch_ready = 1;
+			c->flags |= CLIENT_SLAVE;
+    		c->replstate = SLAVE_STATE_ONLINE;
+    		c->repl_ack_time = server.unixtime;
+    		c->repl_put_online_on_ack = 0;
+    		listAddNodeTail(server.slaves,c);
+			putSlaveOnline(c);
+			printf("22222222222222222\n");
+			return;
 		 }else if (!strcasecmp(c->argv[j]->ptr,"promote")) {
-		 	//server.lock = 1;
+			server.synchronizing = 1;
+			printf("1111111111111111111111111111111111111111111111111111111111111111111111\n");
+		 	return;
 		 }
 #endif
-
 		else {
             addReplyErrorFormat(c,"Unrecognized REPLCONF option: %s",
                 (char*)c->argv[j]->ptr);
@@ -1650,7 +1545,7 @@ char *sendSynchronousCommand(int flags, int fd, ...) {
 #define PSYNC_NOT_SUPPORTED 4
 #define PSYNC_TRY_LATER 5
 int slaveTryPartialResynchronization(int fd, int read_reply) {
-    char *psync_replid;
+	char *psync_replid;
     char psync_offset[32];
     sds reply;
 
@@ -1672,10 +1567,10 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
             psync_replid = "?";
             memcpy(psync_offset,"-1",3);
         }
-
         /* Issue the PSYNC command */
-        reply = sendSynchronousCommand(SYNC_CMD_WRITE,fd,"PSYNC",psync_replid,psync_offset,NULL);
-        if (reply != NULL) {
+		reply = sendSynchronousCommand(SYNC_CMD_WRITE,fd,"PSYNC",psync_replid,psync_offset,NULL);
+		
+		if (reply != NULL) {
             serverLog(LL_WARNING,"Unable to send PSYNC to master: %s",reply);
             sdsfree(reply);
             aeDeleteFileEvent(server.el,fd,AE_READABLE);
@@ -1683,10 +1578,9 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
         }
         return PSYNC_WAIT_REPLY;
     }
-
     /* Reading half */
     reply = sendSynchronousCommand(SYNC_CMD_READ,fd,NULL);
-    if (sdslen(reply) == 0) {
+	if (sdslen(reply) == 0) {
         /* The master may send empty newlines after it receives PSYNC
          * and before to reply, just to keep the connection alive. */
         sdsfree(reply);
@@ -1696,7 +1590,7 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
     aeDeleteFileEvent(server.el,fd,AE_READABLE);
 
     if (!strncmp(reply,"+FULLRESYNC",11)) {
-        char *replid = NULL, *offset = NULL;
+		char *replid = NULL, *offset = NULL;
 
         /* FULL RESYNC, parse the reply in order to extract the run id
          * and the replication offset. */
@@ -1727,10 +1621,9 @@ int slaveTryPartialResynchronization(int fd, int read_reply) {
         sdsfree(reply);
         return PSYNC_FULLRESYNC;
     }
-
     if (!strncmp(reply,"+CONTINUE",9)) {
         /* Partial resync was accepted. */
-        serverLog(LL_NOTICE,
+		serverLog(LL_NOTICE,
             "Successful partial resynchronization with master.");
 
         /* Check the new replication ID advertised by the master. If it
@@ -1978,6 +1871,12 @@ void syncWithMaster(aeEventLoop *el, int fd, void *privdata, int mask) {
         server.repl_state = REPL_STATE_SEND_PSYNC;
     }
 
+#ifdef __KLJ__
+	if(server.bool_switch_ready){
+		replicationResurrectCachedMaster(fd);
+		return;
+	}
+#endif
     /* Try a partial resynchonization. If we don't have a cached master
      * slaveTryPartialResynchronization() will at least try to use PSYNC
      * to start a full resynchronization so that we get the master run id
@@ -2011,7 +1910,6 @@ void syncWithMaster(aeEventLoop *el, int fd, void *privdata, int mask) {
 
     /* Note: if PSYNC does not return WAIT_REPLY, it will take care of
      * uninstalling the read handler from the file descriptor. */
-
     if (psync_result == PSYNC_CONTINUE) {
         serverLog(LL_NOTICE, "MASTER <-> SLAVE sync: Master accepted a Partial Resynchronization.");
         return;
@@ -2084,7 +1982,6 @@ write_error: /* Handle sendSynchronousCommand(SYNC_CMD_WRITE) errors. */
 
 int connectWithMaster(void) {
     int fd;
-
     fd = anetTcpNonBlockBestEffortBindConnect(NULL,
         server.masterhost,server.masterport,NET_FIRST_BIND_ADDR);
     if (fd == -1) {
@@ -2104,7 +2001,7 @@ int connectWithMaster(void) {
     server.repl_transfer_lastio = server.unixtime;
     server.repl_transfer_s = fd;
     server.repl_state = REPL_STATE_CONNECTING;
-    return C_OK;
+	return C_OK;
 }
 
 /* This function can be called when a non blocking connection is currently
@@ -2248,7 +2145,7 @@ void slaveofCommand(client *c) {
         }
         /* There was no previous master or the user specified a different one,
          * we can continue. */
-        replicationSetMaster(c->argv[1]->ptr, port);
+		replicationSetMaster(c->argv[1]->ptr, port);
         sds client = catClientInfoString(sdsempty(),c);
         serverLog(LL_NOTICE,"SLAVE OF %s:%d enabled (user request from '%s')",
             server.masterhost, server.masterport, client);
@@ -2320,10 +2217,10 @@ void replicationSendAck(void) {
     client *c = server.master;
 
     if (c != NULL) {
-        c->flags |= CLIENT_MASTER_FORCE_REPLY;
-        addReplyMultiBulkLen(c,3);
+		c->flags |= CLIENT_MASTER_FORCE_REPLY;
+		addReplyMultiBulkLen(c,3);
         addReplyBulkCString(c,"REPLCONF");
-        addReplyBulkCString(c,"ACK");
+		addReplyBulkCString(c,"ACK");
         addReplyBulkLongLong(c,c->reploff);
         c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
     }
@@ -2333,13 +2230,16 @@ void replicationSendAck(void) {
 void replicationSendCommand(const char* command) {
 	client *c = server.master;
     if (c != NULL) {
-        c->flags |= CLIENT_MASTER_FORCE_REPLY;
+//		addReplySds(c,sdsnewlen(command, strlen(command)));
+#if 1
+		c->flags |= CLIENT_MASTER_FORCE_REPLY;
         addReplyMultiBulkLen(c,3);
         addReplyBulkCString(c,"REPLCONF");
 		addReplyBulkCString(c,command);
         addReplyBulkLongLong(c,c->reploff);
         c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
-    }
+#endif
+	}
 }
 #if 0
 void replicationSendPromote(void) {
@@ -2464,7 +2364,7 @@ void replicationDiscardCachedMaster(void) {
  * so the stream of data that we'll receive will start from were this
  * master left. */
 void replicationResurrectCachedMaster(int newfd) {
-    server.master = server.cached_master;
+	server.master = server.cached_master;
     server.cached_master = NULL;
     server.master->fd = newfd;
     server.master->flags &= ~(CLIENT_CLOSE_AFTER_REPLY|CLIENT_CLOSE_ASAP);
@@ -2802,8 +2702,14 @@ void replicationCron(void) {
      * support PSYNC and replication offsets. */
     if (server.masterhost && server.master &&
         !(server.master->flags & CLIENT_PRE_PSYNC))
-        replicationSendAck();
-
+	{
+		if(server.bool_switch_ready && server.finish_switch){
+			server.bool_switch_ready = 0; 
+			server.finish_switch = 0;
+			replicationSendCommand("FINISH\r\n");
+		}
+		replicationSendAck();
+	}
     /* If we have attached slaves, PING them from time to time.
      * So slaves can implement an explicit timeout to masters, and will
      * be able to detect a link disconnection even if the TCP connection

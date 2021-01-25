@@ -185,13 +185,6 @@ int getGenericCommand(client *c) {
 	}
 }
 
-#ifdef __KLJ__
-int getSwitchGenericCommand(client *c) {
-	lookupSwitchKeyReadOrReply(c,c->argv[1]);
-	return C_OK;
-}
-#endif
-
 void getCommand(client *c) {
     getGenericCommand(c);
 }
