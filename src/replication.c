@@ -2370,7 +2370,7 @@ void replicationResurrectCachedMaster(int newfd) {
     server.master->flags &= ~(CLIENT_CLOSE_AFTER_REPLY|CLIENT_CLOSE_ASAP);
     server.master->authenticated = 1;
     server.master->lastinteraction = server.unixtime;
-    server.repl_state = REPL_STATE_CONNECTED;
+	server.repl_state = REPL_STATE_CONNECTED;
     /* Re-add to the list of clients. */
     listAddNodeTail(server.clients,server.master);
     if (aeCreateFileEvent(server.el, newfd, AE_READABLE,
@@ -2684,7 +2684,8 @@ void replicationCron(void) {
     if (server.masterhost && server.repl_state == REPL_STATE_CONNECTED &&
         (time(NULL)-server.master->lastinteraction) > server.repl_timeout)
     {
-        serverLog(LL_WARNING,"MASTER timeout: no data nor PING received...");
+        printf("server.repl_timeout = %d\n",server.repl_timeout);
+		serverLog(LL_WARNING,"MASTER timeout: no data nor PING received...");
         freeClient(server.master);
     }
 
