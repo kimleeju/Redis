@@ -1416,7 +1416,7 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 #endif
 	nread = read(fd, c->querybuf+qblen, readlen);
 #if 1
-	if(server.synchronizing)
+	//if(server.synchronizing)
 		serverLog(LL_WARNING, "After: %s",c->querybuf+qblen);
 #endif
 	if (nread == -1) {

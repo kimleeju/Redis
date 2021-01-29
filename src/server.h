@@ -2045,8 +2045,11 @@ void sscanCommand(client *c);
 void changeCommand(client *c);
 void endCommand(client *c);
 void lockCommand(client *c);
-void switchCommand(client *c);
-void synchronousCommand(client *c);
+void switchCommand();
+void okCommand();
+//void synchronousCommand();
+void promoteCommand();
+void finishCommand(client *c);
 #endif
 void syncCommand(client *c);
 void flushdbCommand(client *c);

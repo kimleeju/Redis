@@ -318,7 +318,10 @@ struct redisCommand redisCommandTable[] = {
     {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0},
 #ifdef __KLJ__
 	{"switch",switchCommand,1,"ars",0,NULL,0,0,0,0,0},
-    {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},
+//    {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},
+    {"+OK",okCommand,-1,"ars",0,NULL,0,0,0,0,0},
+	{"promote",promoteCommand,1,"ars",0,NULL,0,0,0,0,0},
+	{"finish",finishCommand,1,"ars",0,NULL,0,0,0,0,0},
 #endif
 };
 
@@ -2475,7 +2478,7 @@ void call(client *c, int flags) {
     server.stat_numcommands++;
 #ifdef __KLJ__
 	if(server.bool_switch_ready)
-		replicationFeedSwitchBuf(server.slaves,c->db->id,c->argv,c->argc);
+		replicationFeedSwitchBuf(server.slaves,c->argv,c->argc);
 #endif
 }
 
@@ -2849,15 +2852,15 @@ void authCommand(client *c) {
       addReplyError(c,"invalid password");
     }
 }
-
+#if 0
 #ifdef __KLJ__
-void synchronousCommand(client *c) {
+void synchronousCommand() {
 	//sync맞춰줘야함
 	//replicationSendPsync();
 	replicationSendCommand("FINISH");
 }
 #endif
-
+#endif
 
 /* The PING command. It works in a different way if the client is in
  * in Pub/Sub mode. */

@@ -1,0 +1,619 @@
+34724:C 29 Jan 13:48:15.789 # USING NOT NVM
+34724:C 29 Jan 13:48:15.789 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+34724:C 29 Jan 13:48:15.789 # Redis version=4.0.0, bits=64, commit=de04af69, modified=1, pid=34724, just started
+34724:C 29 Jan 13:48:15.789 # Configuration loaded
+34724:S 29 Jan 13:48:15.790 * Increased maximum number of open files to 10032 (it was originally set to 1024).
+34724:S 29 Jan 13:48:15.791 # server.port 3001 , server.ipfd[j] : 6
+34724:S 29 Jan 13:48:15.791 # server.port 3001 , server.ipfd[j] : 7
+                _._                                                  
+           _.-``__ ''-._                                             
+      _.-``    `.  `_.  ''-._           Redis 4.0.0 (de04af69/1) 64 bit
+  .-`` .-```.  ```\/    _.,_ ''-._                                   
+ (    '      ,       .-`  | `,    )     Running in standalone mode
+ |`-._`-...-` __...-.``-._|'` _.-'|     Port: 3001
+ |    `-._   `._    /     _.-'    |     PID: 34724
+  `-._    `-._  `-./  _.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |           http://redis.io        
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+ |`-._`-._    `-.__.-'    _.-'_.-'|                                  
+ |    `-._`-._        _.-'_.-'    |                                  
+  `-._    `-._`-.__.-'_.-'    _.-'                                   
+      `-._    `-.__.-'    _.-'                                       
+          `-._        _.-'                                           
+              `-.__.-'                                               
+
+34724:S 29 Jan 13:48:15.791 # Server initialized
+34724:S 29 Jan 13:48:15.791 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+34724:S 29 Jan 13:48:15.792 # WARNING you have Transparent Huge Pages (THP) support enabled in your kernel. This will create latency and memory usage issues with Redis. To fix this issue run the command 'echo never > /sys/kernel/mm/transparent_hugepage/enabled' as root, and add it to your /etc/rc.local in order to retain the setting after a reboot. Redis must be restarted after THP is disabled.
+34724:S 29 Jan 13:48:15.792 * Ready to accept connections
+34724:S 29 Jan 13:48:15.792 * Connecting to MASTER 127.0.0.1:3000
+34724:S 29 Jan 13:48:15.792 * MASTER <-> SLAVE sync started
+34724:S 29 Jan 13:48:15.792 * Non blocking connect for SYNC fired the event.
+34724:S 29 Jan 13:48:15.792 * Master replied to PING, replication can continue...
+34724:S 29 Jan 13:48:15.792 * Partial resynchronization not possible (no cached master)
+34724:S 29 Jan 13:48:19.230 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$21
+sentinel-fdacf27d-cmd
+*1
+$4
+PING
+*1
+$4
+INFO
+
+34724:S 29 Jan 13:48:19.230 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$24
+sentinel-fdacf27d-pubsub
+*2
+$9
+SUBSCRIBE
+$18
+__sentinel__:hello
+
+34724:S 29 Jan 13:48:20.272 # After: *1
+$4
+INFO
+
+34724:S 29 Jan 13:48:20.338 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:21.174 * Full resync from master: 803b37d42d223dd11a85d7f4fcdecfd5956c536c:301
+34724:S 29 Jan 13:48:21.175 * MASTER <-> SLAVE sync: receiving streamed RDB from master
+34724:S 29 Jan 13:48:21.175 * MASTER <-> SLAVE sync: Flushing old data
+34724:S 29 Jan 13:48:21.175 * MASTER <-> SLAVE sync: Loading DB in memory
+34724:S 29 Jan 13:48:21.175 * MASTER <-> SLAVE sync: Finished with success
+34724:S 29 Jan 13:48:21.186 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:21.303 # After: *1
+$4
+INFO
+
+34724:S 29 Jan 13:48:21.365 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:21.807 # After: *2
+$6
+SELECT
+$1
+0
+*3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:22.403 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:23.251 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:23.414 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:23.414 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:23.481 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:24.424 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:25.269 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:25.457 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:26.508 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:26.509 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:26.570 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:S 29 Jan 13:48:27.344 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+$4
+INFO
+
+34724:S 29 Jan 13:48:27.535 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:28.568 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:29.188 # After: *1
+$4
+PING
+
+34724:S 29 Jan 13:48:29.374 # After: *1
+$4
+INFO
+
+34724:S 29 Jan 13:48:29.451 # After: *1
+$5
+MULTI
+*3
+$7
+SLAVEOF
+$2
+NO
+$3
+ONE
+*2
+$6
+CONFIG
+$7
+REWRITE
+*1
+$4
+EXEC
+*3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3000,0
+
+34724:M 29 Jan 13:48:29.451 # Setting secondary replication ID to 803b37d42d223dd11a85d7f4fcdecfd5956c536c, valid up to offset: 999. New replication ID is 09fe44b6ec10822aa705e88c15c8db93c4e7ee31
+34724:M 29 Jan 13:48:29.451 # Connection with master lost.
+34724:M 29 Jan 13:48:29.451 * Caching the disconnected master state.
+34724:M 29 Jan 13:48:29.451 * Discarding previously cached master state.
+34724:M 29 Jan 13:48:29.451 * MASTER MODE enabled (user request from 'id=2 addr=127.0.0.1:48798 fd=9 name=sentinel-fdacf27d-cmd age=10 idle=0 flags=x db=0 sub=0 psub=0 multi=2 qbuf=132 qbuf-free=32636 obl=27 oll=0 omem=0 events=r cmd=exec')
+34724:M 29 Jan 13:48:29.453 # CONFIG REWRITE executed with success.
+34724:M 29 Jan 13:48:29.578 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:30.381 # After: *1
+$4
+INFO
+############################## INCLUDES ###################################
+
+# Include one or more other config files here.  This is useful if you
+# have a standard template that goes to all Redis servers but also need
+# to customize a few per-server settings.  Include files can include
+# other files, so use this wisely.
+#
+# Notice option "include" won't be rewritten by command "CONFIG REWRITE"
+# from admin or Redis Sentinel. Since Redis always uses the last processed
+# line as value of a configuration directive, you'd better put includes
+# at the beginning of this file to avoid overwriting config change at runtime.
+#
+# If instead you are interested in using includes to override configuration
+# options, it is better to use include as the last line.
+#
+# include /path/to/local.conf
+# include /path/to/other.conf
+
+################################## MODULES #####################################
+
+# Load modules at startup. If the server is not able to load modules
+# it will abort. It is possib
+34724:M 29 Jan 13:48:30.436 # After: 
+34724:M 29 Jan 13:48:30.436 # After: 
+34724:M 29 Jan 13:48:30.496 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$21
+sentinel-fdacf27d-cmd
+*1
+$4
+PING
+*3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+units: when memory size is needed, it is possible to specify
+# it in the usual form of 1k 5GB 4M and so forth:
+#
+# 1k => 1000 bytes
+# 1kb => 1024 bytes
+# 1m => 1000000 bytes
+# 1mb => 1024*1024 bytes
+# 1g => 1000000000 bytes
+# 1gb => 1024*1024*1024 bytes
+#
+# units are case insensitive so 1GB 1Gb 1gB are 
+34724:M 29 Jan 13:48:30.497 # After: *3
+$6
+CLIENT
+$7
+SETNAME
+$24
+sentinel-fdacf27d-pubsub
+*2
+$9
+SUBSCRIBE
+$18
+__sentinel__:hello
+ at startup. If the server is not able to load modules
+# it will abort. It is possible to use multiple loadmodule directives.
+#
+# loadmodule /path/to/my_module.so
+# loadmodule /path/to/other_module.so
+
+################################## NETWORK #####################################
+
+# By default, if no "bind" configuration directive is specified, Redis listens
+# for connections from all the network interfaces available on the server.
+# It is possible to listen to just one or multiple selected interfaces using
+# the "bind" configuration directive, followed by one or more IP addresses.
+#
+# Examples:
+#
+# bind 192.168.1.100 10.0.0.1
+bind 127.0.0.1 ::1
+#bind 192.168.0.3 127.0.0.1
+#
+# ~~~ WARNING ~~~ If the computer running Redis is directly exposed to the
+# internet, binding to all the interfaces is dangerous and will expose the
+# instance to everybody on the internet. So by default we uncomment the
+# fo
+34724:M 29 Jan 13:48:31.532 # After: *1
+$4
+PING
+53c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+
+34724:M 29 Jan 13:48:32.545 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:32.604 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+
+34724:M 29 Jan 13:48:33.557 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:34.620 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:34.681 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+############ NETWORK #####################################
+
+# By default, if no "bind" configuration directive is specified, Redis listens
+# for connections from all the network interfaces available on the server.
+# It is possible to listen to just one or multiple selected interfaces using
+# the "bind" configuration directive, followed by one or more IP addresses.
+#
+# Examples:
+#
+# bind 192.168.1.100 10.0.0.1
+bind 127.0.0.1 ::1
+#bind 192.168.0.3 127.0.0.1
+#
+# ~~~ WARNING ~~~ If the computer running Redis is directly exposed to the
+# internet, binding to all the interfaces is dangerous and will expose the
+# instance to everybody on the internet. So by default we uncomment the
+# following bind directive, that will force Redis to listen only into
+# the IPv4 lookback interface address (this means Redis will be able to
+# accept connections only from clients running into the sa
+34724:M 29 Jan 13:48:35.695 # After: *1
+$4
+PING
+NFIG REWRITE"
+# from admin or Redis Sentinel. Since Redis always uses the last processed
+# line as value of a configuration directive, you'd better put includes
+# at the beginning of this file to avoid overwriting config change at runtime.
+#
+# If instead you are interested in using includes to override configuration
+# options, it is better to use include as the last line.
+#
+# include /path/to/local.conf
+# include /path/to/other.conf
+
+################################## MODULES #####################################
+
+# Load modules at startup. If the server is not able to load modules
+# it will abort. It is possible 
+34724:M 29 Jan 13:48:36.706 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:36.773 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+ this file to avoid overwriting config change at runtime.
+#
+# If instead you are interested in using includes to override configuration
+# options, it is better to use include as the last line.
+#
+# include /path/to/local.conf
+# include /path/to/other.conf
+
+################################## MODULES #####################################
+
+# Load modules at startup. If the server is not able to load modules
+# it will abort. It is possible 
+34724:M 29 Jan 13:48:37.761 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:38.808 # After: *1
+$4
+PING
+###########
+
+# Include one or more other config files here.  This is useful if you
+# have a standard template
+34724:M 29 Jan 13:48:38.892 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+
+34724:M 29 Jan 13:48:39.379 # After: *1
+$4
+INFO
+
+34724:M 29 Jan 13:48:39.861 # After: *1
+$4
+PING
+H
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+
+34724:M 29 Jan 13:48:40.876 # After: *1
+$4
+PING
+H
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+
+34724:M 29 Jan 13:48:40.960 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+ default, if no "bind" configuration directive is specified, Redis listens
+# for connections from all the network interfaces available on the server.
+# It is possible to listen to just one or multiple selected interfaces using
+# the "bind" configuration directive, followed by one or more IP addresses.
+#
+# Examples:
+#
+# bind 192.168.1.100 10.0.0.1
+bind 127.0.0.1 ::1
+#bind 192.168.0.3 127.0.0.1
+#
+# ~~~ WARNING ~~~ If the computer running Redis is directly exposed to the
+# internet, binding to all the interfaces is dangerous and will expose the
+# instance to everybody on the internet. So by default we uncomment the
+# following bind directive, that will force Redis to listen only into
+# the IPv4 lookback interface address (this means Redis will be able to
+# accept connections only from clients running into the same computer it
+# is running).
+#
+# IF YOU ARE SURE YOU WANT YOUR 
+34724:M 29 Jan 13:48:41.219 # After: PING
+*1024 bytes
+# 1g => 1000000000 bytes
+# 1gb => 1024*1024*1024 bytes
+#
+# units are case insensitive so 1GB 1Gb 1gB are 
+34724:M 29 Jan 13:48:41.220 # After: REPLCONF listening-port 3000
+000000 bytes
+# 1gb => 1024*1024*1024 bytes
+#
+# units are case insensitive so 1GB 1Gb 1gB are 
+34724:M 29 Jan 13:48:41.220 # After: REPLCONF capa eof capa psync2
+00000 bytes
+# 1gb => 1024*1024*1024 bytes
+#
+# units are case insensitive so 1GB 1Gb 1gB are 
+34724:M 29 Jan 13:48:41.220 # After: PROMOTE
+*3
+$3
+set
+$3
+111
+$3
+222
+*3
+$3
+set
+$3
+111
+$3
+222
+*3
+$3
+set
+$3
+111
+$3
+222
+*3
+$3
+set
+$3
+111
+$3
+222
+*3
+$3
+set
+$3
+111
+$3
+222
+######## INCLUDES #####
+prprprprprprprprprprprprprprprprprprprprprprprprprprprprpr
+34724:M 29 Jan 13:48:41.897 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:42.221 # After: FINISH
+*3
+$8
+REPLCONF
+$3
+ACK
+$4
+1970
+S #####################################
+
+# Load modules at startup. If the server is not able to load modules
+# it will abort. It is possible 
+fififififififififififififififififififififififififi
+34724:M 29 Jan 13:48:42.222 * Synchronization with slave 127.0.0.1:3000 succeeded
+34724:M 29 Jan 13:48:42.901 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:42.973 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+################
+
+# Load modules at startup. If the server is not able to load modules
+# it will abort. It is possible 
+34724:M 29 Jan 13:48:43.224 # After: *3
+$8
+REPLCONF
+$3
+ACK
+$4
+2102
+
+34724:M 29 Jan 13:48:43.947 # After: *1
+$4
+PING
+53c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+
+34724:M 29 Jan 13:48:44.227 # After: *3
+$8
+REPLCONF
+$3
+ACK
+$4
+2102
+
+34724:M 29 Jan 13:48:44.949 # After: *1
+$4
+PING
+
+34724:M 29 Jan 13:48:45.001 # After: *3
+$7
+PUBLISH
+$18
+__sentinel__:hello
+$83
+127.0.0.1,3100,fdacf27d0899244453c29ec1a0d30d4bfd91ff70,0,mymaster,127.0.0.1,3001,0
+
+34724:M 29 Jan 13:48:45.228 # After: *3
+$8
+REPLCONF
+$3
+ACK
+$4
+2234
+
+34724:M 29 Jan 13:48:45.730 # After: 
+34724:M 29 Jan 13:48:45.730 # Connection with slave 127.0.0.1:3000 lost.
+34724:M 29 Jan 13:48:45.733 # After: 
+34724:M 29 Jan 13:48:45.733 # After: 
+34724:signal-handler (1611895728) Received SIGTERM scheduling shutdown...
+34724:M 29 Jan 13:48:48.366 # User requested shutdown...
+34724:M 29 Jan 13:48:48.366 * Removing the pid file.
+34724:M 29 Jan 13:48:48.366 # Redis is now ready to exit, bye bye...

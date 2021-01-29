@@ -26,9 +26,9 @@ find / -name "*appendonly.aof" -exec rm {} \;
 
 ../src/redis-server 3000.conf &
 
-../src/redis-server 3001.conf & 
+#../src/redis-server 3001.conf & 
 
-../src/redis-server 3002.conf &
+#../src/redis-server 3002.conf &
 #../src/redis-server 3003.conf &
 #/home/ljkim/redis_switch_master/pmem-redis-test/src/redis-server /home/ljkim/redis_switch_master/pmem-redis-test/KLJ/3001.conf
 #/home/ljkim/redis_switch_master/pmem-redis-test/src/redis-server /home/ljkim/redis_switch_master/pmem-redis-test/KLJ/3000.conf

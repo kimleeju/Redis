@@ -27,7 +27,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include "server.h"
 
 #include <sys/time.h>
@@ -35,7 +34,6 @@
 #include <fcntl.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
-
 void replicationDiscardCachedMaster(void);
 void replicationResurrectCachedMaster(int newfd);
 void replicationSendAck(void);
@@ -332,7 +330,7 @@ void replicationFeedSlaves(list *slaves, int dictid, robj **argv, int argc) {
 }
 
 #ifdef __KLJ__
-void replicationFeedSwitchBuf(list *slaves, int dictid, robj **argv, int argc) {
+void replicationFeedSwitchBuf(list *slaves, robj **argv, int argc) {
 	int j,len;
 	
 	if (server.masterhost != NULL || server.switch_buf == NULL) return;
@@ -490,7 +488,8 @@ long long addReplyReplicationBacklog(client *c, long long offset) {
 
 #ifdef __KLJ__
 void sendSwitchBuf(client *c) {
-	replicationSendCommand("PROMOTE\r\n");
+	const char *command = "PROMOTE\r\n";
+	addReplySds(c,sdsnewlen(command,strlen(command)));
 	addReplySds(c,sdsnewlen(server.switch_buf, strlen(server.switch_buf)));
 	server.finish_switch = 1;
 	zfree(server.switch_buf);
@@ -729,9 +728,23 @@ int startBgsaveForReplication(int mincapa) {
 }
 
 #ifdef __KLJ__
-void switchCommand(client *c) {
+void switchCommand() {
 	if(server.switch_buf == NULL) createReplicationSwitchBuf();
 	server.bool_switch_ready = 1;
+}
+void okCommand() {
+}
+
+void promoteCommand(){
+	server.synchronizing = 1;
+}
+void finishCommand(client *c){
+	c->flags |= CLIENT_SLAVE;
+    c->replstate = SLAVE_STATE_ONLINE;
+    c->repl_ack_time = server.unixtime;
+    c->repl_put_online_on_ack = 0;
+    listAddNodeTail(server.slaves,c);
+	putSlaveOnline(c);
 }
 #endif
 
@@ -944,6 +957,7 @@ void replconfCommand(client *c) {
 				replicationSendAck();
 			return;
         } 
+#if 0
 #ifdef __KLJ__
          else if (!strcasecmp(c->argv[j]->ptr,"finish")) {
 			c->flags |= CLIENT_SLAVE;
@@ -956,9 +970,9 @@ void replconfCommand(client *c) {
 			return;
 		 }else if (!strcasecmp(c->argv[j]->ptr,"promote")) {
 			server.synchronizing = 1;
-			printf("1111111111111111111111111111111111111111111111111111111111111111111111\n");
 		 	return;
 		 }
+#endif
 #endif
 		else {
             addReplyErrorFormat(c,"Unrecognized REPLCONF option: %s",
@@ -2225,13 +2239,13 @@ void replicationSendAck(void) {
         c->flags &= ~CLIENT_MASTER_FORCE_REPLY;
     }
 }
-
+#if 0
 #ifdef __KLJ__
 void replicationSendCommand(const char* command) {
 	client *c = server.master;
     if (c != NULL) {
-//		addReplySds(c,sdsnewlen(command, strlen(command)));
-#if 1
+		addReplySds(c,sdsnewlen(command, strlen(command)));
+#if 0
 		c->flags |= CLIENT_MASTER_FORCE_REPLY;
         addReplyMultiBulkLen(c,3);
         addReplyBulkCString(c,"REPLCONF");
@@ -2241,6 +2255,7 @@ void replicationSendCommand(const char* command) {
 #endif
 	}
 }
+#endif
 #if 0
 void replicationSendPromote(void) {
 	client *c = server.master;
@@ -2704,10 +2719,12 @@ void replicationCron(void) {
     if (server.masterhost && server.master &&
         !(server.master->flags & CLIENT_PRE_PSYNC))
 	{
-		if(server.bool_switch_ready && server.finish_switch){
+		if(server.finish_switch){
+			const char *command = "FINISH\r\n";
+			addReplySds(server.master,sdsnewlen(command,strlen(command)));
 			server.bool_switch_ready = 0; 
 			server.finish_switch = 0;
-			replicationSendCommand("FINISH\r\n");
+
 		}
 		replicationSendAck();
 	}
