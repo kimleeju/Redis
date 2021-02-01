@@ -2496,7 +2496,6 @@ int processCommand(client *c) {
      * when FORCE_REPLICATION is enabled and would be implemented in
      * a regular command proc. */
     
-//	printf("ccccccccccccc argv = %s\n",c->argv[0]->ptr);
 	if (!strcasecmp(c->argv[0]->ptr,"quit")) {
         addReply(c,shared.ok);
         c->flags |= CLIENT_CLOSE_AFTER_REPLY;
@@ -2687,26 +2686,6 @@ int processCommand(client *c) {
         addReply(c,shared.queued);
     } else {
 		call(c,CMD_CALL_FULL);
-#if 0
-#ifndef __KLJ__
-		call(c,CMD_CALL_FULL);
-#endif
-#ifdef __KLJ__
-		if(!server.bool_switch_ready){
-			call(c,CMD_CALL_FULL);
-		}
-		else{
-			replicationFeedSwitchBuf(server.slaves,c->db->id,c->argv,c->argc,c);
-		}
-#endif
-		c->woff = server.master_repl_offset;
-        if (listLength(server.ready_keys))
-            handleClientsBlockedOnLists();
-    }
-#ifdef SUPPORT_PBA
-    server.pba.arg = 0;
-#endif
-#endif
  	} 
     return C_OK;
 }
