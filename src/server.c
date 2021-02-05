@@ -317,11 +317,13 @@ struct redisCommand redisCommandTable[] = {
     {"host:",securityWarningCommand,-1,"lt",0,NULL,0,0,0,0,0},
     {"latency",latencyCommand,-2,"aslt",0,NULL,0,0,0,0,0},
 #ifdef __KLJ__
+    {"rsync",rsyncCommand,3,"ars",0,NULL,0,0,0,0,0},
 	{"switch",switchCommand,1,"ars",0,NULL,0,0,0,0,0},
-//    {"synchronous",synchronousCommand,-1,"ars",0,NULL,0,0,0,0,0},
+    {"synchronous",synchronousCommand,3,"ars",0,NULL,0,0,0,0,0},
     {"+OK",okCommand,-1,"ars",0,NULL,0,0,0,0,0},
 	{"promote",promoteCommand,1,"ars",0,NULL,0,0,0,0,0},
 	{"finish",finishCommand,1,"ars",0,NULL,0,0,0,0,0},
+	{"mastersave",mastersaveCommand,1,"ars",0,NULL,0,0,0,0,0},
 #endif
 };
 

@@ -1182,6 +1182,8 @@ struct redisServer {
 	int bool_switch_ready;
 	int bool_connect_master;
 	bool synchronizing;
+	client *old_master;
+	char* old_master_replid;
 #endif
 	
 	int slave_announce_port;        /* Give the master this listening port. */
@@ -2046,8 +2048,10 @@ void changeCommand(client *c);
 void endCommand(client *c);
 void lockCommand(client *c);
 void switchCommand();
+void mastersaveCommand();
+void rsyncCommand(client *c);
 void okCommand();
-//void synchronousCommand();
+void synchronousCommand(client *c);
 void promoteCommand();
 void finishCommand(client *c);
 #endif

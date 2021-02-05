@@ -1446,7 +1446,7 @@ void readQueryFromClient(aeEventLoop *el, int fd, void *privdata, int mask) {
 	}
 
     sdsIncrLen(c->querybuf,nread);
-    c->lastinteraction = server.unixtime;
+	c->lastinteraction = server.unixtime;
 	if (c->flags & CLIENT_MASTER) c->read_reploff += nread;
     server.stat_net_input_bytes += nread;
     if (sdslen(c->querybuf) > server.client_max_querybuf_len) {

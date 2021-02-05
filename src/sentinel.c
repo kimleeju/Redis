@@ -2223,6 +2223,19 @@ void sentinelRefreshInstanceInfo(sentinelRedisInstance *ri, const char *info) {
                         ri->master->addr->port);
                 if (retval == C_OK)
                     sentinelEvent(LL_NOTICE,"+convert-to-slave",ri,"%@");
+#if 1
+#ifdef __KLJ__
+				if(ri->new_master){
+					char masterport[32];
+					ll2string(masterport,sizeof(masterport),ri->addr->port);
+					retval = redisAsyncCommand(ri->master->link->cc,
+					    sentinelDiscardReplyCallback, ri->master, "SYNCHRONOUS %s %s",ri->addr->ip, masterport);
+					if (retval == C_ERR) 
+						return;
+					ri->link->pending_commands++;
+				}
+#endif
+#endif
 			}
         }
     }
@@ -3788,14 +3801,25 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
     int retval;
 
     ll2string(portstr,sizeof(portstr),port);
-
+#if 0
+#ifdef __KLJ__
+	if(ri->new_master){
+		char masterport[32];
+		ll2string(masterport,sizeof(masterport),ri->addr->port);
+		retval = redisAsyncCommand(ri->master->link->cc,
+			sentinelDiscardReplyCallback, ri->master, "SYNCHRONOUS %s %s",ri->addr->ip, masterport);
+		if (retval == C_ERR) 
+			return;
+		ri->link->pending_commands++;
+	}
+#endif
+#endif
     /* If host is NULL we send SLAVEOF NO ONE that will turn the instance
      * into a master. */
     if (host == NULL) {
         host = "NO";
         memcpy(portstr,"ONE",4);
     }
-
     /* In order to send SLAVEOF in a safe way, we send a transaction performing
      * the following tasks:
      * 1) Reconfigure the instance according to the specified host/port params.
@@ -3811,23 +3835,20 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
     if (retval == C_ERR) return retval;
     ri->link->pending_commands++;
 #ifdef __KLJ__
-    retval = redisAsyncCommand(ri->link->cc,
+	if(ri->master->promoted_slave == ri && ri->master->new_master){
+		printf("ri= %d\n",ri->addr->port);
+		printf("ri->master = %d\n",ri->master->addr->port);
+		retval = redisAsyncCommand(ri->master->link->cc,
+    	    sentinelDiscardReplyCallback, ri->master, "SWITCH");
+		if (retval == C_ERR) return retval;
+    	ri->link->pending_commands++;
+	}
+
+#endif
+	retval = redisAsyncCommand(ri->link->cc,
         sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s", host, portstr);
     if (retval == C_ERR) return retval;
-#endif
-#if 0
-#ifdef __KLJ__
-	if(!(ri->master->new_master)){
-		retval = redisAsyncCommand(ri->link->cc,
-			sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s", host, portstr);
-	}
-	else{
-		retval = redisAsyncCommand(ri->link->cc,
-			sentinelDiscardReplyCallback, ri, "SLAVEOF %s %s %s", host, portstr, "switch");
-	}
-    if (retval == C_ERR) return retval;
-#endif
-#endif
+
 	ri->link->pending_commands++;
 
     retval = redisAsyncCommand(ri->link->cc,
@@ -3846,12 +3867,7 @@ int sentinelSendSlaveOf(sentinelRedisInstance *ri, char *host, int port) {
     if (retval == C_ERR) return retval;
     ri->link->pending_commands++;
 #endif
-#ifdef __KJL__
-    retval = redisAsyncCommand(ri->link->cc,
-        sentinelDiscardReplyCallback, ri, "CHANGE");
-    if (retval == C_ERR) return retval;
-    ri->link->pending_commands++;
-#endif
+
     retval = redisAsyncCommand(ri->link->cc,
         sentinelDiscardReplyCallback, ri, "EXEC");
     if (retval == C_ERR) return retval;
@@ -4248,7 +4264,6 @@ void sentinelFailoverReconfNextSlave(sentinelRedisInstance *master) {
 void sentinelFailoverSwitchToPromotedSlave(sentinelRedisInstance *master) {
     sentinelRedisInstance *ref = master->promoted_slave ?
                                  master->promoted_slave : master;
-
     sentinelEvent(LL_WARNING,"+switch-master",master,"%s %s %d %s %d",
         master->name, master->addr->ip, master->addr->port,
         ref->addr->ip, ref->addr->port);
@@ -4352,6 +4367,7 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 	while((de = dictNext(di)) != NULL) {
         sentinelRedisInstance *ri = dictGetVal(de);
 #ifdef __KLJ__
+#if 0
 		if(ri->master !=NULL && ri->master->memory_priority > ri->memory_priority && ri->bool_connect_master){
 			if(ri->temp != 1){
 				int retval = redisAsyncCommand(ri->master->link->cc, sentinelDiscardReplyCallback, ri->master,"SWITCH");
@@ -4360,7 +4376,10 @@ void sentinelHandleDictOfRedisInstances(dict *instances) {
 			}
 	
 		}
-		if(ri->master != NULL && ri->master->memory_priority > ri->memory_priority && ri->master->bool_switch_ready && (!ri->master->new_master)  && !ri->master->failover_state){
+#endif
+
+		if(ri->master != NULL && ri->master->memory_priority > ri->memory_priority && (!ri->master->new_master)  && !ri->master->failover_state && ri->bool_connect_master){
+		//if(ri->master != NULL && ri->master->memory_priority > ri->memory_priority && ri->master->bool_switch_ready && (!ri->master->new_master)  && !ri->master->failover_state){
 			ri->master->flags |= SRI_FAILOVER_IN_PROGRESS; //flag를 failover말고 다른걸로 바꿔야함
 			ri->master->promoted_slave = ri;
 			ri->master->failover_state = SENTINEL_FAILOVER_STATE_SEND_SLAVEOF_NOONE;

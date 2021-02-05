@@ -2204,7 +2204,7 @@ int rewriteConfig(char *path) {
  *----------------------------------------------------------------------------*/
 
 void configCommand(client *c) {
-    /* Only allow CONFIG GET while loading. */
+	/* Only allow CONFIG GET while loading. */
     if (server.loading && strcasecmp(c->argv[1]->ptr,"get")) {
         addReplyError(c,"Only CONFIG GET is allowed during loading");
         return;
@@ -2233,7 +2233,7 @@ void configCommand(client *c) {
         } else {
             serverLog(LL_WARNING,"CONFIG REWRITE executed with success.");
             addReply(c,shared.ok);
-        }
+		}
     } else {
         addReplyError(c,
             "CONFIG subcommand must be one of GET, SET, RESETSTAT, REWRITE");
